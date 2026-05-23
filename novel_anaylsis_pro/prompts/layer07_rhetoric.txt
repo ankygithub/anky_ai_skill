@@ -1,0 +1,332 @@
+# 修辞文化层分析 Prompt
+
+## 任务目标
+对《{book_title}》进行**修辞文化和文学素养**层面的分析，揭示作者的文化底蕴、知识结构和审美取向。
+
+## 分析维度
+
+### 1. 典故使用分析
+
+#### A. 典故来源分类
+统计书中典故的出处领域：
+
+- **历史典故**：中国历代史书中的事件/人物
+- **文学典故**：诗词/小说/散文中的名句/情节
+- **神话传说**：中国古代神话/民间传说/宗教故事
+- **诸子百家**：儒/道/法/墨/兵等思想家的言论
+- **佛道典故**：佛教/道教的概念/故事/人物
+- **戏曲曲艺**：京剧/昆曲/评书等传统艺术
+- **武侠典故**：金庸/古龙/梁羽生等前辈作品
+- **流行文化**：电影/动漫/游戏/网络梗
+- **西方典故**：希腊罗马神话/圣经/西方文学
+- **原创典故**：作者自己创造的"伪典故"
+
+**统计**：各来源领域的占比和使用频率
+
+#### B. 典故使用方式
+- **直接引用**：原封不动地使用原文
+- **间接化用**：改编后融入自己的文字
+- **暗用暗示**：只取其意不明引其文
+- **反用翻新**：反其意而用之，创造新意
+- **误用创新**：有意或无意地"用错"，产生意外效果
+
+**分析**：哪种方式占主导？效果的差异？
+
+#### C. 典故在文本中的位置
+- **章节标题**：用作标题吸引眼球
+- **开篇/结尾**：用于首尾呼应或点题
+- **人物台词**：展现角色的文化修养
+- **旁白议论**：作者借典故发表观点
+- **描写修饰**：增加文字的文采和厚度
+- **情节设计**：整个情节单元基于某个典故重构
+
+**功能评估**：不同位置的典故分别达到什么效果？
+
+#### D. 典故的叙事功能
+- **装饰性功能**：纯粹为了文采，去掉不影响理解
+- **功能性功能**：承担信息传递或情节推动作用
+- **结构性功能**：作为组织原则串联全文
+- **主题性功能**：深化主题，提供哲学支撑
+- **互文性功能**：与其他文本对话，产生联想网络
+
+**评价**：典故使用的必要性和艺术价值
+
+### 2. 诗词与自创诗分析
+
+#### A. 引用型诗词
+- **出处统计**：主要引用哪些诗人/词人的作品？
+- **朝代分布**：唐/宋/元/明/清/近现代
+- **体裁分布**：诗/词/曲/赋/对联
+- **引用完整性**：全篇引用/摘句/改写
+- **融入方式**：
+  - 自然融入：像说话一样流畅
+  - 刻意展示：明显在"掉书袋"
+  - 角色代言：通过有文化的角色之口
+  - 旁白点缀：叙述者偶尔引用
+
+**格律严谨度评估**：
+- 严格符合格律：显示作者的古文功底
+- 大致符合：基本正确但有小瑕疵
+- 自由发挥：不拘泥于格律，重在意境
+- 完全不合：可能是作者不懂或故意突破
+
+#### B. 化用型诗词
+- **取意重组**：保留原意，重新措辞
+- **取境再造**：借用意境，创作新句
+- **集句成篇**：多首诗词的句子组合
+- **翻案出新**：在原作基础上翻出新意
+
+**分析**：化用的巧妙程度？是否能看出原作痕迹？
+
+#### C. 自创诗词（如有）
+这是检验作者文学功底的关键！
+
+- **数量统计**：全书有多少首自创诗词？
+- **质量评估**：
+  - 格律正确性：平仄/押韵/对仗是否规范
+  - 意境营造：是否有诗意和画面感
+  - 与剧情融合：是否自然贴切还是生硬插入
+  - 水平定位：入门/熟练/优秀/杰出
+
+- **体裁尝试**：
+  - 古体诗（五言/七言/杂言）
+  - 近体诗（律诗/绝句）
+  - 词（各种词牌）
+  - 曲/赋/骚体
+  - 现代自由诗
+
+- **出现时机**：
+  - 触景生情：看到某景某事有感而发
+  - 抒怀言志：表达角色心境或抱负
+  - 斗智斗才：在特定场合展示才华
+  - 预言谶语：暗示未来剧情走向
+  - 收束总结：卷末或章末的诗性收尾
+
+**特别要求**：如书中存在自创诗，请至少选取3首进行详细点评（格律+意境+功能）
+
+### 3. 命名系统分析
+
+#### A. 人名系统
+- **命名风格**：
+  - 写实型：像真人的名字（李明、张伟）
+  - 寓意型：名字包含寓意（萧峰=山峰/傲然）
+  - 古典型：出自古籍典故（屈原、扶苏）
+  - 仙侠型：带有玄幻色彩（叶辰、楚枫）
+  - 外域型：异域风情或音译风格
+  - 象征型：名字暗示命运或性格
+
+- **命名规律**：
+  - 姓氏选择偏好（大姓/稀姓/自造姓）
+  - 名字字数（单字/双字/三字及以上）
+  - 辈分/排行标识（如果有家族体系）
+  - 名字与角色的匹配度
+
+- **特殊命名现象**：
+  - 名字梗/谐音梗（如"甄倒霉"）
+  - 名字预示命运
+  - 名字随剧情演变（改名/赐名/称号变化）
+  - 多名字/多身份的角色处理
+
+**示例**：列出10-15个重要角色的名字并分析命名逻辑
+
+#### B. 地名系统
+- **地域命名风格**：
+  - 写实地名：借用或改造真实地名
+  - 意象地名：根据地貌特征命名（落霞峰、断魂谷）
+  - 功能地名：根据地点用途命名（藏经阁、炼丹房）
+  - 文化地名：蕴含文化内涵（逍遥津、忘川河）
+  - 等级地名：体现地位或危险等级
+
+- **命名体系一致性**：全书的地名是否属于同一"语言体系"？
+- **好记度评估**：哪些地名令人印象深刻？为什么？
+- **地图构建感**：仅看地名列表，能否想象出一个世界？
+
+**示例**：列出10-15个重要地点并分析
+
+#### C. 功法/技能/武器命名
+- **命名美学等级**：
+  - 入门级：直白通俗（火球术、铁布衫）
+  - 进阶级：有一定文采（烈焰掌、寒冰剑）
+  - 高级：富有诗意（九阳神功、独孤九剑）
+  - 大师级：意境深远（万剑归宗、天地同寿）
+  - 传奇级：成为文化符号（降龙十八掌）
+
+- **命名规律**：
+  - 数字序列（一式/二式...或九式/十式）
+  - 元素属性（金木水火土/风雷光暗）
+  - 自然意象（天/地/日/月/星/云/海）
+  - 动物图腾（龙/虎/凤/鹏/麒麟）
+  - 抽象概念（生死/阴阳/虚空/混沌）
+  - 佛教/道教术语（涅槃/轮回/太极/八卦）
+
+- **升级体系命名**：境界/等级的命名是否有层次感和美感？
+
+**示例**：列举书中10-15个重要的功法/技能/武器名称并评价
+
+#### D. 境界/等级/组织命名
+- **修炼境界**：从低到高的等级命名序列
+- **势力/门派**：各组织的名称及其寓意
+- **职称/头衔**：各种身份标识的命名
+- **特殊称谓**：绰号/尊号/封号
+
+**分析**：这些命名是否形成了完整的体系？审美水平如何？
+
+## 输出格式要求
+
+```json
+{
+  "layer": "rhetoric",
+  "book_title": "{book_title}",
+  "analysis": {
+    "allusion_usage": {
+      "source_classification": {
+        "historical": {"count": number, "examples": ["string"]},
+        "literary": {"count": number, "examples": ["string"]},
+        "mythological": {"count": number, "examples": ["string"]},
+        "philosophical": {"count": number, "examples": ["string"]},
+        "religious_taoist_buddhist": {"count": number, "examples": ["string"]},
+        "traditional_opera": {"count": number, "examples": ["string"]},
+        "martial_arts_fiction": {"count": number, "examples": ["string"]},
+        "pop_culture": {"count": number, "examples": ["string"]},
+        "western": {"count": number, "examples": ["string"]},
+        "original_fabricated": {"count": number, "examples": ["string"]}
+      },
+      "usage_methods": {
+        "direct_quotation": {"ratio": number, "effect": "string"},
+        "indirect_adaptation": {"ratio": number, "effect": "string"},
+        "implicit_allusion": {"ratio": number, "effect": "string"},
+        "creative_subversion": {"ratio": number, "effect": "string"},
+        "deliberate_innovation": {"ratio": number, "effect": "string"}
+      },
+      "textual_position": {
+        "chapter_titles": {"usage": "string", "function": "string"},
+        "openings_endings": {"usage": "string", "function": "string"},
+        "character_dialogue": {"usage": "string", "function": "string"},
+        "narrator_commentary": {"usage": "string", "function": "string"},
+        "descriptive_decoration": {"usage": "string", "function": "string"},
+        "plot_design": {"usage": "string", "function": "string"}
+      },
+      "narrative_functions": {
+        "decorative": {"necessity": "low", "artistic_value": "string"},
+        "functional": {"necessity": "high", "artistic_value": "string"},
+        "structural": {"necessity": "high", "artistic_value": "string"},
+        "thematic": {"necessity": "high", "artistic_value": "string"},
+        "intertextual": {"necessity": "medium", "artistic_value": "string"}
+      }
+    },
+    "poetry_analysis": {
+      "quoted_poetry": {
+        "primary_sources": [{"author": "string", "dynasty": "string", "works": ["string"]}],
+        "genre_distribution": {"poem": number, "ci": number, "qu": number, "fu": number, "couplet": number},
+        "completeness": {"full_works": number, "excerpted_lines": number, "adapted": number},
+        "integration_styles": {
+          "natural_integration": "string",
+          "deliberate_display": "string",
+          "character_voice": "string",
+          "narrator_embellishment": "string"
+        },
+        "metrical_rigor": "strict|mostly_correct|liberal|intentionally_broken"
+      },
+      "adapted_poetry": {
+        "techniques": ["string"],
+        "craftsmanship_evaluation": "clumsy|acceptable|clever|brilliant",
+        "traceability": "easily_traceable|partially_hidden|fully_transformed"
+      },
+      "original_poetry": {
+        "total_count": number,
+        "quality_assessment": {
+          "metrical_accuracy": "poor|fair|good|excellent",
+          "imagery_quality": "weak|moderate|strong|exceptional",
+          "plot_integration": "forced|natural|seamless",
+          "overall_level": "beginner|competent|advanced|masterful"
+        },
+        "genres_attempted": ["string"],
+        "timing_triggers": [
+          {"trigger": "string", "frequency": "string", "example": "string"}
+        ],
+        "detailed_reviews": [
+          {
+            "poem_title_or_context": "string",
+            "full_text": "string",
+            "metrical_analysis": "string",
+            "imagery_analysis": "string",
+            "function_in_story": "string",
+            "rating": "1-10"
+          }
+        ]
+      }
+    },
+    "naming_system": {
+      "character_names": {
+        "style": "realistic|symbolic|classical|xianxia|exotic|symbolic",
+        "naming_patterns": {
+          "surname_preference": "string",
+          "name_length": "single|double|triple_plus",
+          "generation_markers": "string",
+          "character_match_score": "1-10"
+        },
+        "special_phenomena": ["string"],
+        "examples": [
+          {"name": "string", "meaning": "string", "naming_logic": "string"}
+        ]
+      },
+      "place_names": {
+        "naming_style": "realistic|imagery|functional|cultural|hierarchical",
+        "system_consistency": "high|medium|low",
+        "memorability_assessment": {
+          "memorable_names": ["string"],
+          "reason_for_memorability": "string"
+        },
+        "world_building_sense": "strong|moderate|weak",
+        "examples": [
+          {"name": "string", "type": "string", "analysis": "string"}
+        ]
+      },
+      "martial_techniques_weapons": {
+        "naming_aesthetics_level": "beginner|intermediate|advanced|master|legendary",
+        "naming_patterns": [
+          {"pattern": "string", "examples": ["string"]}
+        ],
+        "progression_system_naming": {
+          "coherence": "high|medium|low",
+          "aesthetic_progression": "string"
+        },
+        "examples": [
+          {"name": "string", "type": "technique|weapon|skill", "rating": "1-10", "analysis": "string"}
+        ]
+      },
+      "realms_ranks_organizations": {
+        "cultivation_realms": ["string"],
+        "factions_sects": [{"name": "string", "meaning": "string"}],
+        "titles_positions": ["string"],
+        "special_designations": ["string"],
+        "system_coherence": "high|medium|low",
+        "overall_aesthetic_rating": "1-10"
+      }
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "cultural_depth": "shallow|moderate|deep|profound",
+    "literacy_level": "basic|educated|learned|scholarly",
+    "unique_contributions": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取典故库、命名规则体系、诗词格律参数、文化符号清单
+**文学侧**：评估文化底蕴的深厚程度、审美的独特性、文学性的高度、文化运化的自然程度
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的修辞文化特征
+2. **典型证据**：至少2-3个具体例子（含原文引用和出处说明）
+3. **仿写规则**：可操作的文化素养运用指导原则
+4. **稳定度判断**：该书文化品质的一致性和独特性（高/中/低）
+
+---
+**上下文输入**：{context}

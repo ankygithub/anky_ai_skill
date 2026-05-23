@@ -1,0 +1,331 @@
+# 文学维度四：悲悼美学分析 Prompt
+
+## 任务目标
+对《{book_title}》进行**死亡、丧失与悲伤**主题的美学分析，探讨作品如何处理人类最根本的存在体验——失去。
+
+## ⚠️ 分析立场
+悲悼美学不是"追求悲惨"，而是探讨作品面对丧失时的**态度、深度和艺术转化能力**。伟大的作品不会回避悲伤，而是将其升华为美。
+
+---
+
+## 第一部分：死亡重量分析
+
+### A. 死亡的物理重量
+书中的死亡是如何被"称重"的？
+
+#### 死亡的呈现方式分级
+- **0级：略过不提** — 人物消失，轻描淡写或完全不写
+- **1级：报告式** — "他死了"，一句话带过
+- **2级：简述式** — 简单描写死亡过程，几句话到一段
+- **3级：场景式** — 用一个场景展示死亡，有基本的情感
+- **4级：沉浸式** — 详细描写死亡的方方面面，读者身临其境
+- **5级：延展式** — 死亡的影响延续多章，持续发酵
+
+**本书的死亡呈现平均等级**：__级
+**分布情况**：主要角色的死亡通常是__级，次要角色是__级
+
+### B. 死亡的情感重量
+同样的死亡方式，不同的情感重量：
+
+#### 重量影响因素
+1. **铺垫长度**：角色出场多久？读者投入多少感情？
+2. **死亡方式**：自然老死/疾病/意外/战斗被他杀/自杀/牺牲
+3. **与主角关系**：陌生人/熟人/朋友/亲人/爱人/导师/自己
+4. **可避免性**：不可避免/本来可以避免/因主角失误导致
+5. **时机**：故事早期/中期高潮/接近结尾/结局
+6. **余波处理**：死后有多少篇幅处理影响？
+
+**本书最"重"的死亡**：[详细分析]
+**本书最"轻"的死亡**：[详细分析及评价]
+
+### C. 死亡的叙事功能
+每次死亡都应该有叙事目的（即使不明显）：
+- **推动剧情**：死亡引发新的冲突或转折
+- **角色成长**：死亡促使主角（或其他角色）改变
+- **主题深化**：死亡例证了某个主题
+- **情感冲击**：纯粹为了让读者哭/感到悲伤
+- **世界观构建**：展示世界的残酷或规则
+- **节奏标记**：标志一个阶段的结束
+
+**本书死亡的主要叙事功能分布**：__
+
+---
+
+## 第二部分：五种悲剧类型分析
+
+### 类型一：宿命悲剧（Tragedy of Fate）
+- **定义**：无论怎么努力都无法逃脱的命运
+- **特征**：预言/诅咒/血脉/历史必然性
+- **情感效果**：无力感、崇高感、敬畏
+- **本书实例**：[如有]
+- **处理质量**：__
+
+### 类型二：性格悲剧（Tragic Flaw）
+- **定义**：角色自身的缺陷导致的毁灭
+- **特征**：骄傲/贪婪/嫉妒/执念/盲目爱情等
+- **情感效果**：惋惜、"如果当初"、警示
+- **本书实例**：[如有]
+- **处理质量**：__
+
+### 类型三：社会悲剧（Social Tragedy）
+- **定义**：社会制度/不公造成的悲剧
+- **特征**：阶级/偏见/战争/腐败/体制压迫
+- **情感效果**：愤怒、反思、改革冲动
+- **本书实例**：[如有]
+- **处理质量**：__
+
+### 类型四：伦理悲剧（Ethical Tragedy）
+- **定义**：两种道德义务冲突，选哪个都是错
+- **特征**：忠孝难两全/爱情vs责任/个人vs集体
+- **情感效果**：撕裂感、无奈、深刻思考
+- **本书实例**：[如有]
+- **处理质量**：__
+
+### 类型五：存在主义悲剧（Existential Tragedy）
+- **定义**：人生本质上的荒诞、无意义、孤独
+- **特征**：存在的偶然性、死亡的必然性、沟通的不可能性
+- **情感效果**：荒凉感、哲学沉思、平静的绝望
+- **本书实例**：[如有]
+- **处理质量**：__
+
+### 本书的悲剧倾向
+- **主导悲剧类型**：__
+- **复合悲剧**：是否存在多种悲剧类型的叠加？
+- **悲剧的"解决"**：悲剧最终被克服/接受/升华/遗留？
+
+---
+
+## 第三部分：丧失的谱系（Beyond Death）
+
+死亡不是唯一的丧失形式。完整的悲悼分析应包含：
+
+### A. 丧失类型清单
+- **死亡丧失**：某人去世
+- **关系丧失**：分手/绝交/背叛/疏远
+- **能力丧失**：残疾/失忆/失去力量/衰老
+- **理想丧失**：信仰崩塌/梦想破灭/希望落空
+- **时间丧失**：青春不再/机会错过/时光虚度
+- **家园丧失**：故土难回/家被毁/流离失所
+- **身份丧失**：不再认识自己/身份被剥夺
+- **纯洁丧失**：天真不再/被迫长大/目睹黑暗
+
+**本书涉及哪些丧失类型？**：__
+**每种类型的处理深度**：__
+
+### B. 丧失的阶段性反应（参考 Kübler-Ross 模型）
+分析角色经历丧失后的反应过程：
+
+1. **否认阶段**："这不可能是真的""一定是搞错了"
+   - 本书表现：__
+
+2. **愤怒阶段**："为什么是我？""这不公平！"
+   - 本书表现：__
+
+3. **讨价还价阶段**："如果...能不能...""让我用XX交换"
+   - 本书表现：__
+
+4. **抑郁阶段**：深沉的悲伤、退缩、无力
+   - 本书表现：__
+
+5. **接受阶段**：与丧失共存，找到新的平衡
+   - 本书表现：__
+
+**注意**：不是每个角色都会经历所有阶段，顺序也可能不同。关键是反应的**真实性和深度**。
+
+### C. 未完成的哀悼
+- 是否有角色"卡"在某个阶段无法走出？
+- 是否有被压抑的悲伤在后来爆发？
+- 是否有"笑中带泪"式的复杂哀悼？
+
+---
+
+## 第四部分：情绪残留分析（Emotional Residue）
+
+### A. 悲伤的持久性
+重大丧失后，悲伤持续多久？
+- **一章就过去**：恢复太快，不够真实
+- **数章的阴影**：较合理，有持续影响
+- **贯穿半本书**：深刻，影响人物轨迹
+- **终身携带**：最真实，伤痕成为一部分
+
+**本书的悲伤持久性模式**：__
+
+### B. 悲伤的变形
+悲伤不会消失，只会改变形态：
+- **转化为愤怒**：对造成丧失的人/事的恨
+- **转化为力量**："我要变强，不再失去"
+- **转化为温柔**：因为理解痛苦而更加善良
+- **转化为麻木**：保护自己的防御机制
+- **转化为智慧**：对生命有更深的理解
+- **转化为艺术/创造**：将痛苦升华为美
+
+**本书悲伤变形的最佳例子**：[具体分析]
+
+### C. 幸存者内疚（Survivor's Guilt）
+- "为什么我活着而他死了？"
+- "如果我...也许他就不会死"
+- 这种内疚是否被探讨？
+- 如何影响角色的后续行为？
+
+**本书的幸存者内疚处理**：__
+
+### D. 创伤后成长（Post-Traumatic Growth）
+创伤和丧失除了造成伤害，是否也带来了积极的改变？
+- **重新排序价值观**：什么是真正重要的
+- **更深的人际连接**：经历过失去的人更珍惜关系
+- **新的可能性**：旧的路走不通，发现新路
+- **精神层面的提升**：对生命有更深的领悟
+
+**本书的PTG例子**：[如有]
+
+---
+
+## 第五部分：悲悼的美学升华
+
+### A. 悲伤的美化处理
+作者是如何让"悲伤"变得"美"的？
+- **语言的诗意化**：用美的语言描述痛苦
+- **意象的运用**：通过象征物承载悲伤（花/月/雨/雪）
+- **音乐的隐喻**：文字的节奏模仿音乐（如安魂曲）
+- **画面的构图**：悲伤场景的画面美感
+- **时间的艺术**：拉长/压缩时间以增强效果
+- **对比的运用**：美与悲的并置产生更强冲击
+
+**本书最美的一个悲伤场景**：[原文摘录及美学分析]
+
+### B. 悲悼的哲学深度
+本书的悲悼是否触及了哲学层面？
+- **对死亡的看法**：终结？过渡？回归？
+- **对记忆的看法**：遗忘还是铭记？记忆的重量？
+- **对意义的看法**：痛苦有意义吗？苦难的价值？
+- **对连接的看法**：死者与生者的关系如何延续？
+
+**本书最深刻的悲悼哲学表述**：[原文]
+
+### C. 悲悼与希望的关系
+纯粹的绝望是沉重的，加入一丝希望才是成熟的悲悼：
+- **黑暗中的光**：最深的夜里有最亮的星
+- **逝者的遗志**：活着的人完成未竟之事
+- **爱的延续**：爱不会因为死亡而结束
+- **新生的可能**：结束也是开始
+
+**本书悲悼中的希望之光**：[具体表现]
+
+## 输出格式要求
+
+```json
+{
+  "literary_dimension": "mourning",
+  "book_title": "{book_title}",
+  "analysis": {
+    "death_weight": {
+      "presentation_grading_scale": {
+        "level_0_skipped": {"count": number, "when_used": "string"},
+        "level_1_reported": {"count": number, "when_used": "string"},
+        "level_2_briefly_described": {"count": number, "when_used": "string"},
+        "level_3_scenic": {"count": number, "when_used": "string"},
+        "level_4_immersive": {"count": number, "when_used": "string"},
+        "level_5_extended": {"count": number, "when_used": "string"},
+        "average_grade": number
+      },
+      "emotional_weight_factors": {
+        "buildup_length": "string",
+        "manner_of_death": "string",
+        "relationship_to_protagonist": "string",
+        "avoidability": "string",
+        "timing": "string",
+        "aftermath_treatment": "string"
+      },
+      "heaviest_death": {"description": "string", "analysis": "string"},
+      "lightest_death": {"description": "string", "evaluation": "string"},
+      "narrative_functions_distribution": "string"
+    },
+    "five_tragedy_types": {
+      "fate_tragedy": {"presence": boolean, "example": "string", "quality": "1-10"},
+      "character_flaw_tragedy": {"presence": boolean, "example": "string", "quality": "1-10"},
+      "social_tragedy": {"presence": boolean, "example": "string", "quality": "1-10"},
+      "ethical_tragedy": {"presence": boolean, "example": "string", "quality": "1-10"},
+      "existentialist_tragedy": {"presence": boolean, "example": "string", "quality": "1-10"},
+      "dominant_type": "string",
+      "compound_tragedies": boolean,
+      "tragedy_resolution": "overcome|accepted|sublimated|lingering"
+    },
+    "loss_spectrum": {
+      "loss_types_involved": [
+        {"type": "string", "processing_depth": "shallow|moderate|deep"}
+      ],
+      "grief_stages_kubler_ross": {
+        "denial": "string",
+        "anger": "string",
+        "bargaining": "string",
+        "depression": "string",
+        "acceptance": "string",
+        "notes_on_authenticity": "string"
+      },
+      "unfinished_grieving": ["string"]
+    },
+    emotional_residue: {
+      "sadness_duration_patterns": "string",
+      "sadness_metamorphosis": {
+        "to_anger": "string",
+        "to_strength": "string",
+        "to_tenderness": "string",
+        "to_numbness": "string",
+        "to_wisdom": "string",
+        "to_art_creation": "string"
+      },
+      "survivor_guilt": "string",
+      "post_traumatic_growth": ["string"]
+    },
+    mourning_aesthetic_sublimation: {
+      "beautification_techniques": [
+        "poetic_language",
+        "imagery_employment",
+        "musical_metaphor",
+        "visual_composition",
+        "temporal_artistry",
+        "contrast_utilization"
+      ],
+      "most_beautiful_mourning_scene": {"excerpt": "string", "aesthetic_analysis": "string"},
+      "philosophical_depth": {
+        "view_on_death": "string",
+        "view_on_memory": "string",
+        "view_on_meaning": "string",
+        "view_on_connection": "string",
+        "profoundest_statement": "string"
+      },
+      "mourning_and_hope_relationship": {
+        "light_in_darkness": "string",
+        "deceased_legacy": "string",
+        "continuation_of_love": "string",
+        "possibility_of_rebirth": "string"
+      }
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "mourning_authenticity": "high|medium|low",
+    "aesthetic Achievement": "high|medium|low",
+    "unique_contribution_to_mourning_literature": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取死亡重量量表、悲剧类型分类、丧失谱系、哀悼阶段模型、美学升华技法
+**文学侧**：感知悲伤的质感和重量、悲悯的深度、美学升华的高度、哲学洞察的锐度
+
+⭐ **特别强调**：悲悼美学是最考验作者人文深度的维度之一。回避死亡和丧失的作品是幼稚的，沉溺于悲惨的作品是廉价的，唯有能够将悲伤升华为美的作品才能触动灵魂最深处的共鸣。
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的悲悼特征
+2. **典型证据**：至少2-3个具体场景（含原文摘录）
+3. **仿写规则**：可操作的悲悼书写指导原则
+4. **稳定度判断**：悲悼处理的一致性和深度（高/中/低）
+
+---
+**上下文输入**：{context}

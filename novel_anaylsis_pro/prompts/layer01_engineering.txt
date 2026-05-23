@@ -1,0 +1,124 @@
+# 作品工程层分析 Prompt
+
+## 任务目标
+对《{book_title}》进行**作品工程层**的深度分析，从技术角度解构其章节组织、结构设计和功能分配。
+
+## 分析维度
+
+### 1. 章节长度工程
+- **统计指标**：平均章节数、字数中位数、标准差、极值（最长/最短章节）
+- **波动范围**：长度分布区间（如2000-8000字）、异常章节识别
+- **长短章分布模式**：
+  - 铺垫章（<3000字）占比及功能定位
+  - 标准章（3000-6000字）的结构模板
+  - 高潮章（>6000字）的出现频率和触发条件
+- **节奏控制策略**：如何通过章节长度变化调控阅读节奏
+
+### 2. 章节标题风格分类
+对全书章节标题进行语义分类，统计各类型占比：
+- **事件型**：直接描述本章核心事件（如"决战紫禁之巅"）
+- **悬念型**：设置疑问或暗示（如"那个人的秘密"）
+- **爽点型**：预告高潮或反转（如"一剑霜寒十四州"）
+- **诗意型**：使用文学化表达（如"明月照积雪"）
+- **口语型**：亲切随意风格（如"这事儿不简单"）
+- **其他类型**：补充说明
+
+要求：每类提供3-5个典型示例，分析标题与内容的匹配度
+
+### 3. 卷结构与阶段切换
+- **卷划分逻辑**：按什么标准分卷（地域/时间线/力量层级/剧情阶段）
+- **卷内章节数量**：平均每卷章节数、变异系数
+- **阶段切换频率**：大情节单元（通常10-30章）的切换节奏
+- **过渡章处理**：卷末/卷首的衔接方式（留白/回顾/伏笔/新角色引入）
+
+### 4. 章节功能分布
+统计并分类每类功能的典型比例：
+- **冲突推进章**（40-60%）：战斗、对抗、危机升级
+- **人物互动章**（15-25%）：对话、情感发展、关系建立
+- **设定揭示章**（10-20%）：世界观、力量体系、背景故事
+- **情绪缓冲章**（5-15%）：日常、幽默、轻松场景
+
+分析：功能交替的周期性规律（如"3章推进+1章缓冲"）
+
+### 5. 开篇方式分析
+识别本书采用的开篇策略（可多选）：
+- **倒叙开篇**：从高潮或结局回溯
+- **悬念钩子**：开篇即抛出核心疑问
+- **日常切入**：从主角日常生活开始
+- **世界观铺陈**：先介绍设定再进入剧情
+- **战斗开场**：直接以动作场面开始
+- **独白/旁白**：通过叙述者视角引入
+
+分析开篇的前500-1000字的信息密度和吸引力设计
+
+### 6. 结尾钩子类型
+统计章节结尾的钩子策略分布：
+- **悬念式**：未解决的危机或问题
+- **反转式**：意外信息颠覆预期
+- **情感式**：强烈的情绪冲击
+- **伏笔式**：埋下后续线索
+- **开放式**：留下想象空间
+- **总结式**：本章节内容收束
+
+## 输出格式要求
+
+```json
+{
+  "layer": "engineering",
+  "book_title": "{book_title}",
+  "analysis": {
+    "chapter_length_stats": {
+      "avg_words": number,
+      "median": number,
+      "std_dev": number,
+      "min": {"chapter": string, "words": number},
+      "max": {"chapter": string, "words": number},
+      "distribution_pattern": "string"
+    },
+    "title_style_distribution": [
+      {"type": "string", "count": number, "percentage": number, "examples": ["string"]}
+    ],
+    "volume_structure": {
+      "logic": "string",
+      "avg_chapters_per_volume": number,
+      "transition_frequency": "string",
+      "transition_methods": ["string"]
+    ],
+    "function_distribution": {
+      "conflict_advancement": {"percentage": number, "pattern": "string"},
+      "character_interaction": {"percentage": number, "pattern": "string"},
+      "setting_revelation": {"percentage": number, "pattern": "string"},
+      "emotional_buffer": {"percentage": number, "pattern": "string"}
+    },
+    "opening_strategy": {
+      "type": "string",
+      "first_1000_words_analysis": "string",
+      "hook_effectiveness": "high|medium|low"
+    },
+    "ending_hook_distribution": [
+      {"type": "string", "percentage": number, "typical_usage": "string"}
+    ]
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "variation_points": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：关注量化数据、结构模式、可复现的设计原则
+**文学侧**：关注审美效果、读者心理、艺术表达的独特性
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的特征
+2. **典型证据**：至少2-3个具体例子（含章节引用）
+3. **仿写规则**：可操作的创作指导原则
+4. **稳定度判断**：该特征在全书的稳定性（高/中/低）
+
+---
+**上下文输入**：{context}

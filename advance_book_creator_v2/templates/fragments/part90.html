@@ -1,0 +1,288 @@
+<div class="content">
+<h2 class="section-title page-break" id="part90">第九十章 政务AI——技术选型与示例代码</h2>
+
+<h3 id="section340">14.6 政务AI——技术选型与示例代码</h3>
+
+<h4>14.6.1 知识库技术选型</h4>
+
+<p>政务知识库的构建涉及三个核心技术环节：<span class="tag-core">深度文档理解</span>、<span class="tag-core">按章节语义切片</span>、<span class="tag-core">NL2SQL</span>。</p>
+
+<strong>深度文档理解</strong>：
+
+<p>政务文档（政策文件、办事指南、法规条例）通常具有复杂的层级结构和丰富的格式信息。简单的文本提取会丢失大量结构信息，影响检索质量。</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">技术方案</th><th style="text-align:left">适用场景</th><th style="text-align:left">优势</th><th style="text-align:left">局限</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">规则解析（正则/模板）</td><td style="text-align:left">格式固定的公文</td><td style="text-align:left">速度快、准确率高</td><td style="text-align:left">泛化能力差</td></tr>
+<tr><td style="text-align:left">文档大模型（如LayoutLM）</td><td style="text-align:left">复杂排版的PDF</td><td style="text-align:left">能理解布局信息</td><td style="text-align:left">部署成本高</td></tr>
+<tr><td style="text-align:left">混合方案（推荐）</td><td style="text-align:left">政务全场景</td><td style="text-align:left">兼顾速度与精度</td><td style="text-align:left">需要人工标注训练数据</td></tr>
+</tbody>
+</table>
+
+<p>推荐采用混合方案：对格式固定的公文使用规则解析，对复杂排版的PDF使用文档大模型。</p>
+
+<strong>按章节语义切片</strong>：
+
+<p>传统的固定长度切片（如每500字切一片）会破坏文档的逻辑结构。政务文档推荐采用"章节+语义"双层切片策略：</p>
+
+<ol>
+  <li><strong>章节级切片</strong>：先按文档的标题层级（章-节-小节）进行粗粒度切片</li>
+  <li><strong>语义级切片</strong>：对超长章节，按语义完整性进一步细分（如按段落、按条款）</li>
+</ol>
+
+<pre><code class="language-python"># 章节语义切片伪代码
+def semantic_chunk(document, max_chunk_size=2000):
+    """
+    按章节语义切片
+    保留标题层级信息，每个切片包含完整的语义单元
+    """
+    chunks = []
+    current_section = ""
+    current_content = []
+    
+    for block in document.blocks:  # 遍历文档块
+        if block.is_heading:
+            # 遇到新标题，保存当前切片
+            if current_content:
+                chunks.append({
+                    "title": current_section,
+                    "content": "\n".join(current_content),
+                    "metadata": {"level": block.level}
+                })
+            current_section = block.text
+            current_content = []
+        else:
+            current_content.append(block.text)
+            # 超过最大尺寸，强制切分
+            if len("\n".join(current_content)) &gt; max_chunk_size:
+                chunks.append({
+                    "title": current_section,
+                    "content": "\n".join(current_content),
+                    "metadata": {"level": "overflow"}
+                })
+                current_content = []
+    
+    return chunks</code></pre>
+
+<strong>NL2SQL（自然语言转SQL）</strong>：
+
+<p>政务场景中，群众和工作人员的查询需求经常涉及业务数据库。NL2SQL将自然语言问题转换为SQL查询，直接从数据库获取答案。</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">技术方案</th><th style="text-align:left">适用场景</th><th style="text-align:left">推荐度</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">基于规则（DSL映射）</td><td style="text-align:left">查询模式固定</td><td style="text-align:left">⭐⭐</td></tr>
+<tr><td style="text-align:left">基于LLM（Prompt工程）</td><td style="text-align:left">查询模式多样</td><td style="text-align:left">⭐⭐⭐⭐</td></tr>
+<tr><td style="text-align:left">基于微调（Text-to-SQL模型）</td><td style="text-align:left">查询量大、表结构复杂</td><td style="text-align:left">⭐⭐⭐⭐⭐</td></tr>
+</tbody>
+</table>
+
+<p>推荐方案：对简单查询使用LLM Prompt工程，对复杂查询使用微调的Text-to-SQL模型（如SQLCoder、DIN-SQL）。</p>
+
+<h4>14.6.2 多模型路由配置示例</h4>
+
+<p>政务AI平台需要接入多个大语言模型，通过路由策略将请求分发到最优模型。</p>
+
+<pre><code class="language-python"># 多模型路由配置示例
+class ModelRouter:
+    """多模型路由器：根据场景类型和模型负载选择最优模型"""
+    
+    ROUTING_RULES = {
+        "公文写作": {"primary": "qwen", "fallback": "wenxin", "reason": "长文本生成能力强"},
+        "数据分析": {"primary": "deepseek", "fallback": "qwen", "reason": "推理能力强"},
+        "智能客服": {"primary": "wenxin", "fallback": "spark", "reason": "对话能力强"},
+        "语音交互": {"primary": "spark", "fallback": "wenxin", "reason": "语音识别与合成"},
+    }
+    
+    def route(self, request):
+        scene_type = self.classify_scene(request)
+        rule = self.ROUTING_RULES.get(scene_type, self.ROUTING_RULES["智能客服"])
+        
+        # 检查主模型可用性
+        if self.is_model_available(rule["primary"]):
+            return rule["primary"]
+        
+        # 降级到备用模型
+        if self.is_model_available(rule["fallback"]):
+            return rule["fallback"]
+        
+        # 所有模型不可用，返回默认
+        return "qwen"
+    
+    def classify_scene(self, request):
+        # 意图分类逻辑
+        if any(kw in request.text for kw in ["通知", "报告", "批复", "公文"]):
+            return "公文写作"
+        elif any(kw in request.text for kw in ["统计", "分析", "趋势"]):
+            return "数据分析"
+        elif request.is_voice:
+            return "语音交互"
+        else:
+            return "智能客服"</code></pre>
+
+<h4>14.6.3 围串标检测逻辑示例</h4>
+
+<p>围串标检测是招投标AI的核心算法，以下是简化的检测逻辑：</p>
+
+<pre><code class="language-python"># 围串标检测逻辑示例
+import networkx as nx
+from sklearn.ensemble import IsolationForest
+
+def detect_collusion(bidding_records):
+    """
+    围串标检测：基于多维度特征+图计算+异常检测
+    
+    参数:
+        bidding_records: 投标文件列表，包含MAC、IP、制作时间、元数据等
+    
+    返回:
+        suspicious_groups: 疑似围标串标的投标人组合
+    """
+    # 1. 构建关联图
+    G = nx.Graph()
+    for record in bidding_records:
+        G.add_node(record.bidder_id, data=record)
+        
+        # 添加关联边（共性问题）
+        for other in bidding_records:
+            if record.bidder_id == other.bidder_id:
+                continue
+            
+            weight = 0
+            if record.mac == other.mac:
+                weight += 3  # MAC相同，权重最高
+            if record.ip == other.ip:
+                weight += 2  # IP相同
+            if record.office_author == other.office_author:
+                weight += 2  # Office作者相同
+            if abs(record.create_time - other.create_time) &lt; 300:
+                weight += 1  # 制作时间接近（5分钟内）
+            if record.file_similarity(other) &gt; 0.8:
+                weight += 2  # 文件内容高度相似
+            
+            if weight &gt;= 3:  # 权重阈值
+                G.add_edge(record.bidder_id, other.bidder_id, weight=weight)
+    
+    # 2. 社区发现（识别紧密关联的投标人集群）
+    from networkx.algorithms.community import louvain_communities
+    communities = louvain_communities(G)
+    
+    # 3. 异常检测评分
+    features = extract_features(G, communities)
+    clf = IsolationForest(contamination=0.1)
+    anomaly_scores = clf.fit_predict(features)
+    
+    # 4. 输出结果
+    suspicious = []
+    for i, score in enumerate(anomaly_scores):
+        if score == -1:  # 异常
+            suspicious.append({
+                "community": communities[i],
+                "risk_score": clf.decision_function([features[i]])[0]
+            })
+    
+    return suspicious</code></pre>
+
+<h4>14.6.4 政策查询NL2SQL示例</h4>
+
+<pre><code class="language-python"># 政策查询NL2SQL示例
+from langchain.chat_models import ChatOpenAI
+from langchain.sql_database import SQLDatabase
+from langchain.chains import create_sql_query_chain
+
+# 政策数据库Schema
+# policies 表: id, title, category, publish_date, applicable_type, content
+# policy_conditions 表: id, policy_id, condition_type, condition_value
+
+def query_policies(natural_language_query):
+    """
+    政策查询NL2SQL：将自然语言问题转换为SQL查询
+    
+    示例:
+        输入: "适合小微企业的补贴政策有哪些？"
+        输出: SELECT p.title, p.publish_date FROM policies p 
+              JOIN policy_conditions pc ON p.id = pc.policy_id 
+              WHERE pc.condition_type = '企业规模' AND pc.condition_value = '小微企业'
+              AND p.category = '补贴'
+    """
+    llm = ChatOpenAI(model="deepseek-chat", temperature=0)
+    db = SQLDatabase.from_uri("sqlite:///policy.db")
+    
+    chain = create_sql_query_chain(llm, db)
+    sql_query = chain.invoke({"question": natural_language_query})
+    
+    # 执行查询
+    result = db.run(sql_query)
+    return {
+        "sql": sql_query,
+        "result": result,
+        "natural_explanation": generate_explanation(result, llm)
+    }</code></pre>
+
+<h4>14.6.5 部署架构选型</h4>
+
+<p>政务AI的部署模式有三种：</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">部署模式</th><th style="text-align:left">适用场景</th><th style="text-align:left">优势</th><th style="text-align:left">局限</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">集约化部署</td><td style="text-align:left">省级平台、地市级平台</td><td style="text-align:left">资源利用率高、运维成本低</td><td style="text-align:left">网络依赖强</td></tr>
+<tr><td style="text-align:left">分散式部署</td><td style="text-align:left">涉密场景、网络隔离场景</td><td style="text-align:left">数据不出域</td><td style="text-align:left">运维成本高、资源利用率低</td></tr>
+<tr><td style="text-align:left">混合部署</td><td style="text-align:left">大部分场景（推荐）</td><td style="text-align:left">兼顾效率与安全</td><td style="text-align:left">架构复杂度高</td></tr>
+</tbody>
+</table>
+
+<strong>推荐方案：集约化为主 + 租户隔离</strong>
+
+<ul>
+  <li>省级/地市级统一建设算力中心和AI中台</li>
+  <li>县级及以下单位通过API网关调用，不单独部署算力</li>
+  <li>通过租户标识和API网关限流实现多租户隔离</li>
+  <li>涉密场景采用独立部署</li>
+</ul>
+
+<h4>14.6.6 国产算力适配</h4>
+
+<span class="tag-core">昇腾910B</span>是政务AI的主流国产算力选择。其核心特点：
+
+<table>
+<thead>
+<tr><th style="text-align:left">指标</th><th style="text-align:left">昇腾910B</th><th style="text-align:left">NVIDIA A100</th><th style="text-align:left">对比</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">FP16算力</td><td style="text-align:left">320 TFLOPS</td><td style="text-align:left">312 TFLOPS</td><td style="text-align:left">相当</td></tr>
+<tr><td style="text-align:left">显存</td><td style="text-align:left">64GB HBM2e</td><td style="text-align:left">40/80GB HBM2e</td><td style="text-align:left">相当</td></tr>
+<tr><td style="text-align:left">生态</td><td style="text-align:left">CANN</td><td style="text-align:left">CUDA</td><td style="text-align:left">CUDA成熟度更高</td></tr>
+</tbody>
+</table>
+
+<strong>CANN生态深度兼容</strong>：
+
+<p>华为CANN（Compute Architecture for Neural Networks）生态已覆盖主流深度学习框架和推理引擎：</p>
+
+<ul>
+  <li>框架适配：PyTorch（通过torch_npu）、MindSpore、TensorFlow</li>
+  <li>推理引擎：AscendCL、ACL Graph</li>
+  <li>模型转换：ATC（Ascend Tensor Compiler）工具链</li>
+</ul>
+
+<p>部署时需要注意：模型需从PyTorch/ONNX转换为Ascend兼容格式，部分算子可能需要手动适配。</p>
+
+<blockquote><p><div class="callout callout-info">
+> <div class="callout-title">参考</div>
+> <p>昇腾910B硬件参数来源于华为官网公开数据（获取时间：2025-12）。CANN生态适配信息来源于华为昇腾开发者文档（获取时间：2025-12）。NL2SQL相关技术来源于LangChain官方文档和Text-to-SQL开源社区（获取时间：2025-11）。</p>
+> </div></p></blockquote>
+
+
+<h4>14.6.7 本章小结</h4>
+
+<p>政务AI技术选型的核心：知识库采用深度文档理解+章节语义切片+NL2SQL三层架构；多模型路由实现通义千问/DeepSeek/文心/讯飞的智能分发；围串标检测结合多维度特征、图计算和异常检测算法；部署以集约化为主、租户隔离；算力以昇腾910B为核心、CANN生态深度兼容。在下一章中，我们将探讨政务AI的落地实施要点。</p>
+
+</div>

@@ -1,0 +1,201 @@
+<div class="content">
+<h3 id="section357">17.2 技术选型决策树：三维框架下的理性选择</h3>
+
+<p>技术选型是AI系统建设中最容易"踩坑"的环节之一。市场上模型琳琅满目、架构方案五花八门、部署选项各有利弊。如果缺乏系统的决策框架，选型就会变成"拍脑袋"或者"跟风"——别人用GPT-4我也用，别人上Agent我也上，最终导致成本失控或效果不达预期。</p>
+
+<p>本节提供一套<span class="tag-core">"三维决策框架"</span>，从模型、架构、部署三个维度构建决策树，帮助你在纷繁复杂的技术选项中找到最优解。核心原则：<strong>提供决策框架而非固定答案</strong>，因为每个企业的情况不同，没有放之四海而皆准的标准答案。</p>
+
+<hr>
+
+<h4>第一维度：模型选型决策树</h4>
+
+<p>模型是AI系统的"引擎"，选错了引擎，再好的架构也无济于事。模型选型的核心考量因素包括：隐私要求、推理复杂度、成本约束和性能指标。</p>
+
+<strong>决策树逻辑</strong>：
+
+<pre><code>开始
+  │
+  ├─ 数据是否涉及敏感信息/商业机密？
+  │   ├─ 是 → 私有化模型（私有部署的开源模型或企业版私有服务）
+  │   └─ 否 → 继续判断
+  │
+  ├─ 是否需要复杂推理能力？（数学、逻辑、多步骤推理）
+  │   ├─ 是 → GPT-4o / Claude 3.5 Sonnet / 同类旗舰模型
+  │   └─ 否 → 继续判断
+  │
+  ├─ 成本是否敏感？（月Token消耗量&gt;100M）
+  │   ├─ 是 → DeepSeek-V3 / Qwen2.5-72B / 同类高性价比模型
+  │   └─ 否 → 继续判断
+  │
+  ├─ 是否需要多模态能力？（图像理解/语音交互）
+  │   ├─ 是 → GPT-4o / Claude 3.5 / Qwen2.5-VL
+  │   └─ 否 → 文本模型即可
+  │
+  └─ 默认推荐：根据性价比和效果平衡选择中等体量模型</code></pre>
+
+<strong>模型选型对比矩阵</strong>（2025年下半年市场格局）：
+
+<table>
+<thead>
+<tr><th style="text-align:left">模型</th><th style="text-align:left">优势场景</th><th style="text-align:left">劣势</th><th style="text-align:left">参考价格（每百万Token）</th><th style="text-align:left">适用企业</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">GPT-4o</td><td style="text-align:left">复杂推理、多模态、英文场景</td><td style="text-align:left">成本高、数据出境风险</td><td style="text-align:left">¥120-180</td><td style="text-align:left">数据无出境限制、预算充足</td></tr>
+<tr><td style="text-align:left">Claude 3.5 Sonnet</td><td style="text-align:left">长文本理解、代码生成</td><td style="text-align:left">中文支持稍弱、生态依赖少</td><td style="text-align:left">¥100-150</td><td style="text-align:left">技术文档处理、代码辅助</td></tr>
+<tr><td style="text-align:left">DeepSeek-V3</td><td style="text-align:left">中文场景、高性价比</td><td style="text-align:left">推理能力略逊旗舰</td><td style="text-align:left">¥8-15</td><td style="text-align:left">成本敏感型、中文为主</td></tr>
+<tr><td style="text-align:left">Qwen2.5-72B</td><td style="text-align:left">中文能力突出、开源可私有化</td><td style="text-align:left">需自建推理基础设施</td><td style="text-align:left">自建成本</td><td style="text-align:left">数据敏感、有技术团队</td></tr>
+<tr><td style="text-align:left">文心一言4.5</td><td style="text-align:left">中文生态、百度生态集成</td><td style="text-align:left">国际对比有差距</td><td style="text-align:left">¥30-50</td><td style="text-align:left">百度生态企业、政务场景</td></tr>
+</tbody>
+</table>
+
+<blockquote><p>[!IMPORTANT] 模型选型核心原则</p></blockquote>
+<blockquote><p>> <strong>没有最好的模型，只有最适合的模型。</strong> 选型时不要被Benchmark分数迷惑，要用自己的实际业务数据做PoC（概念验证）测试。一个在通用Benchmark上90分的模型，在你的业务场景上可能只有70分；一个Benchmark 75分的模型，在你的场景上可能达到85分。<strong>用自己的数据说话。</strong></p></blockquote>
+
+<h4>第二维度：架构选型决策树</h4>
+
+<p>架构选型的核心问题是：AI系统如何与业务流程集成？常见的架构模式有RAG（检索增强生成）、Agent（智能体）、Fine-tuning（微调）以及它们的组合。</p>
+
+<strong>架构决策树</strong>：
+
+<pre><code>开始
+  │
+  ├─ 是否需要利用企业内部知识？
+  │   ├─ 是 → RAG模式
+  │   │   ├─ 知识量&lt;10万条 → 一级RAG（简单向量检索+生成）
+  │   │   ├─ 知识量10-100万条 → 二级RAG（检索优化+重排序+生成）
+  │   │   └─ 知识量&gt;100万条 → 三级RAG（知识图谱+多级检索+混合搜索+生成）
+  │   └─ 否 → 继续判断
+  │
+  ├─ 是否需要自主执行多步骤任务？（如自动完成工单处理全流程）
+  │   ├─ 是 → Agent模式
+  │   │   ├─ 单步工具调用 → ReAct Agent
+  │   │   ├─ 多步骤规划执行 → Plan-and-Execute Agent
+  │   │   └─ 多智能体协作 → Multi-Agent + 编排引擎
+  │   └─ 否 → 继续判断
+  │
+  ├─ 是否有垂直领域的特殊语言风格/专业术语？
+  │   ├─ 是 → Fine-tuning微调
+  │   └─ 否 → 基础模型+Prompt工程即可
+  │
+  └─ 默认推荐：基础模型 + Prompt工程 + 少量Few-shot示例</code></pre>
+
+<strong>三种架构模式对比</strong>：
+
+<table>
+<thead>
+<tr><th style="text-align:left">架构模式</th><th style="text-align:left">适用场景</th><th style="text-align:left">实施难度</th><th style="text-align:left">周期</th><th style="text-align:left">维护成本</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>Prompt工程</strong></td><td style="text-align:left">通用问答、简单任务</td><td style="text-align:left">★☆☆☆☆</td><td style="text-align:left">1-2周</td><td style="text-align:left">低</td></tr>
+<tr><td style="text-align:left"><strong>RAG</strong></td><td style="text-align:left">知识问答、文档检索</td><td style="text-align:left">★★★☆☆</td><td style="text-align:left">4-8周</td><td style="text-align:left">中</td></tr>
+<tr><td style="text-align:left"><strong>Fine-tuning</strong></td><td style="text-align:left">风格迁移、专业术语</td><td style="text-align:left">★★★★☆</td><td style="text-align:left">4-12周</td><td style="text-align:left">高</td></tr>
+<tr><td style="text-align:left"><strong>Agent</strong></td><td style="text-align:left">自主任务执行</td><td style="text-align:left">★★★★★</td><td style="text-align:left">8-16周</td><td style="text-align:left">高</td></tr>
+</tbody>
+</table>
+
+<h4>第三维度：部署选型决策树</h4>
+
+<p>部署方案直接影响系统的安全性、成本和运维复杂度。</p>
+
+<strong>部署决策树</strong>：
+
+<pre><code>开始
+  │
+  ├─ 数据是否绝对不允许出域？
+  │   ├─ 是 → 私有化部署
+  │   │   ├─ 有GPU集群 → 自建推理服务（vLLM/TGI）
+  │   │   └─ 无GPU集群 → 采购国产AI算力（昇腾/海光）
+  │   └─ 否 → 继续判断
+  │
+  ├─ 是否需要兼顾安全和成本？
+  │   ├─ 是 → 混合部署
+  │   │   ├─ 敏感数据 → 私有化模型处理
+  │   │   └─ 非敏感任务 → 公有云API调用
+  │   └─ 否 → 继续判断
+  │
+  ├─ 是否需要低延迟/离线可用？
+  │   ├─ 是 → 边缘部署
+  │   │   └─ 端侧小模型（&lt;7B参数量化部署）
+  │   └─ 否 → SaaS/公有云API
+  │
+  └─ 默认推荐：SaaS API（快速验证期）→ 混合部署（规模推广期）</code></pre>
+
+<h4>国产芯片适配专题：昇腾910B与CANN生态</h4>
+
+<p>在中国市场，国产芯片适配是技术选型中不可忽视的一环。随着国际供应链的不确定性增加，越来越多的企业开始考虑<span class="tag-core">"国产替代"</span>方案。</p>
+
+<strong>昇腾910B现状</strong>（2025年）：
+<ul>
+  <li><strong>算力对标</strong>：理论FP16算力接近NVIDIA A100，但实际效率因算子覆盖率而异</li>
+  <li><strong>生态支持</strong>：CANN（Compute Architecture for Neural Networks）是核心软件栈</li>
+  <li><strong>主流框架适配</strong>：PyTorch通过torch_npu插件支持，MindSpore原生支持</li>
+  <li><strong>模型适配进度</strong>：</li>
+  <li>LLaMA系列：社区适配较成熟</li>
+  <li>Qwen系列：官方支持，适配度高</li>
+  <li>ChatGLM系列：官方支持，适配度高</li>
+  <li>Baichuan系列：社区适配中</li>
+</ul>
+
+<strong>适配注意事项</strong>：
+<ol>
+  <li>不是所有模型都能直接迁移，部分算子可能缺失，需要自行实现</li>
+  <li>CANN生态仍在快速迭代中，版本兼容性需要特别关注</li>
+  <li>建议预留20-30%的额外工作量用于模型迁移和调优</li>
+  <li>对于关键业务，建议"双栈"部署——同时支持NVIDIA和昇腾</li>
+</ol>
+
+<h4>成本测算：从Token到全生命周期</h4>
+
+<p>技术选型不仅是技术决策，也是经济决策。以下是AI系统的<span class="tag-core">全生命周期成本测算框架</span>：</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">成本项</th><th style="text-align:left">计算方式</th><th style="text-align:left">典型占比</th><th style="text-align:left">优化策略</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>Token费用</strong></td><td style="text-align:left">输入Token+输出Token×单价</td><td style="text-align:left">40-60%</td><td style="text-align:left">缓存/多模型路由/Prompt压缩</td></tr>
+<tr><td style="text-align:left"><strong>向量存储</strong></td><td style="text-align:left">向量维度×数量×存储单价</td><td style="text-align:left">5-10%</td><td style="text-align:left">量化降维/冷热分层</td></tr>
+<tr><td style="text-align:left"><strong>推理算力</strong></td><td style="text-align:left">GPU时租×使用时长</td><td style="text-align:left">20-30%</td><td style="text-align:left">量化/批处理/异步推理</td></tr>
+<tr><td style="text-align:left"><strong>数据存储</strong></td><td style="text-align:left">原始数据+索引存储</td><td style="text-align:left">5-10%</td><td style="text-align:left">归档策略/数据生命周期管理</td></tr>
+<tr><td style="text-align:left"><strong>运维人力</strong></td><td style="text-align:left">工程师投入×人力成本</td><td style="text-align:left">15-25%</td><td style="text-align:left">自动化/LLMOps工具链</td></tr>
+</tbody>
+</table>
+
+<strong>成本测算公式</strong>：
+
+<pre><code>月均成本 = (月均Token消耗 × 单价) 
+         + (向量存储量 × 存储单价)
+         + (GPU算力时长 × 算力单价)
+         + (数据存储量 × 存储单价)
+         + (运维人力 × 人力成本)</code></pre>
+
+<strong>实际案例</strong>：某智能客服系统，日均对话1万次，平均每次对话8轮，每轮输入500 Token、输出300 Token。
+
+<pre><code>日Token消耗 = 10,000 × 8 × (500 + 300) = 64,000,000 Token
+月Token消耗 = 64M × 30 = 1,920M Token</code></pre>
+
+<p>如果选用DeepSeek-V3（约¥10/M Token）：月Token费用 ≈ ¥19,200 如果选用GPT-4o（约¥150/M Token）：月Token费用 ≈ ¥288,000</p>
+
+<p>差距达15倍。这解释了为什么成本敏感型场景必须认真考虑高性价比模型。</p>
+
+<h4>决策框架总结：一张卡片带走</h4>
+
+<p>将上述三维决策浓缩为一张快速决策卡：</p>
+
+<pre><code>┌─────────────────────────────────────────────────┐
+│           AI技术选型快速决策卡                    │
+├─────────────────────────────────────────────────┤
+│ 模型选型：隐私→私有 | 推理→旗舰 | 成本→高性价比  │
+│ 架构选型：知识→RAG  | 自主→Agent | 风格→微调    │
+│ 部署选型：敏感→私有 | 兼顾→混合 | 低延迟→边缘    │
+│                                                  │
+│ ⚠️ 记住：用自己的数据做PoC测试，不要只看Benchmark│
+│ ⚠️ 记住：先SaaS验证，再私有化规模部署            │
+│ ⚠️ 记住：成本测算要算全生命周期，不只是Token费用  │
+└─────────────────────────────────────────────────┘</code></pre>
+
+<hr>
+
+<blockquote><p><strong>下节预告</strong>：技术选型完成后，如何确保AI系统的输出质量？下一节将构建一套完整的评估体系，从RAG质量到Agent能力，从自动化评估到人工回标，让你的AI系统有据可查、有据可依。</p></blockquote>
+
+</div>

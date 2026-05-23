@@ -1,0 +1,212 @@
+<div class="content">
+<h2 class="section-title page-break" id="part97">第九十七章 零售AI——技术选型与示例代码</h2>
+
+<h3 id="section347">15.6 零售AI——技术选型与示例代码</h3>
+
+<h4>15.6.1 多平台聚合架构</h4>
+
+<p>零售电商商家通常同时在多个平台经营：<span class="tag-core">淘宝/京东/拼多多/微信/抖音</span>。每个平台的API接口、消息格式、会话管理机制都不同。多平台聚合架构的目标是统一收口，让AI系统用一套逻辑处理所有渠道的请求。</p>
+
+<strong>架构设计</strong>：
+
+<pre><code>各平台消息 → 平台适配器层（统一格式转换）
+                    ↓
+              统一消息总线
+                    ↓
+              会话管理器（跨平台合并）
+                    ↓
+              AI处理引擎
+                    ↓
+              平台分发器（适配各平台回复格式）
+                    ↓
+              各平台回复</code></pre>
+
+<strong>平台适配器</strong>：
+
+<table>
+<thead>
+<tr><th style="text-align:left">平台</th><th style="text-align:left">API协议</th><th style="text-align:left">消息格式特点</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">淘宝</td><td style="text-align:left">开放平台API</td><td style="text-align:left">会话ID为cid，消息支持图文混合</td></tr>
+<tr><td style="text-align:left">京东</td><td style="text-align:left">京东API</td><td style="text-align:left">会话ID为sessionId，纯文本为主</td></tr>
+<tr><td style="text-align:left">拼多多</td><td style="text-align:left">拼多多API</td><td style="text-align:left">消息体加密，需要解密处理</td></tr>
+<tr><td style="text-align:left">微信</td><td style="text-align:left">微信公众号/小程序API</td><td style="text-align:left">XML格式，支持消息类型丰富</td></tr>
+<tr><td style="text-align:left">抖音</td><td style="text-align:left">抖音开放平台API</td><td style="text-align:left">JSON格式，支持短视频/直播场景</td></tr>
+</tbody>
+</table>
+
+<h4>15.6.2 会话管理</h4>
+
+<span class="tag-core">会话管理</span>是多平台客服的核心挑战。用户可能在淘宝咨询后，又在微信小程序继续咨询。AI系统需要将跨平台的同一用户会话合并，保持上下文连续性。
+
+<strong>跨平台会话合并逻辑</strong>：
+
+<pre><code class="language-python"># 跨平台会话合并伪代码
+class SessionManager:
+    """
+    跨平台会话管理：
+    1. 识别同一用户在不同平台的身份
+    2. 合并会话上下文
+    3. 智能路由到正确的处理引擎
+    """
+    
+    def resolve_user(self, platform, platform_user_id):
+        """跨平台用户身份识别"""
+        # 策略1：通过手机号/会员ID关联
+        user_info = get_user_info(platform, platform_user_id)
+        phone = user_info.get("phone")
+        member_id = user_info.get("member_id")
+        
+        if phone:
+            return self.lookup_by_phone(phone)
+        if member_id:
+            return self.lookup_by_member_id(member_id)
+        
+        # 策略2：通过设备指纹/行为特征模糊匹配
+        return self.fuzzy_match(platform, platform_user_id, user_info)
+    
+    def merge_context(self, unified_user_id, platform, message):
+        """合并多平台会话上下文"""
+        user_id = self.resolve_user(platform, message.user_id)
+        
+        # 获取最近N条对话历史（跨平台）
+        history = self.get_conversation_history(user_id, limit=10)
+        
+        # 追加当前消息
+        session = {
+            "unified_user_id": user_id,
+            "platform": platform,
+            "history": history,
+            "current_message": message
+        }
+        
+        return session</code></pre>
+
+<strong>会话上下文持久化</strong>：
+
+<ul>
+  <li>短期上下文：Redis存储，TTL=24小时（用于实时对话）</li>
+  <li>长期上下文：Elasticsearch存储，保留90天（用于用户画像和历史分析）</li>
+  <li>关键事件：MySQL存储，永久保留（订单/退换货/投诉等关键事件）</li>
+</ul>
+
+<h4>15.6.3 商品语义搜索逻辑</h4>
+
+<pre><code class="language-python"># 商品语义搜索逻辑
+from elasticsearch import Elasticsearch
+
+class ProductSemanticSearch:
+    """
+    商品语义搜索：多维度混合检索
+    支持品类过滤 + 价格过滤 + 属性向量检索
+    """
+    
+    def search(self, query, budget=None, skin_type=None, category=None):
+        """
+        多维度商品搜索
+        
+        示例:
+            query="适合油皮的平价洗面奶",
+            budget="平价",
+            skin_type="油性",
+            category="洗面奶"
+        """
+        # 1. 规则过滤（品类 + 价格）
+        filters = self.build_filters(budget, skin_type, category)
+        
+        # 2. 向量检索（语义匹配）
+        query_vector = self.embedding_model.encode(query)
+        vector_results = self.vector_db.search(
+            vector=query_vector,
+            top_k=100,
+            filters=filters
+        )
+        
+        # 3. 多因子排序
+        ranked = self.rank_products(
+            candidates=vector_results,
+            factors={
+                "vector_similarity": 0.4,
+                "sales_volume": 0.2,
+                "positive_rate": 0.2,
+                "inventory_status": 0.2
+            }
+        )
+        
+        # 4. 库存验证
+        final = self.filter_out_of_stock(ranked[:10])
+        
+        return final</code></pre>
+
+<h4>15.6.4 实时同步机制</h4>
+
+<p>价格和库存的实时同步是零售AI的基础设施。以下是一个基于消息队列的实时同步方案：</p>
+
+<pre><code class="language-python"># 实时同步机制伪代码
+import json
+from kafka import KafkaConsumer, KafkaProducer
+
+class RealTimeSync:
+    """
+    实时数据同步：价格变动秒级同步到AI系统
+    """
+    
+    def __init__(self):
+        self.consumer = KafkaConsumer(
+            'price_updates', 'inventory_updates',
+            bootstrap_servers=['kafka:9092'],
+            value_deserializer=lambda v: json.loads(v.decode('utf-8'))
+        )
+        self.producer = KafkaProducer(...)
+        self.redis = RedisCluster(...)
+    
+    def run_sync(self):
+        for message in self.consumer:
+            event = message.value
+            
+            if event['type'] == 'price_change':
+                self.update_price_cache(
+                    sku_id=event['sku_id'],
+                    price=event['new_price'],
+                    timestamp=event['timestamp']
+                )
+                # 通知AI服务缓存失效
+                self.invalidate_ai_cache(event['sku_id'])
+            
+            elif event['type'] == 'inventory_change':
+                self.update_inventory_cache(
+                    sku_id=event['sku_id'],
+                    stock=event['new_stock'],
+                    timestamp=event['timestamp']
+                )
+    
+    def invalidate_ai_cache(self, sku_id):
+        """通知AI服务刷新缓存"""
+        self.redis.publish('ai_cache_invalidate', json.dumps({
+            'sku_id': sku_id,
+            'timestamp': time.time()
+        }))</code></pre>
+
+<h4>15.6.5 技术栈选型</h4>
+
+<table>
+<thead>
+<tr><th style="text-align:left">组件</th><th style="text-align:left">推荐方案</th><th style="text-align:left">备选方案</th><th style="text-align:left">选型理由</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">大模型</td><td style="text-align:left">DeepSeek/通义千问</td><td style="text-align:left">文心一言/智谱</td><td style="text-align:left">中文理解能力强、API成本低</td></tr>
+<tr><td style="text-align:left">向量数据库</td><td style="text-align:left">Milvus</td><td style="text-align:left">FAISS/Weaviate</td><td style="text-align:left">分布式、高并发、支持过滤</td></tr>
+<tr><td style="text-align:left">缓存</td><td style="text-align:left">Redis Cluster</td><td style="text-align:left">Memcached</td><td style="text-align:left">集群模式、持久化、数据结构丰富</td></tr>
+<tr><td style="text-align:left">消息队列</td><td style="text-align:left">Kafka</td><td style="text-align:left">RabbitMQ</td><td style="text-align:left">高吞吐、低延迟、生态完善</td></tr>
+<tr><td style="text-align:left">搜索</td><td style="text-align:left">Elasticsearch</td><td style="text-align:left">OpenSearch</td><td style="text-align:left">混合检索、全文搜索、聚合分析</td></tr>
+<tr><td style="text-align:left">容器编排</td><td style="text-align:left">Kubernetes</td><td style="text-align:left">Docker Compose</td><td style="text-align:left">弹性伸缩、生产级</td></tr>
+<tr><td style="text-align:left">监控</td><td style="text-align:left">Prometheus + Grafana</td><td style="text-align:left">阿里云ARMS</td><td style="text-align:left">开源、可定制、生态成熟</td></tr>
+</tbody>
+</table>
+
+<h4>15.6.6 本章小结</h4>
+
+<p>零售AI技术栈的核心是多平台聚合架构（淘宝/京东/拼多多/微信/抖音统一API）、跨平台会话管理（身份关联+上下文持久化+智能路由）、商品语义搜索（多维度混合检索）、实时同步机制（价格/库存秒级同步到AI缓存）。技术选型以成熟开源方案为主，支撑百万级并发和高可用性。</p>
+
+</div>

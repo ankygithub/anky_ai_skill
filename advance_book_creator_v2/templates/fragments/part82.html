@@ -1,0 +1,128 @@
+<div class="content">
+<h2 class="section-title page-break" id="part82">第13.6章 工业AI——时序预测与知识库构建</h2>
+
+<h3 id="section318">13.6.1 工业时序预测模型体系</h3>
+
+<p>工业场景中的时序数据（传感器读数、设备运行参数、质量检测指标）蕴含丰富的设备状态信息。选择合适的预测模型是工业AI成功的关键之一。</p>
+
+<span class="tag-core">工业时序预测模型</span>按场景需求分为三个层级：
+
+<strong>LSTM/GRU（中等规模场景）</strong>：
+<ul>
+  <li>适用场景：单变量/少变量预测、中短期趋势预测</li>
+  <li>数据规模：数千至数万条时序记录</li>
+  <li>典型应用：电机温度趋势预测、轴承振动趋势预测</li>
+  <li>优势：计算量适中、训练快、效果稳定</li>
+  <li>劣势：长序列记忆有限、多变量交互建模能力弱</li>
+</ul>
+
+<strong>Transformer（多变量长序列场景）</strong>：
+<ul>
+  <li>适用场景：多变量联合预测、长序列依赖建模</li>
+  <li>数据规模：数十万至百万级时序记录</li>
+  <li>典型应用：多传感器融合的剩余寿命预测、全产线工艺参数优化</li>
+  <li>优势：全局注意力机制、多变量交互建模能力强</li>
+  <li>劣势：计算量大、需要充足数据、训练成本高</li>
+</ul>
+
+<strong>异常检测（Isolation Forest/AutoEncoder）</strong>：
+<ul>
+  <li>适用场景：未知故障模式检测、数据漂移监控</li>
+  <li>方法：无监督/半监督学习，仅需正常数据即可训练</li>
+  <li>典型应用：设备运行偏离正常基线时的早期预警</li>
+</ul>
+
+<h3 id="section319">13.6.2 混合模型——AI+机理双驱动</h3>
+
+<p>纯数据驱动模型在工业场景面临泛化能力不足的问题——训练数据覆盖的工况外的预测效果难以保证。<span class="tag-core">AI+机理双驱动</span>将物理机理模型与AI模型结合：</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">维度</th><th style="text-align:left">机理模型</th><th style="text-align:left">AI模型</th><th style="text-align:left">混合方案</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">知识来源</td><td style="text-align:left">物理定律/经验公式</td><td style="text-align:left">数据驱动学习</td><td style="text-align:left">机理约束+AI拟合残差</td></tr>
+<tr><td style="text-align:left">泛化能力</td><td style="text-align:left">强（物理定律不变）</td><td style="text-align:left">弱（依赖训练数据分布）</td><td style="text-align:left">强（机理兜底）</td></tr>
+<tr><td style="text-align:left">数据需求</td><td style="text-align:left">低</td><td style="text-align:left">高</td><td style="text-align:left">中等</td></tr>
+<tr><td style="text-align:left">计算效率</td><td style="text-align:left">高</td><td style="text-align:left">中/低</td><td style="text-align:left">中</td></tr>
+</tbody>
+</table>
+
+<strong>混合建模策略</strong>：
+<ul>
+  <li><strong>残差学习</strong>：机理模型预测基础趋势，AI模型预测残差（机理模型无法解释的部分）</li>
+  <li><strong>约束学习</strong>：在AI模型训练中加入物理约束（如能量守恒、质量平衡）</li>
+  <li><strong>并行决策</strong>：机理模型和AI模型并行输出，加权融合（权重根据工况动态调整）</li>
+</ul>
+
+<h3 id="section320">13.6.3 工业知识库构建</h3>
+
+<p>工业知识库是AI系统的知识底座，将设备手册、故障案例、工艺文档等非结构化数据转化为结构化知识。</p>
+
+<strong>多模态解析</strong>：
+<ul>
+  <li><strong>OCR</strong>：纸质手册/图纸/标签的文字提取</li>
+  <li><strong>ASR</strong>：维护人员的口述记录转文字</li>
+  <li><strong>NLP</strong>：技术文档的段落切分、实体识别、关系抽取</li>
+</ul>
+
+<strong>知识图谱构建</strong>：
+
+<p>设备知识图谱的实体关系模型：</p>
+<pre><code>[设备] --包含--&gt; [部件] --包含--&gt; [子部件]
+[设备] --关联--&gt; [故障模式] --导致--&gt; [症状]
+[故障模式] --解决--&gt; [维修方案] --需要--&gt; [备件]
+[维修方案] --参考--&gt; [SOP文档]
+[部件] --监测--&gt; [传感器] --产生--&gt; [时序数据]</code></pre>
+
+<strong>向量化存储</strong>：
+<ul>
+  <li>文档Chunk切分（按章节/段落，每段200-500字）</li>
+  <li>Embedding向量化（工业术语优化的embedding模型）</li>
+  <li>向量数据库存储（Milvus/Faiss），支持语义检索</li>
+</ul>
+
+<strong>分级管理</strong>：
+<table>
+<thead>
+<tr><th style="text-align:left">知识等级</th><th style="text-align:left">内容</th><th style="text-align:left">审核要求</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">L1-核心知识</td><td style="text-align:left">安全操作规程/紧急处置流程</td><td style="text-align:left">专家审核+管理层审批</td></tr>
+<tr><td style="text-align:left">L2-标准知识</td><td style="text-align:left">设备手册/SOP/工艺参数</td><td style="text-align:left">专家审核</td></tr>
+<tr><td style="text-align:left">L3-经验知识</td><td style="text-align:left">故障案例/维修记录/操作技巧</td><td style="text-align:left">自动入库+抽检</td></tr>
+<tr><td style="text-align:left">L4-参考资料</td><td style="text-align:left">技术文献/行业报告</td><td style="text-align:left">自动入库</td></tr>
+</tbody>
+</table>
+
+<h3 id="section321">13.6.4 模型选型对比</h3>
+
+<table>
+<thead>
+<tr><th style="text-align:left">场景</th><th style="text-align:left">推荐模型</th><th style="text-align:left">备选模型</th><th style="text-align:left">决策依据</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">单变量短期预测</td><td style="text-align:left">LSTM</td><td style="text-align:left">GRU</td><td style="text-align:left">LSTM效果更稳定</td></tr>
+<tr><td style="text-align:left">多变量长期预测</td><td style="text-align:left">Transformer</td><td style="text-align:left">Informer</td><td style="text-align:left">Transformer全局注意力更强</td></tr>
+<tr><td style="text-align:left">异常检测</td><td style="text-align:left">AutoEncoder</td><td style="text-align:left">Isolation Forest</td><td style="text-align:left">AE对非线性关系建模更好</td></tr>
+<tr><td style="text-align:left">剩余寿命预测</td><td style="text-align:left">LSTM+注意力</td><td style="text-align:left">Transformer</td><td style="text-align:left">数据量中等时LSTM性价比更高</td></tr>
+<tr><td style="text-align:left">工艺参数寻优</td><td style="text-align:left">AI+机理混合</td><td style="text-align:left">强化学习</td><td style="text-align:left">机理约束保证安全性</td></tr>
+</tbody>
+</table>
+
+<h3 id="section322">13.6.5 验收标准</h3>
+
+<table>
+<thead>
+<tr><th style="text-align:left">指标</th><th style="text-align:left">目标值</th><th style="text-align:left">测量方法</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">时序预测误差（MAPE）</td><td style="text-align:left"><10%（单变量）/<15%（多变量）</td><td style="text-align:left">与实测数据对比</td></tr>
+<tr><td style="text-align:left">异常检测召回率</td><td style="text-align:left">≥85%</td><td style="text-align:left">与已知异常事件对照</td></tr>
+<tr><td style="text-align:left">知识图谱覆盖率</td><td style="text-align:left">≥90%（核心设备/部件纳入）</td><td style="text-align:left">知识图谱统计</td></tr>
+<tr><td style="text-align:left">知识库检索命中率</td><td style="text-align:left">≥80%（Top-3返回有效结果）</td><td style="text-align:left">用户反馈统计</td></tr>
+<tr><td style="text-align:left">模型训练数据需求量</td><td style="text-align:left">相比纯数据驱动模型减少50%</td><td style="text-align:left">AI+机理 vs 纯AI对比</td></tr>
+</tbody>
+</table>
+
+</div>

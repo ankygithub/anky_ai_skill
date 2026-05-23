@@ -1,0 +1,149 @@
+<div class="content">
+<h2 class="section-title page-break" id="part70">第12.2章 医疗AI——影像辅助诊断系统</h2>
+
+<h3 id="section246">12.2.1 医学影像AI的业务价值</h3>
+
+<p>医学影像是医疗AI最成熟的应用领域之一。一张CT扫描通常包含数百至上千张切片，放射科医生需要在有限时间内逐张阅片，工作强度大且容易漏诊。<span class="tag-core">影像辅助诊断AI</span>通过深度学习模型实现自动病灶检测、分割和分级，将放射科医生的工作从"大海捞针"转变为"重点复核"，显著提升诊断效率和一致性。</p>
+
+<p>典型收益：</p>
+<ul>
+  <li>肺结节检出率提升至95%以上，微小结节（<5mm）检出率提升30%</li>
+  <li>单份CT阅片时间从15-20分钟缩短至5-8分钟</li>
+  <li>报告质控覆盖率从人工抽检30%提升至100%自动质控</li>
+</ul>
+
+<h3 id="section247">12.2.2 影像质控模块</h3>
+
+<p>影像质控是影像辅助诊断的前置环节，确保影像数据满足诊断要求：</p>
+
+<strong>DR/X线质控</strong>：
+<ul>
+  <li>体位标准性检测（如胸部正位片是否偏转）</li>
+  <li>曝光参数合理性检查（过曝/欠曝预警）</li>
+  <li>图像清晰度评估（模糊/伪影检测）</li>
+  <li>患者信息完整性校验（姓名/检查号/检查日期）</li>
+</ul>
+
+<strong>CT质控</strong>：
+<ul>
+  <li>扫描范围完整性检查（是否覆盖目标区域）</li>
+  <li>层厚/层间距合规性检查</li>
+  <li>造影剂注射时序评估（增强CT）</li>
+  <li>运动伪影/金属伪影检测</li>
+</ul>
+
+<strong>报告质控</strong>：
+<ul>
+  <li>报告完整性检查（必填字段是否遗漏）</li>
+  <li>诊断术语规范性检查（是否使用标准医学术语）</li>
+  <li>结论与描述一致性检查</li>
+  <li>危急值漏报预警</li>
+</ul>
+
+<blockquote><p>[!TIP] 数据自动接收分发</p></blockquote>
+<blockquote><p>影像质控系统需与PACS（影像归档和通信系统）无缝对接，实现DICOM影像自动接收→质控检测→合格影像分发至AI诊断模块→不合格影像退回重拍，全流程自动化。</p></blockquote>
+
+<h3 id="section248">12.2.3 多部位诊断系统</h3>
+
+<p>影像AI诊断按人体部位分为五大子系统：</p>
+
+<strong>数智胸</strong>：
+<ul>
+  <li><strong>乳腺</strong>：乳腺钼靶X线微钙化灶检测、BI-RADS分级辅助</li>
+  <li><strong>肺结节</strong>：结节检测/测量/良恶性评估/随访对比（体积倍增时间计算）</li>
+  <li><strong>肺炎</strong>：肺炎病灶分割/炎症范围量化/疗效评估</li>
+  <li><strong>骨密度</strong>：基于胸部CT的 opportunistic 骨密度筛查（无需额外扫描）</li>
+</ul>
+
+<strong>数智腹</strong>：
+<ul>
+  <li><strong>肝脏</strong>：肝脏分割/病灶检测（肝癌/血管瘤/囊肿）/LI-RADS分级</li>
+  <li><strong>前列腺</strong>：前列腺分割/PI-RADS分级辅助/病灶定位</li>
+</ul>
+
+<strong>数智血管</strong>：
+<ul>
+  <li><strong>胸痛三联</strong>：肺动脉栓塞/主动脉夹层/冠脉狭窄一站式筛查</li>
+  <li><strong>CT-FFR</strong>：基于CT影像的无创血流储备分数计算，替代部分有创FFR检查</li>
+  <li><strong>钙化积分</strong>：冠状动脉钙化积分自动计算，评估心血管疾病风险</li>
+</ul>
+
+<strong>数智肌骨</strong>：
+<ul>
+  <li><strong>脊柱</strong>：椎体分割/侧弯角度测量/椎间盘突出检测/骨折识别</li>
+  <li><strong>下肢力线</strong>：髋-膝-踝角（HKA）自动测量，用于关节置换术前规划</li>
+  <li><strong>骨龄</strong>：基于左手腕X线的骨龄自动评估（Greulich-Pyle/TW3法）</li>
+</ul>
+
+<strong>数智神经</strong>：
+<ul>
+  <li><strong>脑出血</strong>：出血灶检测/体积计算/中线移位测量</li>
+  <li><strong>脑缺血</strong>：缺血半暗带评估/核心梗死区分割/ASPECTS评分辅助</li>
+  <li><strong>卒中</strong>：大血管闭塞（LVO）筛查/侧支循环评估</li>
+</ul>
+
+<h3 id="section249">12.2.4 三维重建与结构化报告</h3>
+
+<strong>三维重建</strong>是影像AI的高级功能，将二维CT/MRI切片重建为三维可视化模型：
+<ul>
+  <li>器官三维重建（肝脏/心脏/肺部）</li>
+  <li>血管树三维重建（冠脉/脑动脉）</li>
+  <li>病灶三维可视化（体积测量/空间位置关系）</li>
+  <li>手术规划应用（切除范围模拟/入路规划）</li>
+</ul>
+
+<strong>结构化报告</strong>将传统的自由文本报告转化为结构化数据：
+
+<pre><code class="language-json">{
+  "report_type": "胸部CT",
+  "patient_id": "P20260523001",
+  "findings": [
+    {
+      "finding_type": "肺结节",
+      "location": "右肺上叶尖段",
+      "size_mm": {"long_axis": 8.2, "short_axis": 6.5},
+      "density": "磨玻璃",
+      "margin": "分叶",
+      "lung_rads": "4A",
+      "recommendation": "3个月后复查"
+    }
+  ],
+  "conclusion": "右肺上叶磨玻璃结节，建议随访。",
+  "radiologist": "张XX",
+  "ai_assistant": "影像AI v3.2"
+}</code></pre>
+
+<h3 id="section250">12.2.5 系统功能模块全景</h3>
+
+<table>
+<thead>
+<tr><th style="text-align:left">模块</th><th style="text-align:left">功能</th><th style="text-align:left">输出</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">影像接入</td><td style="text-align:left">DICOM接收/格式转换/序列识别</td><td style="text-align:left">标准化影像数据</td></tr>
+<tr><td style="text-align:left">质控检测</td><td style="text-align:left">体位/曝光/范围/完整性检查</td><td style="text-align:left">质控报告（合格/不合格）</td></tr>
+<tr><td style="text-align:left">病灶检测</td><td style="text-align:left">自动检测/定位/测量/分级</td><td style="text-align:left">病灶标注列表</td></tr>
+<tr><td style="text-align:left">三维重建</td><td style="text-align:left">器官/血管/病灶三维可视化</td><td style="text-align:left">三维模型（VTK/OBJ）</td></tr>
+<tr><td style="text-align:left">报告生成</td><td style="text-align:left">结构化报告草稿生成</td><td style="text-align:left">结构化JSON+文本报告</td></tr>
+<tr><td style="text-align:left">历史对比</td><td style="text-align:left">历次影像自动配准/变化检测</td><td style="text-align:left">病灶变化趋势图</td></tr>
+<tr><td style="text-align:left">质量控制</td><td style="text-align:left">报告规范性/一致性检查</td><td style="text-align:left">质控评分</td></tr>
+<tr><td style="text-align:left">医生反馈</td><td style="text-align:left">确认/修改AI结果/反馈标注</td><td style="text-align:left">标注数据集（用于模型迭代）</td></tr>
+</tbody>
+</table>
+
+<h3 id="section251">12.2.6 验收标准</h3>
+
+<table>
+<thead>
+<tr><th style="text-align:left">指标</th><th style="text-align:left">目标值</th><th style="text-align:left">测量方法</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">病灶检出率</td><td style="text-align:left">肺结节≥95%，脑出血≥98%</td><td style="text-align:left">与病理/专家诊断对照</td></tr>
+<tr><td style="text-align:left">假阳性率</td><td style="text-align:left">每例<3个假阳性标注</td><td style="text-align:left">放射科医生复核</td></tr>
+<tr><td style="text-align:left">阅片时间缩短</td><td style="text-align:left">单例阅片时间缩短40-60%</td><td style="text-align:left">上线前后对比</td></tr>
+<tr><td style="text-align:left">报告质控覆盖率</td><td style="text-align:left">100%</td><td style="text-align:left">系统日志统计</td></tr>
+<tr><td style="text-align:left">三维重建时间</td><td style="text-align:left"><3分钟/例（含肝脏/血管）</td><td style="text-align:left">性能测试</td></tr>
+</tbody>
+</table>
+
+</div>

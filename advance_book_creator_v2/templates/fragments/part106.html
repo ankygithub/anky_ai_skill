@@ -1,0 +1,204 @@
+<div class="content">
+<h2 class="section-title page-break" id="part106">第106章 从需求到落地的方法论</h2>
+
+<blockquote><p><strong>本章导读</strong>：AI项目失败的首要原因不是技术不成熟，而是需求界定不清、选型盲目、缺乏评估体系。本章提供一套可操作的方法论框架，帮助产品经理和架构师从"模糊的想法"走向"可执行的方案"。</p></blockquote>
+
+<hr>
+
+<h3 id="section356">17.1 需求拆解方法论：五步法将模糊需求转化为可执行PRD</h3>
+
+<p>在AI应用系统建设中，需求拆解的质量直接决定了项目的成败。传统软件的需求相对确定——输入A，经过B，输出C，路径是明确的。但AI系统引入了<span class="tag-core">概率性输出</span>，需求的不确定性呈指数级增长。如果照搬传统软件的需求拆解方式，项目极大概率会偏离轨道。</p>
+
+<p>本节提出一套经过实战检验的<span class="tag-core">"五步需求拆解法"</span>，并附带可直接复用的模板和案例。</p>
+
+<h4>第一步：场景识别——判断这个需求是否值得用AI做</h4>
+
+<p>并非所有需求都适合AI。很多项目一开始就走偏，是因为在错误的场景上投入了过多资源。判断一个场景是否适合AI，用三个维度快速筛选：</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">维度</th><th style="text-align:left">判断标准</th><th style="text-align:left">说明</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>高频</strong></td><td style="text-align:left">每天/每周发生≥10次</td><td style="text-align:left">低频场景（如每年一次的年检报告）AI投入产出比极低</td></tr>
+<tr><td style="text-align:left"><strong>重复</strong></td><td style="text-align:left">操作流程高度相似</td><td style="text-align:left">如果每次操作差异巨大，AI泛化成本高</td></tr>
+<tr><td style="text-align:left"><strong>规则明确</strong></td><td style="text-align:left">有清晰的判断标准或历史先例</td><td style="text-align:left">完全没有标准的"创意类"需求，AI输出不可控</td></tr>
+</tbody>
+</table>
+
+<strong>快速决策公式</strong>：三个维度中满足2个以上，说明值得投入AI；只满足1个，需要谨慎评估；都不满足，果断放弃。
+
+<blockquote><p>[!IMPORTANT] 案例：合同审查场景筛选</p></blockquote>
+<blockquote><p>> 某大型企业法务部门提出需求："帮我审查合同"。这是一个模糊需求，拆解后发现：</p></blockquote>
+<blockquote><p>- 高频：每天处理合同80-120份 ✅</p></blockquote>
+<blockquote><p>- 重复：主要是劳动合同、采购合同、销售合同三类 ✅</p></blockquote>
+<blockquote><p>- 规则明确：有标准合同模板和审查清单 ✅</p></blockquote>
+<blockquote><p>- <strong>结论</strong>：三个维度全中，是AI的绝佳场景。</p></blockquote>
+
+<h4>第二步：边界评估——AI能做什么，不能做什么</h4>
+
+<p>识别出合适的场景后，必须明确AI的边界。这一步最容易犯的错误是"期望过高"——认为AI什么都行。</p>
+
+<strong>四维评估矩阵</strong>：
+
+<table>
+<thead>
+<tr><th style="text-align:left">评估维度</th><th style="text-align:left">关键问题</th><th style="text-align:left">红线指标</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>数据可用性</strong></td><td style="text-align:left">是否有足够的高质量历史数据？</td><td style="text-align:left">无数据或数据严重脏乱 → 项目风险极高</td></tr>
+<tr><td style="text-align:left"><strong>容错率</strong></td><td style="text-align:left">AI出错的可接受程度？</td><td style="text-align:left">医疗诊断/金融风控等零容错场景 → AI只能辅助，不能替代</td></tr>
+<tr><td style="text-align:left"><strong>ROI预期</strong></td><td style="text-align:left">投入产出比是否合理？</td><td style="text-align:left">预计ROI<1.5 → 不建议投入</td></tr>
+<tr><td style="text-align:left"><strong>合规风险</strong></td><td style="text-align:left">是否涉及敏感数据或监管要求？</td><td style="text-align:left">涉及个人信息/国家秘密 → 必须私有化部署</td></tr>
+</tbody>
+</table>
+
+<blockquote><p>[!TIP] 产品经理自检清单</p></blockquote>
+<blockquote><p>- 这个场景AI做不到100%准确时，业务能接受吗？</p></blockquote>
+<blockquote><p>- 如果AI出错了，有没有人工兜底机制？</p></blockquote>
+<blockquote><p>- 业务方是否理解AI的局限性，而不是抱有"万能"期待？</p></blockquote>
+
+<h4>第三步：功能需求拆解——从用户故事到功能清单</h4>
+
+<p>采用"用户故事+功能拆解"的方式，将大场景拆成可迭代的小功能。</p>
+
+<strong>用户故事模板</strong>：
+
+<pre><code>作为 [角色]，
+我希望 [执行某个AI辅助的动作]，
+以便 [实现某个业务目标]。
+
+验收标准：
+- 输入：明确的数据格式和范围
+- 动作：AI需要完成的具体任务
+- 输出：期望的结果格式
+- 约束：响应时间、准确率等
+- 异常：AI无法判断时的处理流程</code></pre>
+
+<h4>第四步：技术需求拆解——从功能到技术栈</h4>
+
+<p>功能需求确定后，架构师需要从四个维度进行技术拆解：</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">技术维度</th><th style="text-align:left">拆解内容</th><th style="text-align:left">关键决策点</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>模型层</strong></td><td style="text-align:left">选择哪个模型？微调还是零样本？</td><td style="text-align:left">精度vs成本、推理延迟、上下文长度</td></tr>
+<tr><td style="text-align:left"><strong>数据层</strong></td><td style="text-align:left">知识库构建、向量存储、数据管道</td><td style="text-align:left">数据清洗策略、更新频率、存储选型</td></tr>
+<tr><td style="text-align:left"><strong>性能层</strong></td><td style="text-align:left">并发量、响应时间、吞吐量</td><td style="text-align:left">QPS预估、缓存策略、异步处理</td></tr>
+<tr><td style="text-align:left"><strong>安全层</strong></td><td style="text-align:left">数据脱敏、权限控制、审计日志</td><td style="text-align:left">数据出境、Prompt注入防护、输出审核</td></tr>
+</tbody>
+</table>
+
+<h4>第五步：输出PRD——AI产品的最小需求模板</h4>
+
+<p>传统PRD模板不适用于AI产品，因为缺少对"概率性输出"的处理。以下是AI产品的<span class="tag-core">最小需求模板</span>：</p>
+
+<pre><code class="language-markdown"># AI功能需求卡片
+
+## 基础信息
+- 功能名称：
+- 业务场景：
+- 优先级：P0/P1/P2
+- 预期上线日期：
+
+## 输入定义
+- 输入来源：用户输入/系统接口/文件上传
+- 输入格式：文本/图片/结构化数据
+- 输入约束：最大长度、必填字段、格式校验
+
+## 动作定义
+- AI任务类型：问答/生成/分类/抽取/推理
+- 模型策略：基础模型/微调模型/组合模型
+- Prompt策略：系统提示词+用户提示词
+
+## 输出定义
+- 输出格式：结构化JSON/自然语言/混合
+- 输出约束：最大长度、敏感词过滤
+- 质量要求：准确率≥X%、响应时间≤Y秒
+
+## 异常处理
+- 模型超时：超时阈值+降级策略
+- 低置信度：阈值设定+人工审核流程
+- 敏感内容：过滤规则+告警机制
+
+## 评价指标
+- 核心指标：准确率/召回率/F1值
+- 体验指标：响应时间/用户满意度
+- 业务指标：人工节省工时/错误率降低</code></pre>
+
+<h4>实战案例一：合同审查AI系统需求拆解</h4>
+
+<strong>场景识别</strong>：某集团公司法务部门每天处理约100份合同，人工审查平均每份耗时45分钟。主要问题：审查标准不统一、新人培训成本高、紧急合同积压。
+
+<strong>五步拆解</strong>：
+
+<ol>
+  <li><strong>场景识别</strong>：高频(100份/天) ✅、重复(三类合同为主) ✅、规则明确(有审查清单) ✅</li>
+  <li><strong>边界评估</strong>：</li>
+</ol>
+<ul>
+  <li>数据可用性：历史合同2万份+审查意见库 ✅</li>
+  <li>容错率：AI不能直接决定"通过/不通过"，但可以标注风险点 ⚠️</li>
+  <li>ROI：预计节省60%人工时间，ROI≈5.2 ✅</li>
+  <li>合规：合同涉及商业秘密，必须私有化部署 ✅</li>
+</ul>
+<ol>
+  <li><strong>功能拆解</strong>：</li>
+</ol>
+<ul>
+  <li>用户故事：作为法务专员，我希望上传合同后自动获得风险标注，以便快速定位问题条款</li>
+  <li>功能清单：合同上传→条款解析→风险比对→报告生成→人工复核</li>
+</ul>
+<ol>
+  <li><strong>技术拆解</strong>：</li>
+</ol>
+<ul>
+  <li>模型：选用支持长上下文的模型（≥128K token）</li>
+  <li>数据：构建标准合同条款知识库+风险规则库</li>
+  <li>性能：单份合同处理≤30秒</li>
+  <li>安全：合同数据不出域、审查结果水印溯源</li>
+</ul>
+<ol>
+  <li><strong>输出PRD</strong>：按照最小需求模板输出</li>
+</ol>
+
+<h4>实战案例二：智能问数系统需求拆解</h4>
+
+<strong>场景识别</strong>：某零售企业高管希望"用自然语言查数据"。当前BI工具使用率低，高管看不懂仪表盘。
+
+<strong>五步拆解</strong>：
+
+<ol>
+  <li><strong>场景识别</strong>：高频(每天) ✅、重复(核心指标查询) ✅、规则部分明确(指标口径有定义) ⚠️</li>
+  <li><strong>边界评估</strong>：</li>
+</ol>
+<ul>
+  <li>数据可用性：指标字典完整，但部分指标口径不一致 ⚠️</li>
+  <li>容错率：数据错误可能导致决策失误，需要结果可验证 ⚠️</li>
+  <li>ROI：提升高管决策效率，但难以量化</li>
+  <li>合规：经营数据内部可见，需权限控制 ✅</li>
+</ul>
+<ol>
+  <li><strong>关键约束</strong>：智能问数系统的核心难点不是模型能力，而是<span class="tag-core">指标口径的一致性</span>。必须先做数据治理，再做AI接入。</li>
+</ol>
+
+<blockquote><p>[!WARNING] 常见误区</p></blockquote>
+<blockquote><p>> 很多企业在做智能问数系统时，跳过数据治理直接上AI。结果AI回答的"销售额"和财务报表不一致，导致高管对系统失去信任。正确的顺序是：数据治理→指标标准化→AI接入→持续优化。</p></blockquote>
+
+<h4>小结：需求拆解的核心原则</h4>
+
+<ol>
+  <li><strong>先判断值不值得做，再思考怎么做</strong>——不是所有场景都值得AI化</li>
+  <li><strong>明确AI的边界</strong>——AI是概率性工具，不是确定性引擎</li>
+  <li><strong>异常处理比正常流程更重要</strong>——AI出错时怎么办，比AI正常工作时更重要</li>
+  <li><strong>评价指标必须量化</strong>——无法衡量的改进就是没有改进</li>
+  <li><strong>迭代优于完美</strong>——先用最小可用版本验证，再持续优化</li>
+</ol>
+
+<hr>
+
+<blockquote><p><strong>下节预告</strong>：需求拆解完成后，面临的核心挑战是技术选型——模型怎么选？架构怎么搭？部署方案怎么定？下一节将提供一套三维决策框架，帮助你在复杂的技术迷宫中找到最优路径。</p></blockquote>
+
+</div>

@@ -1,0 +1,427 @@
+<div class="content">
+<h2 class="section-title page-break" id="part35">第三十五章 AI编程助手——示例代码与最佳实践</h2>
+
+<h3 id="section176">6.8 核心场景示例代码与最佳实践</h3>
+
+<p>本节通过具体的示例代码和可操作的实践指南，帮助产品经理和架构师理解AI编程助手核心功能的技术实现细节。</p>
+
+<h4>6.8.1 上下文收集策略伪代码</h4>
+
+<p>以下是上下文收集策略的核心伪代码实现：</p>
+
+<pre><code class="language-python">class ContextCollector:
+    """代码上下文收集器"""
+
+    def collect_context(self, cursor_position: CursorPos, max_tokens: int) -&gt; Context:
+        """
+        根据光标位置和token预算，收集最相关的代码上下文
+        """
+        context = Context()
+
+        # 第一步：获取当前文件内容（占用60%预算）
+        current_file = self.get_current_file(cursor_position)
+        current_file_tokens = self.count_tokens(current_file)
+        budget_for_current = int(max_tokens * 0.6)
+
+        if current_file_tokens &gt; budget_for_current:
+            # 如果当前文件过长，截取光标周围的代码窗口
+            current_file = self.extract_window_around_cursor(
+                current_file, cursor_position, budget_for_current
+            )
+        context.add(current_file, priority=1)
+
+        # 第二步：获取调用链相关文件（占用20%预算）
+        budget_for_callers = int(max_tokens * 0.2)
+        call_graph = self.build_call_graph(cursor_position)
+        related_files = self.select_related_files(
+            call_graph, budget_for_callers, strategy="call_chain"
+        )
+        for file in related_files:
+            context.add(file, priority=2)
+
+        # 第三步：获取类型定义（占用10%预算）
+        budget_for_types = int(max_tokens * 0.1)
+        type_symbols = self.extract_type_symbols(cursor_position)
+        type_files = self.resolve_type_definitions(type_symbols, budget_for_types)
+        for file in type_files:
+            context.add(file, priority=3)
+
+        # 第四步：获取其他相关代码（占用剩余10%预算）
+        remaining_budget = max_tokens - context.total_tokens()
+        if remaining_budget &gt; 0:
+            semantic_files = self.semantic_search(
+                cursor_position, remaining_budget
+            )
+            for file in semantic_files:
+                context.add(file, priority=4)
+
+        return context
+
+    def build_call_graph(self, cursor: CursorPos) -&gt; CallGraph:
+        """构建当前函数的调用图"""
+        func = self.ast.get_function_at(cursor)
+        if not func:
+            return CallGraph()
+
+        graph = CallGraph(root=func)
+
+        # 向上追溯：查找调用者
+        callers = self.symbol_index.find_callers(func.name)
+        for caller in callers[:3]:  # 限制最多3个调用者
+            graph.add_caller(caller)
+
+        # 向下追溯：查找被调用函数
+        callees = self.ast.get_function_calls(func)
+        for callee in callees[:5]:  # 限制最多5个被调用函数
+            graph.add_callee(callee)
+
+        return graph
+
+    def semantic_search(self, cursor: CursorPos, budget: int) -&gt; List[CodeFile]:
+        """基于向量相似度搜索相关代码"""
+        current_code = self.get_current_file(cursor)
+        query_embedding = self.embedding_model.encode(current_code)
+
+        # 从向量索引中检索相似代码
+        results = self.vector_db.search(
+            query=query_embedding,
+            top_k=10,
+            filter={"language": self.detect_language(cursor)}
+        )
+
+        # 按相关性排序并截取到预算范围内
+        selected = []
+        total_tokens = 0
+        for result in results:
+            tokens = self.count_tokens(result.code)
+            if total_tokens + tokens &lt;= budget:
+                selected.append(result)
+                total_tokens += tokens
+            else:
+                break
+
+        return selected</code></pre>
+
+<h4>6.8.2 多Agent协作流程实现</h4>
+
+<p>以下是多Agent协作的核心流程实现：</p>
+
+<pre><code class="language-python">class MultiAgentOrchestrator:
+    """多Agent编排器"""
+
+    def execute_task(self, user_request: str) -&gt; TaskResult:
+        """执行用户请求的完整流程"""
+        # 步骤1: Plan Agent进行任务规划
+        plan = self.plan_agent.plan(user_request)
+        if not self.validate_plan(plan):
+            return TaskResult.error("任务规划失败")
+
+        # 步骤2: Architect Agent进行架构设计
+        architecture = self.architect_agent.design(plan, self.codebase_context)
+        if not self.validate_architecture(architecture):
+            return TaskResult.error("架构设计未通过验证")
+
+        # 步骤3: Coder Agent逐个实现子任务
+        all_changes = []
+        for task in plan.tasks:
+            change = self.coder_agent.implement(
+                task=task,
+                architecture=architecture,
+                codebase_context=self.codebase_context
+            )
+            all_changes.append(change)
+
+        # 步骤4: Reviewer Agent审查所有变更
+        review_results = []
+        for change in all_changes:
+            review = self.reviewer_agent.review(change)
+            review_results.append(review)
+
+            # 如果审查未通过，让Coder Agent修正
+            if not review.passed:
+                max_retries = 3
+                for attempt in range(max_retries):
+                    fixed_change = self.coder_agent.fix(
+                        change=change,
+                        feedback=review.feedback
+                    )
+                    review = self.reviewer_agent.review(fixed_change)
+                    if review.passed:
+                        all_changes.remove(change)
+                        all_changes.append(fixed_change)
+                        break
+                else:
+                    # 超过最大重试次数，标记为需要人工审查
+                    review.requires_human = True
+
+        # 步骤5: 汇总结果
+        return TaskResult(
+            plan=plan,
+            architecture=architecture,
+            changes=all_changes,
+            reviews=review_results,
+            needs_human_review=any(r.requires_human for r in review_results)
+        )
+
+
+class PlanAgent:
+    """任务规划Agent"""
+
+    def plan(self, user_request: str) -&gt; TaskPlan:
+        """将用户需求拆解为可执行的子任务"""
+        prompt = self.build_plan_prompt(user_request)
+        response = self.llm.generate(prompt)
+        return self.parse_plan(response)
+
+    def build_plan_prompt(self, request: str) -&gt; str:
+        return f"""
+你是一个软件工程任务规划专家。请分析以下需求，将其拆解为可独立实现的子任务。
+
+需求描述：
+{request}
+
+请输出以下格式：
+1. 任务标题
+2. 任务描述
+3. 输入/输出定义
+4. 依赖关系
+5. 验收标准
+"""
+
+
+class CoderAgent:
+    """代码实现Agent"""
+
+    def implement(self, task: Task, architecture: Architecture,
+                  codebase_context: CodebaseContext) -&gt; CodeChange:
+        """实现单个子任务"""
+        prompt = self.build_coder_prompt(task, architecture, codebase_context)
+        response = self.llm.generate(prompt)
+        return self.parse_code_change(response)
+
+    def fix(self, change: CodeChange, feedback: str) -&gt; CodeChange:
+        """根据审查意见修复代码"""
+        prompt = self.build_fix_prompt(change, feedback)
+        response = self.llm.generate(prompt)
+        return self.parse_code_change(response)</code></pre>
+
+<h4>6.8.3 SPEC模式五步流程实现</h4>
+
+<p>以下是SPEC模式（Doc→Tasks→Changes→Preview→Summary）的完整实现：</p>
+
+<pre><code class="language-python">class SPECWorkflow:
+    """SPEC模式工作流"""
+
+    def execute(self, user_request: str) -&gt; SPECResult:
+        """执行SPEC模式的完整流程"""
+
+        # Step 1: Doc - 生成需求规格文档
+        doc = self.generate_spec_doc(user_request)
+        if not self.confirm_with_user(doc):
+            return SPECResult.cancelled("用户取消")
+
+        # Step 2: Tasks - 拆解为任务列表
+        tasks = self.breakdown_tasks(doc)
+        if not self.confirm_with_user(tasks):
+            return SPECResult.cancelled("用户取消任务拆分")
+
+        # Step 3: Changes - 生成代码变更
+        changes = []
+        for task in tasks:
+            change = self.generate_change(task)
+            changes.append(change)
+
+        # Step 4: Preview - 生成变更预览报告
+        preview = self.generate_preview(changes)
+        if not self.confirm_with_user(preview):
+            return SPECResult.cancelled("用户取消变更")
+
+        # Step 5: Summary - 生成变更摘要
+        summary = self.generate_summary(changes)
+
+        return SPECResult(
+            doc=doc,
+            tasks=tasks,
+            changes=changes,
+            preview=preview,
+            summary=summary
+        )
+
+    def generate_spec_doc(self, request: str) -&gt; SpecDoc:
+        """生成需求规格文档"""
+        prompt = f"""
+根据以下用户需求，生成结构化的需求规格文档。
+
+用户需求：{request}
+
+输出格式：
+## 功能描述
+## 输入定义
+## 输出定义
+## 边界条件
+## 约束条件
+## 非功能性要求
+"""
+        return self.parse_spec_doc(self.llm.generate(prompt))
+
+    def generate_preview(self, changes: List[CodeChange]) -&gt; PreviewReport:
+        """生成变更预览报告"""
+        return PreviewReport(
+            diff_summary=self.compute_diff_summary(changes),
+            affected_files=self.list_affected_files(changes),
+            coverage_change=self.compute_coverage_change(changes),
+            risk_assessment=self.assess_risks(changes),
+            test_results=self.run_tests(changes)
+        )</code></pre>
+
+<strong>SPEC模式五步流程说明</strong>
+
+<table>
+<thead>
+<tr><th style="text-align:left">步骤</th><th style="text-align:left">名称</th><th style="text-align:left">核心产出</th><th style="text-align:left">用户交互</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">1</td><td style="text-align:left">Doc</td><td style="text-align:left">需求规格文档</td><td style="text-align:left">用户确认需求理解是否正确</td></tr>
+<tr><td style="text-align:left">2</td><td style="text-align:left">Tasks</td><td style="text-align:left">任务拆解列表</td><td style="text-align:left">用户确认任务拆分是否合理</td></tr>
+<tr><td style="text-align:left">3</td><td style="text-align:left">Changes</td><td style="text-align:left">代码变更集合</td><td style="text-align:left">自动执行，无需确认</td></tr>
+<tr><td style="text-align:left">4</td><td style="text-align:left">Preview</td><td style="text-align:left">变更预览报告</td><td style="text-align:left">用户确认变更是否可以合入</td></tr>
+<tr><td style="text-align:left">5</td><td style="text-align:left">Summary</td><td style="text-align:left">变更摘要</td><td style="text-align:left">自动生成PR描述</td></tr>
+</tbody>
+</table>
+
+<blockquote><p>💡 <strong>实践洞察：</strong> SPEC模式的关键价值在于"每一步都有用户确认点"。这确保了AI的编码方向始终与用户的意图一致，即使AI生成的代码需要修改，整个过程也是可追溯、可审计的。</p></blockquote>
+
+<h4>6.8.4 代码安全扫描规则配置</h4>
+
+<p>以下是代码安全扫描规则的配置示例：</p>
+
+<pre><code class="language-yaml"># security-scan-rules.yaml
+# AI编程助手代码安全扫描规则配置
+
+sast_rules:
+  - id: SQL_INJECTION
+    name: SQL注入检测
+    severity: CRITICAL
+    language: [java, python, go]
+    pattern: |
+      # Java
+      query\s*\(\s*["'][^"']*["']\s*\+
+      # Python
+      (execute|query)\s*\(\s*f["']
+      # Go
+      Query\s*\(\s*fmt\.Sprintf
+    action: BLOCK
+    message: "检测到潜在的SQL注入风险，请使用参数化查询"
+
+  - id: XSS_VULNERABILITY
+    name: XSS跨站脚本检测
+    severity: HIGH
+    language: [java, typescript, python]
+    pattern: |
+      # 未转义的用户输入直接输出
+      (innerHTML|document\.write|Response\.write)\s*\(.*\+
+    action: BLOCK
+    message: "检测到潜在的XSS风险，请对用户输入进行转义"
+
+  - id: HARDCODED_SECRET
+    name: 硬编码密钥检测
+    severity: CRITICAL
+    language: all
+    pattern: |
+      (password|secret|api_key|token|access_key)\s*=\s*["'][^"']{8,}["']
+    action: BLOCK
+    message: "禁止在代码中硬编码敏感信息，请使用配置中心或密钥管理服务"
+
+  - id: WEAK_CRYPTO
+    name: 弱加密算法检测
+    severity: HIGH
+    language: all
+    pattern: |
+      (MD5|SHA1|DES|RC4|ECB)\b
+    action: WARN
+    message: "检测到使用弱加密算法，建议使用AES-256-GCM或SHA-256"
+
+sca_rules:
+  - id: KNOWN_VULNERABILITY
+    name: 已知漏洞依赖检测
+    severity: CRITICAL
+    database: [NVD, GitHub_Advisory, OSV]
+    cvss_threshold: 7.0
+    action: BLOCK
+    message: "检测到存在已知高危漏洞的依赖，请升级到安全版本"
+
+  - id: LICENSE_VIOLATION
+    name: 许可证违规检测
+    severity: MEDIUM
+    allowed_licenses: [MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC]
+    restricted_licenses: [GPL-3.0, AGPL-3.0]
+    action: WARN
+    message: "检测到受限许可证的依赖，请确认是否符合企业许可证政策"
+
+secret_scanning_rules:
+  - id: AWS_KEY
+    name: AWS密钥检测
+    pattern: AKIA[0-9A-Z]{16}
+    action: BLOCK
+
+  - id: GITHUB_TOKEN
+    name: GitHub Token检测
+    pattern: ghp_[0-9a-zA-Z]{36}
+    action: BLOCK
+
+  - id: GENERIC_SECRET
+    name: 通用密钥检测（高熵字符串）
+    min_entropy: 4.5
+    context_keywords: [secret, key, token, password, credential]
+    action: BLOCK</code></pre>
+
+<h4>6.8.5 最佳实践清单</h4>
+
+<p>以下是AI编程助手在企业中落地的最佳实践：</p>
+
+<strong>1. 渐进式推广策略</strong>
+
+<ul>
+  <li>第1周：选择2-3个技术骨干进行小范围试用</li>
+  <li>第2-4周：收集反馈，调整配置和提示词模板</li>
+  <li>第5-8周：扩展到10-20人的核心团队</li>
+  <li>第9-12周：全团队推广，覆盖80%以上的开发者</li>
+</ul>
+
+<strong>2. 效能度量体系</strong>
+
+<ul>
+  <li>每日采集AI采纳率、生成代码占比等核心指标</li>
+  <li>每周发布效能报告，透明化展示AI工具的效果</li>
+  <li>每月回顾指标趋势，调整推广策略</li>
+</ul>
+
+<strong>3. 安全审查流程</strong>
+
+<ul>
+  <li>AI生成代码必须经过SAST/SCA/Secret扫描</li>
+  <li>所有AI生成代码的PR必须有至少一位人工Reviewer</li>
+  <li>定期（每月）对AI生成代码进行安全抽检</li>
+</ul>
+
+<strong>4. 知识管理</strong>
+
+<ul>
+  <li>建立AI提示词最佳实践库</li>
+  <li>收集典型使用场景的成功案例</li>
+  <li>定期组织内部分享和经验交流</li>
+</ul>
+
+<strong>5. 持续优化</strong>
+
+<ul>
+  <li>定期更新代码库索引</li>
+  <li>根据团队反馈调整提示词模板</li>
+  <li>关注AI编程助手的版本更新和新功能</li>
+</ul>
+
+<h4>6.8.6 本章小结</h4>
+
+<p>本章通过具体的示例代码展示了上下文收集策略、多Agent协作流程和SPEC模式五步流程的技术实现。代码安全扫描规则配置提供了SAST/SCA/Secret扫描的可操作模板。最佳实践清单涵盖了渐进式推广策略、效能度量体系、安全审查流程、知识管理和持续优化五个方面。这些示例和实践可以直接指导企业在AI编程助手落地过程中的技术实施。</p>
+
+</div>

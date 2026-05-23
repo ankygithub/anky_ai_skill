@@ -1,0 +1,479 @@
+<div class="content">
+<div class="toc">
+<h2>目录</h2>
+<ul>
+  <li><a href="#part1"><span class="toc-title-text">第一章 AI应用全景地图</span></a></li>
+  <li class="toc-sub"><a href="#section1"><span class="toc-title-text">1.1 AI技术形态分类</span></a></li>
+  <li class="toc-sub"><a href="#section2"><span class="toc-title-text">1.2 AI应用场景分类</span></a></li>
+  <li class="toc-sub"><a href="#section3"><span class="toc-title-text">1.3 AI部署模式分类</span></a></li>
+  <li class="toc-sub"><a href="#section4"><span class="toc-title-text">1.4 2026年中国AI核心产业数据</span></a></li>
+  <li class="toc-sub"><a href="#section5"><span class="toc-title-text">1.5 本章小结</span></a></li>
+  <li><a href="#part2"><span class="toc-title-text">第二章 2026年技术演进趋势</span></a></li>
+  <li class="toc-sub"><a href="#section6"><span class="toc-title-text">2.1 趋势总览：五大方向定义2026</span></a></li>
+  <li class="toc-sub"><a href="#section7"><span class="toc-title-text">2.2 Agent主流化：从"对话工具"到"自主工作者"</span></a></li>
+  <li class="toc-sub"><a href="#section8"><span class="toc-title-text">2.3 主动服务：从"等你问"到"我先做"</span></a></li>
+  <li class="toc-sub"><a href="#section9"><span class="toc-title-text">2.4 场景化小模型：极致性价比的新选择</span></a></li>
+  <li class="toc-sub"><a href="#section10"><span class="toc-title-text">2.5 边缘推理爆发：AI走出云端</span></a></li>
+  <li class="toc-sub"><a href="#section11"><span class="toc-title-text">2.6 ROI导向：从"技术秀"到"算经济账"</span></a></li>
+  <li class="toc-sub"><a href="#section12"><span class="toc-title-text">2.7 其他重要趋势</span></a></li>
+  <li class="toc-sub"><a href="#section13"><span class="toc-title-text">2.8 本章小结</span></a></li>
+  <li><a href="#part3"><span class="toc-title-text">第三章 AI系统分层架构</span></a></li>
+  <li class="toc-sub"><a href="#section14"><span class="toc-title-text">3.1 为什么需要分层架构？</span></a></li>
+  <li class="toc-sub"><a href="#section15"><span class="toc-title-text">3.2 九层AI系统架构模型</span></a></li>
+  <li class="toc-sub"><a href="#section16"><span class="toc-title-text">3.3 逐层职责详解</span></a></li>
+  <li class="toc-sub"><a href="#section17"><span class="toc-title-text">3.4 层间数据流与交互关系</span></a></li>
+  <li class="toc-sub"><a href="#section18"><span class="toc-title-text">3.5 架构演进路径</span></a></li>
+  <li class="toc-sub"><a href="#section19"><span class="toc-title-text">3.6 本章小结</span></a></li>
+  <li><a href="#part4"><span class="toc-title-text">第四章 核心组件详解</span></a></li>
+  <li class="toc-sub"><a href="#section20"><span class="toc-title-text">4.1 接入层组件</span></a></li>
+  <li class="toc-sub"><a href="#section21"><span class="toc-title-text">4.2 编排层组件</span></a></li>
+  <li class="toc-sub"><a href="#section22"><span class="toc-title-text">4.3 模型层组件</span></a></li>
+  <li class="toc-sub"><a href="#section23"><span class="toc-title-text">4.4 数据层组件</span></a></li>
+  <li class="toc-sub"><a href="#section24"><span class="toc-title-text">4.5 运维层组件</span></a></li>
+  <li class="toc-sub"><a href="#section25"><span class="toc-title-text">4.6 本章小结</span></a></li>
+  <li><a href="#part5"><span class="toc-title-text">第五章 AI系统 vs 传统系统</span></a></li>
+  <li class="toc-sub"><a href="#section26"><span class="toc-title-text">5.1 根本差异：确定性 vs 概率性</span></a></li>
+  <li class="toc-sub"><a href="#section27"><span class="toc-title-text">5.2 七维度全面对比</span></a></li>
+  <li class="toc-sub"><a href="#section28"><span class="toc-title-text">5.3 逐维度深入分析</span></a></li>
+  <li class="toc-sub"><a href="#section29"><span class="toc-title-text">5.4 架构思维转变</span></a></li>
+  <li class="toc-sub"><a href="#section30"><span class="toc-title-text">5.5 本章小结</span></a></li>
+  <li><a href="#part6"><span class="toc-title-text">第六章 通用技术底座</span></a></li>
+  <li class="toc-sub"><a href="#section31"><span class="toc-title-text">6.1 八项基础设施概述</span></a></li>
+  <li class="toc-sub"><a href="#section32"><span class="toc-title-text">6.2 模型网关：AI的流量调度中枢</span></a></li>
+  <li class="toc-sub"><a href="#section33"><span class="toc-title-text">6.3 RAG知识引擎：AI的知识中枢</span></a></li>
+  <li class="toc-sub"><a href="#section34"><span class="toc-title-text">6.4 智能体编排：AI的工作流引擎</span></a></li>
+  <li class="toc-sub"><a href="#section35"><span class="toc-title-text">6.5 沙箱执行：AI的安全笼子</span></a></li>
+  <li class="toc-sub"><a href="#section36"><span class="toc-title-text">6.6 权限身份：AI的门卫和会计</span></a></li>
+  <li class="toc-sub"><a href="#section37"><span class="toc-title-text">6.7 可观测性：AI的仪表盘和黑匣子</span></a></li>
+  <li class="toc-sub"><a href="#section38"><span class="toc-title-text">6.8 评测系统：AI的考试中心</span></a></li>
+  <li class="toc-sub"><a href="#section39"><span class="toc-title-text">6.9 成本控制：AI的财务系统</span></a></li>
+  <li class="toc-sub"><a href="#section40"><span class="toc-title-text">6.10 八项基础设施的关系图</span></a></li>
+  <li class="toc-sub"><a href="#section41"><span class="toc-title-text">6.11 本章小结</span></a></li>
+  <li><a href="#part7"><span class="toc-title-text">第七章 通用AI系统实战导引</span></a></li>
+  <li class="toc-sub"><a href="#section42"><span class="toc-title-text">3.1 通用AI系统实战导引</span></a></li>
+  <li class="toc-sub"><a href="#section43"><span class="toc-title-text">3.2 本书实战篇章的结构设计</span></a></li>
+  <li class="toc-sub"><a href="#section44"><span class="toc-title-text">3.3 双角色阅读建议</span></a></li>
+  <li class="toc-sub"><a href="#section45"><span class="toc-title-text">3.4 实战案例选择原则</span></a></li>
+  <li><a href="#part8"><span class="toc-title-text">第八章 智能客服——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section46"><span class="toc-title-text">4.1 智能客服市场格局</span></a></li>
+  <li class="toc-sub"><a href="#section47"><span class="toc-title-text">4.2 智能客服的角色演进</span></a></li>
+  <li class="toc-sub"><a href="#section48"><span class="toc-title-text">4.3 智能客服的典型场景</span></a></li>
+  <li class="toc-sub"><a href="#section49"><span class="toc-title-text">4.4 本章小结</span></a></li>
+  <li><a href="#part9"><span class="toc-title-text">第九章 智能客服——前台功能设计</span></a></li>
+  <li class="toc-sub"><a href="#section50"><span class="toc-title-text">4.2.1 前台功能全景图</span></a></li>
+  <li class="toc-sub"><a href="#section51"><span class="toc-title-text">4.2.2 多渠道接入设计</span></a></li>
+  <li class="toc-sub"><a href="#section52"><span class="toc-title-text">4.2.3 用户身份识别</span></a></li>
+  <li class="toc-sub"><a href="#section53"><span class="toc-title-text">4.2.4 自然语言对话与多轮追问</span></a></li>
+  <li class="toc-sub"><a href="#section54"><span class="toc-title-text">4.2.5 答案展示模块</span></a></li>
+  <li class="toc-sub"><a href="#section55"><span class="toc-title-text">4.2.6 业务办理与转人工</span></a></li>
+  <li class="toc-sub"><a href="#section56"><span class="toc-title-text">4.2.7 服务评价</span></a></li>
+  <li class="toc-sub"><a href="#section57"><span class="toc-title-text">4.2.8 前台设计检查清单</span></a></li>
+  <li class="toc-sub"><a href="#section58"><span class="toc-title-text">4.2.9 本章小结</span></a></li>
+  <li><a href="#part10"><span class="toc-title-text">第undefined章 智能客服——后台功能设计</span></a></li>
+  <li class="toc-sub"><a href="#section59"><span class="toc-title-text">4.3.1 后台功能全景图</span></a></li>
+  <li class="toc-sub"><a href="#section60"><span class="toc-title-text">4.3.2 知识库管理</span></a></li>
+  <li class="toc-sub"><a href="#section61"><span class="toc-title-text">4.3.3 意图管理</span></a></li>
+  <li class="toc-sub"><a href="#section62"><span class="toc-title-text">4.3.4 会话管理</span></a></li>
+  <li class="toc-sub"><a href="#section63"><span class="toc-title-text">4.3.5 工单管理</span></a></li>
+  <li class="toc-sub"><a href="#section64"><span class="toc-title-text">4.3.6 质检中心</span></a></li>
+  <li class="toc-sub"><a href="#section65"><span class="toc-title-text">4.3.7 数据看板</span></a></li>
+  <li class="toc-sub"><a href="#section66"><span class="toc-title-text">4.3.8 训练与优化</span></a></li>
+  <li class="toc-sub"><a href="#section67"><span class="toc-title-text">4.3.9 权限管理</span></a></li>
+  <li class="toc-sub"><a href="#section68"><span class="toc-title-text">4.3.10 本章小结</span></a></li>
+  <li><a href="#part11"><span class="toc-title-text">第十一章 智能客服——核心业务流程与规则</span></a></li>
+  <li class="toc-sub"><a href="#section69"><span class="toc-title-text">4.4.1 核心业务流程全景</span></a></li>
+  <li class="toc-sub"><a href="#section70"><span class="toc-title-text">4.4.2 流程节点详解</span></a></li>
+  <li class="toc-sub"><a href="#section71"><span class="toc-title-text">4.4.3 关键规则设计</span></a></li>
+  <li class="toc-sub"><a href="#section72"><span class="toc-title-text">4.4.4 流程状态机</span></a></li>
+  <li class="toc-sub"><a href="#section73"><span class="toc-title-text">4.4.5 本章小结</span></a></li>
+  <li><a href="#part12"><span class="toc-title-text">第十二章 智能客服——系统整体架构</span></a></li>
+  <li class="toc-sub"><a href="#section74"><span class="toc-title-text">4.5.1 多平台聚合架构概述</span></a></li>
+  <li class="toc-sub"><a href="#section75"><span class="toc-title-text">4.5.2 系统整体架构图</span></a></li>
+  <li class="toc-sub"><a href="#section76"><span class="toc-title-text">4.5.3 会话管理三大特性详解</span></a></li>
+  <li class="toc-sub"><a href="#section77"><span class="toc-title-text">4.5.4 系统分层职责</span></a></li>
+  <li class="toc-sub"><a href="#section78"><span class="toc-title-text">4.5.5 架构设计关键决策</span></a></li>
+  <li class="toc-sub"><a href="#section79"><span class="toc-title-text">4.5.6 本章小结</span></a></li>
+  <li><a href="#part13"><span class="toc-title-text">第十三章 智能客服——核心AI能力模块</span></a></li>
+  <li class="toc-sub"><a href="#section80"><span class="toc-title-text">4.6.1 AI能力模块全景图</span></a></li>
+  <li class="toc-sub"><a href="#section81"><span class="toc-title-text">4.6.2 意图识别</span></a></li>
+  <li class="toc-sub"><a href="#section82"><span class="toc-title-text">4.6.3 实体抽取</span></a></li>
+  <li class="toc-sub"><a href="#section83"><span class="toc-title-text">4.6.4 RAG问答引擎</span></a></li>
+  <li class="toc-sub"><a href="#section84"><span class="toc-title-text">4.6.5 多轮对话管理</span></a></li>
+  <li class="toc-sub"><a href="#section85"><span class="toc-title-text">4.6.6 情绪识别</span></a></li>
+  <li class="toc-sub"><a href="#section86"><span class="toc-title-text">4.6.7 对话摘要</span></a></li>
+  <li class="toc-sub"><a href="#section87"><span class="toc-title-text">4.6.8 工单分类</span></a></li>
+  <li class="toc-sub"><a href="#section88"><span class="toc-title-text">4.6.9 质检分析</span></a></li>
+  <li class="toc-sub"><a href="#section89"><span class="toc-title-text">4.6.10 本章小结</span></a></li>
+  <li><a href="#part14"><span class="toc-title-text">第十四章 智能客服——业务系统对接与高并发</span></a></li>
+  <li class="toc-sub"><a href="#section90"><span class="toc-title-text">4.7.1 业务系统对接清单</span></a></li>
+  <li class="toc-sub"><a href="#section91"><span class="toc-title-text">4.7.2 高并发架构设计</span></a></li>
+  <li class="toc-sub"><a href="#section92"><span class="toc-title-text">4.7.3 流量洪峰应对方案</span></a></li>
+  <li class="toc-sub"><a href="#section93"><span class="toc-title-text">4.7.4 缓存策略设计</span></a></li>
+  <li class="toc-sub"><a href="#section94"><span class="toc-title-text">4.7.5 本章小结</span></a></li>
+  <li><a href="#part15"><span class="toc-title-text">第十五章 智能客服——关键规则设计与异常处理</span></a></li>
+  <li class="toc-sub"><a href="#section95"><span class="toc-title-text">4.8.1 转人工触发条件完整清单</span></a></li>
+  <li class="toc-sub"><a href="#section96"><span class="toc-title-text">4.8.2 业务操作确认机制</span></a></li>
+  <li class="toc-sub"><a href="#section97"><span class="toc-title-text">4.8.3 会话状态管理JSON结构</span></a></li>
+  <li class="toc-sub"><a href="#section98"><span class="toc-title-text">4.8.4 结构化摘要模板</span></a></li>
+  <li class="toc-sub"><a href="#section99"><span class="toc-title-text">4.8.5 异常处理机制</span></a></li>
+  <li class="toc-sub"><a href="#section100"><span class="toc-title-text">4.8.6 本章小结</span></a></li>
+  <li><a href="#part16"><span class="toc-title-text">第十六章 智能客服——技术选型与示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section101"><span class="toc-title-text">4.9.1 技术栈全景</span></a></li>
+  <li class="toc-sub"><a href="#section102"><span class="toc-title-text">4.9.2 模型选型建议</span></a></li>
+  <li class="toc-sub"><a href="#section103"><span class="toc-title-text">4.9.3 意图识别接口伪代码</span></a></li>
+  <li class="toc-sub"><a href="#section104"><span class="toc-title-text">4.9.4 高并发架构详解</span></a></li>
+  <li class="toc-sub"><a href="#section105"><span class="toc-title-text">4.9.5 本章小结</span></a></li>
+  <li><a href="#part17"><span class="toc-title-text">第十七章 智能客服——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section106"><span class="toc-title-text">4.10.1 实施阶段规划</span></a></li>
+  <li class="toc-sub"><a href="#section107"><span class="toc-title-text">4.10.2 关键风险点</span></a></li>
+  <li class="toc-sub"><a href="#section108"><span class="toc-title-text">4.10.3 验收标准</span></a></li>
+  <li class="toc-sub"><a href="#section109"><span class="toc-title-text">4.10.4 成功要素总结</span></a></li>
+  <li class="toc-sub"><a href="#section110"><span class="toc-title-text">4.10.5 本章小结</span></a></li>
+  <li><a href="#part18"><span class="toc-title-text">第十八章 企业知识库——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section111"><span class="toc-title-text">5.1 数据洪流与知识管理困境</span></a></li>
+  <li class="toc-sub"><a href="#section112"><span class="toc-title-text">5.2 企业知识管理三大痛点</span></a></li>
+  <li class="toc-sub"><a href="#section113"><span class="toc-title-text">5.3 企业知识库的典型应用场景</span></a></li>
+  <li class="toc-sub"><a href="#section114"><span class="toc-title-text">5.4 本章小结</span></a></li>
+  <li><a href="#part19"><span class="toc-title-text">第十九章 企业知识库——前台功能设计</span></a></li>
+  <li class="toc-sub"><a href="#section115"><span class="toc-title-text">5.2.1 前台功能全景图</span></a></li>
+  <li class="toc-sub"><a href="#section116"><span class="toc-title-text">5.2.2 自然语言问答</span></a></li>
+  <li class="toc-sub"><a href="#section117"><span class="toc-title-text">5.2.3 语义搜索与文档搜索</span></a></li>
+  <li class="toc-sub"><a href="#section118"><span class="toc-title-text">5.2.4 答案来源引用</span></a></li>
+  <li class="toc-sub"><a href="#section119"><span class="toc-title-text">5.2.5 权限过滤</span></a></li>
+  <li class="toc-sub"><a href="#section120"><span class="toc-title-text">5.2.6 收藏与分享</span></a></li>
+  <li class="toc-sub"><a href="#section121"><span class="toc-title-text">5.2.7 反馈纠错与推荐问题</span></a></li>
+  <li class="toc-sub"><a href="#section122"><span class="toc-title-text">5.2.8 前台设计检查清单</span></a></li>
+  <li class="toc-sub"><a href="#section123"><span class="toc-title-text">5.2.9 本章小结</span></a></li>
+  <li><a href="#part20"><span class="toc-title-text">第二十章 企业知识库——后台功能设计</span></a></li>
+  <li class="toc-sub"><a href="#section124"><span class="toc-title-text">5.3.1 后台功能全景图</span></a></li>
+  <li class="toc-sub"><a href="#section125"><span class="toc-title-text">5.3.2 数据源管理</span></a></li>
+  <li class="toc-sub"><a href="#section126"><span class="toc-title-text">5.3.3 文档解析与知识分类</span></a></li>
+  <li class="toc-sub"><a href="#section127"><span class="toc-title-text">5.3.4 文档版本管理</span></a></li>
+  <li class="toc-sub"><a href="#section128"><span class="toc-title-text">5.3.5 权限管理</span></a></li>
+  <li class="toc-sub"><a href="#section129"><span class="toc-title-text">5.3.6 问题分析与答案审核</span></a></li>
+  <li class="toc-sub"><a href="#section130"><span class="toc-title-text">5.3.7 反馈处理与质量评估</span></a></li>
+  <li class="toc-sub"><a href="#section131"><span class="toc-title-text">5.3.8 后台设计检查清单</span></a></li>
+  <li class="toc-sub"><a href="#section132"><span class="toc-title-text">5.3.9 本章小结</span></a></li>
+  <li><a href="#part21"><span class="toc-title-text">第二十一章 企业知识库——知识健康度与运营</span></a></li>
+  <li class="toc-sub"><a href="#section133"><span class="toc-title-text">5.4.1 知识健康度概念</span></a></li>
+  <li class="toc-sub"><a href="#section134"><span class="toc-title-text">5.4.2 五大健康度指标详解</span></a></li>
+  <li class="toc-sub"><a href="#section135"><span class="toc-title-text">5.4.3 知识运营闭环</span></a></li>
+  <li class="toc-sub"><a href="#section136"><span class="toc-title-text">5.4.4 知识运营报告</span></a></li>
+  <li class="toc-sub"><a href="#section137"><span class="toc-title-text">5.4.5 本章小结</span></a></li>
+  <li><a href="#part22"><span class="toc-title-text">第二十二章 企业知识库——RAG完整技术管道</span></a></li>
+  <li class="toc-sub"><a href="#section138"><span class="toc-title-text">5.5.1 RAG管道全景</span></a></li>
+  <li class="toc-sub"><a href="#section139"><span class="toc-title-text">5.5.2 步骤1-5：知识入库管道</span></a></li>
+  <li class="toc-sub"><a href="#section140"><span class="toc-title-text">5.5.3 步骤6-10：查询响应管道</span></a></li>
+  <li class="toc-sub"><a href="#section141"><span class="toc-title-text">5.5.4 管道性能优化</span></a></li>
+  <li class="toc-sub"><a href="#section142"><span class="toc-title-text">5.5.5 本章小结</span></a></li>
+  <li><a href="#part23"><span class="toc-title-text">第二十三章 企业知识库——多路召回与重排</span></a></li>
+  <li class="toc-sub"><a href="#section143"><span class="toc-title-text">5.6.1 为什么需要多路召回</span></a></li>
+  <li class="toc-sub"><a href="#section144"><span class="toc-title-text">5.6.2 五种召回策略详解</span></a></li>
+  <li class="toc-sub"><a href="#section145"><span class="toc-title-text">5.6.3 重排技术</span></a></li>
+  <li class="toc-sub"><a href="#section146"><span class="toc-title-text">5.6.4 多路召回架构示例</span></a></li>
+  <li class="toc-sub"><a href="#section147"><span class="toc-title-text">5.6.5 本章小结</span></a></li>
+  <li><a href="#part24"><span class="toc-title-text">第二十四章 企业知识库——查询改写与向量数据库</span></a></li>
+  <li class="toc-sub"><a href="#section148"><span class="toc-title-text">5.7.1 查询改写的必要性</span></a></li>
+  <li class="toc-sub"><a href="#section149"><span class="toc-title-text">5.7.2 查询改写三大策略</span></a></li>
+  <li class="toc-sub"><a href="#section150"><span class="toc-title-text">5.7.3 向量数据库选型</span></a></li>
+  <li class="toc-sub"><a href="#section151"><span class="toc-title-text">5.7.4 查询改写与向量检索的协同</span></a></li>
+  <li class="toc-sub"><a href="#section152"><span class="toc-title-text">5.7.5 本章小结</span></a></li>
+  <li><a href="#part25"><span class="toc-title-text">第二十五章 企业知识库——文档处理与权限控制</span></a></li>
+  <li class="toc-sub"><a href="#section153"><span class="toc-title-text">5.8.1 8种核心文档类型及处理难点</span></a></li>
+  <li class="toc-sub"><a href="#section154"><span class="toc-title-text">5.8.2 权限控制核心原则</span></a></li>
+  <li class="toc-sub"><a href="#section155"><span class="toc-title-text">5.8.3 ACL元数据设计</span></a></li>
+  <li class="toc-sub"><a href="#section156"><span class="toc-title-text">5.8.4 答案溯源机制</span></a></li>
+  <li class="toc-sub"><a href="#section157"><span class="toc-title-text">5.8.5 本章小结</span></a></li>
+  <li><a href="#part26"><span class="toc-title-text">第二十六章 企业知识库——技术选型与示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section158"><span class="toc-title-text">5.9.1 Embedding模型选型</span></a></li>
+  <li class="toc-sub"><a href="#section159"><span class="toc-title-text">5.9.2 大语言模型选型</span></a></li>
+  <li class="toc-sub"><a href="#section160"><span class="toc-title-text">5.9.3 生产级评估指标</span></a></li>
+  <li class="toc-sub"><a href="#section161"><span class="toc-title-text">5.9.4 示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section162"><span class="toc-title-text">5.9.5 本章小结</span></a></li>
+  <li><a href="#part27"><span class="toc-title-text">第二十七章 企业知识库——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section163"><span class="toc-title-text">5.10.1 实施三阶段规划</span></a></li>
+  <li class="toc-sub"><a href="#section164"><span class="toc-title-text">5.10.2 核心风险点与应对策略</span></a></li>
+  <li class="toc-sub"><a href="#section165"><span class="toc-title-text">5.10.3 验收标准</span></a></li>
+  <li class="toc-sub"><a href="#section166"><span class="toc-title-text">5.10.4 团队建设建议</span></a></li>
+  <li class="toc-sub"><a href="#section167"><span class="toc-title-text">5.10.5 成本估算</span></a></li>
+  <li class="toc-sub"><a href="#section168"><span class="toc-title-text">5.10.6 本章小结</span></a></li>
+  <li><a href="#part28"><span class="toc-title-text">第二十八章 AI编程助手——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section169"><span class="toc-title-text">6.1 从"代码补全"到"全栈Coding Agent"的演进</span></a></li>
+  <li><a href="#part29"><span class="toc-title-text">第二十九章 AI编程助手——功能演进与需求清单</span></a></li>
+  <li class="toc-sub"><a href="#section170"><span class="toc-title-text">6.2 功能演进路线与需求清单</span></a></li>
+  <li><a href="#part30"><span class="toc-title-text">第三十章 AI编程助手——企业落地要求与风险</span></a></li>
+  <li class="toc-sub"><a href="#section171"><span class="toc-title-text">6.3 企业硬性要求与关键风险</span></a></li>
+  <li><a href="#part31"><span class="toc-title-text">第三十一章 AI编程助手——系统整体架构</span></a></li>
+  <li class="toc-sub"><a href="#section172"><span class="toc-title-text">6.4 系统架构设计</span></a></li>
+  <li><a href="#part32"><span class="toc-title-text">第三十二章 AI编程助手——上下文收集与多Agent协作</span></a></li>
+  <li class="toc-sub"><a href="#section173"><span class="toc-title-text">6.5 上下文收集策略与多Agent协作机制</span></a></li>
+  <li><a href="#part33"><span class="toc-title-text">第三十三章 AI编程助手——沙箱安全与代码安全扫描</span></a></li>
+  <li class="toc-sub"><a href="#section174"><span class="toc-title-text">6.6 沙箱安全机制与代码安全扫描</span></a></li>
+  <li><a href="#part34"><span class="toc-title-text">第三十四章 AI编程助手——技术选型与ROI评估</span></a></li>
+  <li class="toc-sub"><a href="#section175"><span class="toc-title-text">6.7 技术选型与ROI评估</span></a></li>
+  <li><a href="#part35"><span class="toc-title-text">第三十五章 AI编程助手——示例代码与最佳实践</span></a></li>
+  <li class="toc-sub"><a href="#section176"><span class="toc-title-text">6.8 核心场景示例代码与最佳实践</span></a></li>
+  <li><a href="#part36"><span class="toc-title-text">第三十六章 AI编程助手——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section177"><span class="toc-title-text">6.9 实施阶段规划与验收标准</span></a></li>
+  <li><a href="#part37"><span class="toc-title-text">第三十七章 智能问数——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section178"><span class="toc-title-text">7.1 从"Text-to-SQL"到"指标语义层"的认知升级</span></a></li>
+  <li><a href="#part38"><span class="toc-title-text">第三十八章 智能问数——功能需求与交互设计</span></a></li>
+  <li class="toc-sub"><a href="#section179"><span class="toc-title-text">7.2 功能需求清单与交互设计原则</span></a></li>
+  <li><a href="#part39"><span class="toc-title-text">第三十九章 智能问数——核心误区与数据权限</span></a></li>
+  <li class="toc-sub"><a href="#section180"><span class="toc-title-text">7.3 核心认知误区警示与数据权限体系</span></a></li>
+  <li><a href="#part40"><span class="toc-title-text">第四十章 智能问数——系统整体架构</span></a></li>
+  <li class="toc-sub"><a href="#section181"><span class="toc-title-text">7.4 工程架构设计</span></a></li>
+  <li><a href="#part41"><span class="toc-title-text">第四十一章 智能问数——指标语义层与Text-to-SQL安全</span></a></li>
+  <li class="toc-sub"><a href="#section182"><span class="toc-title-text">7.5 指标语义层建设与Text-to-SQL安全机制</span></a></li>
+  <li><a href="#part42"><span class="toc-title-text">第四十二章 智能问数——归因分析与示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section183"><span class="toc-title-text">7.6 归因分析流程与示例代码</span></a></li>
+  <li><a href="#part43"><span class="toc-title-text">第四十三章 智能问数——评估体系与运营要点</span></a></li>
+  <li class="toc-sub"><a href="#section184"><span class="toc-title-text">7.7 关键评估指标与运营策略</span></a></li>
+  <li><a href="#part44"><span class="toc-title-text">第四十四章 智能问数——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section185"><span class="toc-title-text">7.8 实施阶段规划与验收标准</span></a></li>
+  <li><a href="#part45"><span class="toc-title-text">第四十五章 文档与合同智能处理——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section186"><span class="toc-title-text">8.1 核心原则与典型场景</span></a></li>
+  <li><a href="#part46"><span class="toc-title-text">第四十六章 文档与合同智能处理——功能需求与处理流程</span></a></li>
+  <li class="toc-sub"><a href="#section187"><span class="toc-title-text">8.2 功能需求体系与合同处理流程</span></a></li>
+  <li><a href="#part47"><span class="toc-title-text">第四十七章 文档与合同智能处理——证据链与人工复核</span></a></li>
+  <li class="toc-sub"><a href="#section188"><span class="toc-title-text">8.3 证据链要求与人工复核机制</span></a></li>
+  <li><a href="#part48"><span class="toc-title-text">第四十八章 文档与合同智能处理——多模型流水线架构</span></a></li>
+  <li class="toc-sub"><a href="#section189"><span class="toc-title-text">8.4 多模型流水线设计与实现</span></a></li>
+  <li><a href="#part49"><span class="toc-title-text">第四十九章 文档与合同智能处理——结构化输出与示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section190"><span class="toc-title-text">8.5 结构化输出规范与示例代码</span></a></li>
+  <li><a href="#part50"><span class="toc-title-text">第五十章 文档与合同智能处理——行业应用与合规要求</span></a></li>
+  <li class="toc-sub"><a href="#section191"><span class="toc-title-text">8.6 行业场景差异化与合规要求</span></a></li>
+  <li><a href="#part51"><span class="toc-title-text">第五十一章 文档与合同智能处理——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section192"><span class="toc-title-text">8.7 实施阶段规划与验收标准</span></a></li>
+  <li><a href="#part52"><span class="toc-title-text">第五十二章 AI Agent平台与智能体编排——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section193"><span class="toc-title-text">9.1 Agent市场爆发与4类Agent形态</span></a></li>
+  <li><a href="#part53"><span class="toc-title-text">第五十三章 AI Agent平台与智能体编排——4类Agent形态与成本模型</span></a></li>
+  <li class="toc-sub"><a href="#section194"><span class="toc-title-text">9.2 4类Agent形态详解与成本分析</span></a></li>
+  <li><a href="#part54"><span class="toc-title-text">第五十四章 AI Agent平台与智能体编排——创建Agent的最小功能集</span></a></li>
+  <li class="toc-sub"><a href="#section195"><span class="toc-title-text">9.3 角色设定、工作流与工具配置</span></a></li>
+  <li><a href="#part55"><span class="toc-title-text">第五十五章 AI Agent平台与智能体编排——AgentInfra框架与技术架构</span></a></li>
+  <li class="toc-sub"><a href="#section196"><span class="toc-title-text">9.4 AgentInfra四层架构与技术选型</span></a></li>
+  <li><a href="#part56"><span class="toc-title-text">第五十六章 AI Agent平台与智能体编排——工具调用与记忆管理</span></a></li>
+  <li class="toc-sub"><a href="#section197"><span class="toc-title-text">9.5 工具调用规范与记忆体系</span></a></li>
+  <li><a href="#part57"><span class="toc-title-text">第五十七章 AI Agent平台与智能体编排——MCP协议与示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section198"><span class="toc-title-text">9.6 MCP协议：AI Agent的"USB标准"</span></a></li>
+  <li><a href="#part58"><span class="toc-title-text">第五十八章 AI Agent平台与智能体编排——行业应用案例</span></a></li>
+  <li class="toc-sub"><a href="#section199"><span class="toc-title-text">9.7 金融、政务、企业三大行业Agent实践</span></a></li>
+  <li><a href="#part59"><span class="toc-title-text">第五十九章 AI Agent平台与智能体编排——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section200"><span class="toc-title-text">9.8 实施阶段规划与验收标准</span></a></li>
+  <li><a href="#part60"><span class="toc-title-text">第六十章 行业AI系统实战导引</span></a></li>
+  <li class="toc-sub"><a href="#section201"><span class="toc-title-text">10.1 行业AI系统实战导引</span></a></li>
+  <li><a href="#part61"><span class="toc-title-text">第六十一章 金融AI——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section202"><span class="toc-title-text">11.1 金融AI——业务背景与场景定位</span></a></li>
+  <li><a href="#part62"><span class="toc-title-text">第六十二章 金融AI——智能风控系统</span></a></li>
+  <li class="toc-sub"><a href="#section203"><span class="toc-title-text">11.2 金融AI——智能风控系统</span></a></li>
+  <li><a href="#part63"><span class="toc-title-text">第11.3章 金融AI——信贷审批辅助系统</span></a></li>
+  <li class="toc-sub"><a href="#section204"><span class="toc-title-text">11.3.1 信贷审批的业务痛点与AI定位</span></a></li>
+  <li class="toc-sub"><a href="#section205"><span class="toc-title-text">11.3.2 材料自动解析与信息提取</span></a></li>
+  <li class="toc-sub"><a href="#section206"><span class="toc-title-text">11.3.3 还款能力分析与风险点提取</span></a></li>
+  <li class="toc-sub"><a href="#section207"><span class="toc-title-text">11.3.4 审批摘要生成与审批建议</span></a></li>
+  <li class="toc-sub"><a href="#section208"><span class="toc-title-text">11.3.5 信贷审批AI的系统架构</span></a></li>
+  <li class="toc-sub"><a href="#section209"><span class="toc-title-text">11.3.6 验收标准与效能指标</span></a></li>
+  <li><a href="#part64"><span class="toc-title-text">第11.4章 金融AI——合规审查与智能客服</span></a></li>
+  <li class="toc-sub"><a href="#section210"><span class="toc-title-text">11.4.1 金融合规审查的业务背景</span></a></li>
+  <li class="toc-sub"><a href="#section211"><span class="toc-title-text">11.4.2 文案合规检查</span></a></li>
+  <li class="toc-sub"><a href="#section212"><span class="toc-title-text">11.4.3 智能客服系统</span></a></li>
+  <li class="toc-sub"><a href="#section213"><span class="toc-title-text">11.4.4 智能客服的技术架构</span></a></li>
+  <li class="toc-sub"><a href="#section214"><span class="toc-title-text">11.4.5 合规护栏设计</span></a></li>
+  <li class="toc-sub"><a href="#section215"><span class="toc-title-text">11.4.6 验收标准与效能指标</span></a></li>
+  <li><a href="#part65"><span class="toc-title-text">第11.5章 金融AI——金融级AgentInfra与实时风控</span></a></li>
+  <li class="toc-sub"><a href="#section216"><span class="toc-title-text">11.5.1 AgentInfra四层架构</span></a></li>
+  <li class="toc-sub"><a href="#section217"><span class="toc-title-text">11.5.2 实时风控系统架构</span></a></li>
+  <li class="toc-sub"><a href="#section218"><span class="toc-title-text">11.5.3 规则引擎与AI模型协同</span></a></li>
+  <li class="toc-sub"><a href="#section219"><span class="toc-title-text">11.5.4 多维度交叉验证</span></a></li>
+  <li class="toc-sub"><a href="#section220"><span class="toc-title-text">11.5.5 验收标准与效能指标</span></a></li>
+  <li><a href="#part66"><span class="toc-title-text">第11.6章 金融AI——数据对接与安全合规</span></a></li>
+  <li class="toc-sub"><a href="#section221"><span class="toc-title-text">11.6.1 金融数据全景与对接需求</span></a></li>
+  <li class="toc-sub"><a href="#section222"><span class="toc-title-text">11.6.2 数据对接架构与集成模式</span></a></li>
+  <li class="toc-sub"><a href="#section223"><span class="toc-title-text">11.6.3 三层安全护栏设计</span></a></li>
+  <li class="toc-sub"><a href="#section224"><span class="toc-title-text">11.6.4 等保合规与数据隔离</span></a></li>
+  <li class="toc-sub"><a href="#section225"><span class="toc-title-text">11.6.5 国产化适配与信创生态</span></a></li>
+  <li class="toc-sub"><a href="#section226"><span class="toc-title-text">11.6.6 数据合规与隐私保护</span></a></li>
+  <li class="toc-sub"><a href="#section227"><span class="toc-title-text">11.6.7 验收标准</span></a></li>
+  <li><a href="#part67"><span class="toc-title-text">第11.7章 金融AI——技术选型与示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section228"><span class="toc-title-text">11.7.1 金融AI技术栈全景</span></a></li>
+  <li class="toc-sub"><a href="#section229"><span class="toc-title-text">11.7.2 模型选型策略</span></a></li>
+  <li class="toc-sub"><a href="#section230"><span class="toc-title-text">11.7.3 示例代码：风险评分接口</span></a></li>
+  <li class="toc-sub"><a href="#section231"><span class="toc-title-text">11.7.4 示例代码：规则引擎配置</span></a></li>
+  <li class="toc-sub"><a href="#section232"><span class="toc-title-text">11.7.5 示例代码：审计日志格式</span></a></li>
+  <li class="toc-sub"><a href="#section233"><span class="toc-title-text">11.7.6 特征平台选型对比</span></a></li>
+  <li class="toc-sub"><a href="#section234"><span class="toc-title-text">11.7.7 验收标准</span></a></li>
+  <li><a href="#part68"><span class="toc-title-text">第11.8章 金融AI——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section235"><span class="toc-title-text">11.8.1 实施阶段规划</span></a></li>
+  <li class="toc-sub"><a href="#section236"><span class="toc-title-text">11.8.2 核心风险点与应对策略</span></a></li>
+  <li class="toc-sub"><a href="#section237"><span class="toc-title-text">11.8.3 验收标准体系</span></a></li>
+  <li class="toc-sub"><a href="#section238"><span class="toc-title-text">11.8.4 运营与持续改进</span></a></li>
+  <li class="toc-sub"><a href="#section239"><span class="toc-title-text">11.8.5 组织保障</span></a></li>
+  <li><a href="#part69"><span class="toc-title-text">第12.1章 医疗AI——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section240"><span class="toc-title-text">12.1.1 医疗AI的核心价值定位</span></a></li>
+  <li class="toc-sub"><a href="#section241"><span class="toc-title-text">12.1.2 市场规模与发展趋势</span></a></li>
+  <li class="toc-sub"><a href="#section242"><span class="toc-title-text">12.1.3 医疗AI的典型应用场景</span></a></li>
+  <li class="toc-sub"><a href="#section243"><span class="toc-title-text">12.1.4 医疗AI的合规与伦理边界</span></a></li>
+  <li class="toc-sub"><a href="#section244"><span class="toc-title-text">12.1.5 医疗AI系统建设的路径选择</span></a></li>
+  <li class="toc-sub"><a href="#section245"><span class="toc-title-text">12.1.6 验收标准参考</span></a></li>
+  <li><a href="#part70"><span class="toc-title-text">第12.2章 医疗AI——影像辅助诊断系统</span></a></li>
+  <li class="toc-sub"><a href="#section246"><span class="toc-title-text">12.2.1 医学影像AI的业务价值</span></a></li>
+  <li class="toc-sub"><a href="#section247"><span class="toc-title-text">12.2.2 影像质控模块</span></a></li>
+  <li class="toc-sub"><a href="#section248"><span class="toc-title-text">12.2.3 多部位诊断系统</span></a></li>
+  <li class="toc-sub"><a href="#section249"><span class="toc-title-text">12.2.4 三维重建与结构化报告</span></a></li>
+  <li class="toc-sub"><a href="#section250"><span class="toc-title-text">12.2.5 系统功能模块全景</span></a></li>
+  <li class="toc-sub"><a href="#section251"><span class="toc-title-text">12.2.6 验收标准</span></a></li>
+  <li><a href="#part71"><span class="toc-title-text">第12.3章 医疗AI——智能问诊与病历结构化</span></a></li>
+  <li class="toc-sub"><a href="#section252"><span class="toc-title-text">12.3.1 智能问诊的业务场景</span></a></li>
+  <li class="toc-sub"><a href="#section253"><span class="toc-title-text">12.3.2 医生个性化配置</span></a></li>
+  <li class="toc-sub"><a href="#section254"><span class="toc-title-text">12.3.3 病历结构化系统</span></a></li>
+  <li class="toc-sub"><a href="#section255"><span class="toc-title-text">12.3.4 医学术语标准化</span></a></li>
+  <li class="toc-sub"><a href="#section256"><span class="toc-title-text">12.3.5 病历辅助功能矩阵</span></a></li>
+  <li class="toc-sub"><a href="#section257"><span class="toc-title-text">12.3.6 验收标准</span></a></li>
+  <li><a href="#part72"><span class="toc-title-text">第12.4章 医疗AI——医学知识库与影像辅助</span></a></li>
+  <li class="toc-sub"><a href="#section258"><span class="toc-title-text">12.4.1 医学知识库的建设目标</span></a></li>
+  <li class="toc-sub"><a href="#section259"><span class="toc-title-text">12.4.2 知识库内容体系</span></a></li>
+  <li class="toc-sub"><a href="#section260"><span class="toc-title-text">12.4.3 知识库的技术实现</span></a></li>
+  <li class="toc-sub"><a href="#section261"><span class="toc-title-text">12.4.4 权限分层设计</span></a></li>
+  <li class="toc-sub"><a href="#section262"><span class="toc-title-text">12.4.5 影像辅助功能</span></a></li>
+  <li class="toc-sub"><a href="#section263"><span class="toc-title-text">12.4.6 验收标准</span></a></li>
+  <li><a href="#part73"><span class="toc-title-text">第12.5章 医疗AI——系统分层架构与数据对接</span></a></li>
+  <li class="toc-sub"><a href="#section264"><span class="toc-title-text">12.5.1 医疗AI四层架构</span></a></li>
+  <li class="toc-sub"><a href="#section265"><span class="toc-title-text">12.5.2 医疗数据层——异构系统对接</span></a></li>
+  <li class="toc-sub"><a href="#section266"><span class="toc-title-text">12.5.3 AI能力层——算法引擎</span></a></li>
+  <li class="toc-sub"><a href="#section267"><span class="toc-title-text">12.5.4 临床智能体层——业务场景封装</span></a></li>
+  <li class="toc-sub"><a href="#section268"><span class="toc-title-text">12.5.5 医生交互层——多端适配</span></a></li>
+  <li class="toc-sub"><a href="#section269"><span class="toc-title-text">12.5.6 数据对接技术要点</span></a></li>
+  <li class="toc-sub"><a href="#section270"><span class="toc-title-text">12.5.7 验收标准</span></a></li>
+  <li><a href="#part74"><span class="toc-title-text">第12.6章 医疗AI——垂类大模型与推理优化</span></a></li>
+  <li class="toc-sub"><a href="#section271"><span class="toc-title-text">12.6.1 医疗垂类大模型的建设路径</span></a></li>
+  <li class="toc-sub"><a href="#section272"><span class="toc-title-text">12.6.2 RAG架构实现可追溯诊疗建议</span></a></li>
+  <li class="toc-sub"><a href="#section273"><span class="toc-title-text">12.6.3 深度学习推理优化</span></a></li>
+  <li class="toc-sub"><a href="#section274"><span class="toc-title-text">12.6.4 动态预后模拟</span></a></li>
+  <li class="toc-sub"><a href="#section275"><span class="toc-title-text">12.6.5 验收标准</span></a></li>
+  <li><a href="#part75"><span class="toc-title-text">第12.7章 医疗AI——技术选型与示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section276"><span class="toc-title-text">12.7.1 医疗AI技术栈全景</span></a></li>
+  <li class="toc-sub"><a href="#section277"><span class="toc-title-text">12.7.2 DICOM解析示例</span></a></li>
+  <li class="toc-sub"><a href="#section278"><span class="toc-title-text">12.7.3 RAG检索逻辑示例</span></a></li>
+  <li class="toc-sub"><a href="#section279"><span class="toc-title-text">12.7.4 病历结构化JSON Schema示例</span></a></li>
+  <li class="toc-sub"><a href="#section280"><span class="toc-title-text">12.7.5 技术选型决策矩阵</span></a></li>
+  <li class="toc-sub"><a href="#section281"><span class="toc-title-text">12.7.6 验收标准</span></a></li>
+  <li><a href="#part76"><span class="toc-title-text">第12.8章 医疗AI——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section282"><span class="toc-title-text">12.8.1 实施阶段规划</span></a></li>
+  <li class="toc-sub"><a href="#section283"><span class="toc-title-text">12.8.2 核心风险点与应对策略</span></a></li>
+  <li class="toc-sub"><a href="#section284"><span class="toc-title-text">12.8.3 验收标准体系</span></a></li>
+  <li class="toc-sub"><a href="#section285"><span class="toc-title-text">12.8.4 组织保障与培训</span></a></li>
+  <li><a href="#part77"><span class="toc-title-text">第13.1章 工业AI——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section286"><span class="toc-title-text">13.1.1 工业AI的三大核心场景</span></a></li>
+  <li class="toc-sub"><a href="#section287"><span class="toc-title-text">13.1.2 行业转型趋势</span></a></li>
+  <li class="toc-sub"><a href="#section288"><span class="toc-title-text">13.1.3 政策驱动——以沈阳市为例</span></a></li>
+  <li class="toc-sub"><a href="#section289"><span class="toc-title-text">13.1.4 工业AI的特殊挑战</span></a></li>
+  <li class="toc-sub"><a href="#section290"><span class="toc-title-text">13.1.5 工业AI的建设路径选择</span></a></li>
+  <li class="toc-sub"><a href="#section291"><span class="toc-title-text">13.1.6 验收标准参考</span></a></li>
+  <li><a href="#part78"><span class="toc-title-text">第13.2章 工业AI——视觉质检系统</span></a></li>
+  <li class="toc-sub"><a href="#section292"><span class="toc-title-text">13.2.1 高精度成像系统</span></a></li>
+  <li class="toc-sub"><a href="#section293"><span class="toc-title-text">13.2.2 微米级缺陷识别</span></a></li>
+  <li class="toc-sub"><a href="#section294"><span class="toc-title-text">13.2.3 复杂环境适应性</span></a></li>
+  <li class="toc-sub"><a href="#section295"><span class="toc-title-text">13.2.4 检测标准统一与产线级微调</span></a></li>
+  <li class="toc-sub"><a href="#section296"><span class="toc-title-text">13.2.5 缺陷分级与产线联动</span></a></li>
+  <li class="toc-sub"><a href="#section297"><span class="toc-title-text">13.2.6 样本管理</span></a></li>
+  <li class="toc-sub"><a href="#section298"><span class="toc-title-text">13.2.7 验收标准</span></a></li>
+  <li><a href="#part79"><span class="toc-title-text">第13.3章 工业AI——预测性维护与工艺知识库</span></a></li>
+  <li class="toc-sub"><a href="#section299"><span class="toc-title-text">13.3.1 预测性维护的业务价值</span></a></li>
+  <li class="toc-sub"><a href="#section300"><span class="toc-title-text">13.3.2 多传感器融合</span></a></li>
+  <li class="toc-sub"><a href="#section301"><span class="toc-title-text">13.3.3 预测模型体系</span></a></li>
+  <li class="toc-sub"><a href="#section302"><span class="toc-title-text">13.3.4 隐患+故障双主线管理</span></a></li>
+  <li class="toc-sub"><a href="#section303"><span class="toc-title-text">13.3.5 工单联动与健康看板</span></a></li>
+  <li class="toc-sub"><a href="#section304"><span class="toc-title-text">13.3.6 工艺知识库</span></a></li>
+  <li class="toc-sub"><a href="#section305"><span class="toc-title-text">13.3.7 验收标准</span></a></li>
+  <li><a href="#part80"><span class="toc-title-text">第13.4章 工业AI——生产排程与多业务协同</span></a></li>
+  <li class="toc-sub"><a href="#section306"><span class="toc-title-text">13.4.1 生产排程的业务挑战</span></a></li>
+  <li class="toc-sub"><a href="#section307"><span class="toc-title-text">13.4.2 AI驱动的生产排程</span></a></li>
+  <li class="toc-sub"><a href="#section308"><span class="toc-title-text">13.4.3 生产智能问答</span></a></li>
+  <li class="toc-sub"><a href="#section309"><span class="toc-title-text">13.4.4 多业务协同——跨业务数据打通</span></a></li>
+  <li class="toc-sub"><a href="#section310"><span class="toc-title-text">13.4.5 技术实现要点</span></a></li>
+  <li class="toc-sub"><a href="#section311"><span class="toc-title-text">13.4.6 验收标准</span></a></li>
+  <li><a href="#part81"><span class="toc-title-text">第13.5章 工业AI——边缘计算与云边协同</span></a></li>
+  <li class="toc-sub"><a href="#section312"><span class="toc-title-text">13.5.1 边缘AI的业务驱动</span></a></li>
+  <li class="toc-sub"><a href="#section313"><span class="toc-title-text">13.5.2 边缘推理节点架构</span></a></li>
+  <li class="toc-sub"><a href="#section314"><span class="toc-title-text">13.5.3 边缘计算核心能力</span></a></li>
+  <li class="toc-sub"><a href="#section315"><span class="toc-title-text">13.5.4 边缘芯片选型</span></a></li>
+  <li class="toc-sub"><a href="#section316"><span class="toc-title-text">13.5.5 云边协同架构</span></a></li>
+  <li class="toc-sub"><a href="#section317"><span class="toc-title-text">13.5.6 验收标准</span></a></li>
+  <li><a href="#part82"><span class="toc-title-text">第13.6章 工业AI——时序预测与知识库构建</span></a></li>
+  <li class="toc-sub"><a href="#section318"><span class="toc-title-text">13.6.1 工业时序预测模型体系</span></a></li>
+  <li class="toc-sub"><a href="#section319"><span class="toc-title-text">13.6.2 混合模型——AI+机理双驱动</span></a></li>
+  <li class="toc-sub"><a href="#section320"><span class="toc-title-text">13.6.3 工业知识库构建</span></a></li>
+  <li class="toc-sub"><a href="#section321"><span class="toc-title-text">13.6.4 模型选型对比</span></a></li>
+  <li class="toc-sub"><a href="#section322"><span class="toc-title-text">13.6.5 验收标准</span></a></li>
+  <li><a href="#part83"><span class="toc-title-text">第13.7章 工业AI——技术选型与示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section323"><span class="toc-title-text">13.7.1 工业AI技术栈全景</span></a></li>
+  <li class="toc-sub"><a href="#section324"><span class="toc-title-text">13.7.2 准确率门槛——从80%到99%+</span></a></li>
+  <li class="toc-sub"><a href="#section325"><span class="toc-title-text">13.7.3 数据稀缺应对策略</span></a></li>
+  <li class="toc-sub"><a href="#section326"><span class="toc-title-text">13.7.4 示例代码：传感器数据采集与预处理</span></a></li>
+  <li class="toc-sub"><a href="#section327"><span class="toc-title-text">13.7.5 示例代码：时序预测伪代码</span></a></li>
+  <li class="toc-sub"><a href="#section328"><span class="toc-title-text">13.7.6 示例代码：边缘推理配置</span></a></li>
+  <li class="toc-sub"><a href="#section329"><span class="toc-title-text">13.7.7 验收标准</span></a></li>
+  <li><a href="#part84"><span class="toc-title-text">第13.8章 工业AI——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section330"><span class="toc-title-text">13.8.1 实施阶段规划</span></a></li>
+  <li class="toc-sub"><a href="#section331"><span class="toc-title-text">13.8.2 核心风险点与应对策略</span></a></li>
+  <li class="toc-sub"><a href="#section332"><span class="toc-title-text">13.8.3 验收标准体系</span></a></li>
+  <li class="toc-sub"><a href="#section333"><span class="toc-title-text">13.8.4 持续运营机制</span></a></li>
+  <li class="toc-sub"><a href="#section334"><span class="toc-title-text">13.8.5 投资回报分析</span></a></li>
+  <li><a href="#part85"><span class="toc-title-text">第八十五章 政务AI——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section335"><span class="toc-title-text">14.1 政务AI——业务背景与场景定位</span></a></li>
+  <li><a href="#part86"><span class="toc-title-text">第八十六章 政务AI——政务AI核心功能</span></a></li>
+  <li class="toc-sub"><a href="#section336"><span class="toc-title-text">14.2 政务AI——政务AI核心功能</span></a></li>
+  <li><a href="#part87"><span class="toc-title-text">第八十七章 政务AI——招投标AI 20个场景</span></a></li>
+  <li class="toc-sub"><a href="#section337"><span class="toc-title-text">14.3 政务AI——招投标AI 20个场景</span></a></li>
+  <li><a href="#part88"><span class="toc-title-text">第八十八章 政务AI——政务"1+1+1+1"架构</span></a></li>
+  <li class="toc-sub"><a href="#section338"><span class="toc-title-text">14.4 政务AI——政务"1+1+1+1"架构</span></a></li>
+  <li><a href="#part89"><span class="toc-title-text">第八十九章 政务AI——安全合规与招投标技术</span></a></li>
+  <li class="toc-sub"><a href="#section339"><span class="toc-title-text">14.5 政务AI——安全合规与招投标技术</span></a></li>
+  <li><a href="#part90"><span class="toc-title-text">第九十章 政务AI——技术选型与示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section340"><span class="toc-title-text">14.6 政务AI——技术选型与示例代码</span></a></li>
+  <li><a href="#part91"><span class="toc-title-text">第九十一章 政务AI——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section341"><span class="toc-title-text">14.7 政务AI——落地实施要点</span></a></li>
+  <li><a href="#part92"><span class="toc-title-text">第九十二章 零售AI——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section342"><span class="toc-title-text">15.1 零售AI——业务背景与场景定位</span></a></li>
+  <li><a href="#part93"><span class="toc-title-text">第九十三章 零售AI——智能导购系统</span></a></li>
+  <li class="toc-sub"><a href="#section343"><span class="toc-title-text">15.2 零售AI——智能导购系统</span></a></li>
+  <li><a href="#part94"><span class="toc-title-text">第九十四章 零售AI——商品内容生成与运营分析</span></a></li>
+  <li class="toc-sub"><a href="#section344"><span class="toc-title-text">15.3 零售AI——商品内容生成与运营分析</span></a></li>
+  <li><a href="#part95"><span class="toc-title-text">第九十五章 零售AI——客服Agent与高并发</span></a></li>
+  <li class="toc-sub"><a href="#section345"><span class="toc-title-text">15.4 零售AI——客服Agent与高并发</span></a></li>
+  <li><a href="#part96"><span class="toc-title-text">第九十六章 零售AI——商品知识库与高并发架构</span></a></li>
+  <li class="toc-sub"><a href="#section346"><span class="toc-title-text">15.5 零售AI——商品知识库与高并发架构</span></a></li>
+  <li><a href="#part97"><span class="toc-title-text">第九十七章 零售AI——技术选型与示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section347"><span class="toc-title-text">15.6 零售AI——技术选型与示例代码</span></a></li>
+  <li><a href="#part98"><span class="toc-title-text">第九十八章 零售AI——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section348"><span class="toc-title-text">15.7 零售AI——落地实施要点</span></a></li>
+  <li><a href="#part99"><span class="toc-title-text">第九十九章 教育AI——业务背景与场景定位</span></a></li>
+  <li class="toc-sub"><a href="#section349"><span class="toc-title-text">16.1 教育AI——业务背景与场景定位</span></a></li>
+  <li><a href="#part100"><span class="toc-title-text">第100章 教育AI——个性化学习与智能批改</span></a></li>
+  <li class="toc-sub"><a href="#section350"><span class="toc-title-text">16.2 教育AI——个性化学习与智能批改</span></a></li>
+  <li><a href="#part101"><span class="toc-title-text">第101章 教育AI——AI助教与机构运营</span></a></li>
+  <li class="toc-sub"><a href="#section351"><span class="toc-title-text">16.3 教育AI——AI助教与机构运营</span></a></li>
+  <li><a href="#part102"><span class="toc-title-text">第102章 教育AI——分层架构与多源数据融合</span></a></li>
+  <li class="toc-sub"><a href="#section352"><span class="toc-title-text">16.4 教育AI——分层架构与多源数据融合</span></a></li>
+  <li><a href="#part103"><span class="toc-title-text">第103章 教育AI——知识推理与RAG实现</span></a></li>
+  <li class="toc-sub"><a href="#section353"><span class="toc-title-text">16.5 教育AI——知识推理与RAG实现</span></a></li>
+  <li><a href="#part104"><span class="toc-title-text">第104章 教育AI——技术选型与示例代码</span></a></li>
+  <li class="toc-sub"><a href="#section354"><span class="toc-title-text">16.6 教育AI——技术选型与示例代码</span></a></li>
+  <li><a href="#part105"><span class="toc-title-text">第105章 教育AI——落地实施要点</span></a></li>
+  <li class="toc-sub"><a href="#section355"><span class="toc-title-text">16.7 教育AI——落地实施要点</span></a></li>
+  <li><a href="#part106"><span class="toc-title-text">第106章 从需求到落地的方法论</span></a></li>
+  <li class="toc-sub"><a href="#section356"><span class="toc-title-text">17.1 需求拆解方法论：五步法将模糊需求转化为可执行PRD</span></a></li>
+  <li class="toc-sub"><a href="#section357"><span class="toc-title-text">17.2 技术选型决策树：三维框架下的理性选择</span></a></li>
+  <li class="toc-sub"><a href="#section358"><span class="toc-title-text">17.3 评估体系建设：从主观判断到数据驱动的度量体系</span></a></li>
+  <li class="toc-sub"><a href="#section359"><span class="toc-title-text">17.4 LLMOps与智能体治理：AI系统的生产级运维框架</span></a></li>
+  <li><a href="#part107"><span class="toc-title-text">第107章 避坑指南与行动清单</span></a></li>
+  <li class="toc-sub"><a href="#section360"><span class="toc-title-text">18.1 常见误区与真实案例：7个代价高昂的教训</span></a></li>
+  <li class="toc-sub"><a href="#section361"><span class="toc-title-text">18.2 成功路径与行动清单：从"知道"到"做到"</span></a></li>
+  <li><a href="#part108"><span class="toc-title-text">第108章 2026年趋势展望与准备建议</span></a></li>
+  <li class="toc-sub"><a href="#section362"><span class="toc-title-text">19.1 五大前沿趋势：重塑AI应用格局的力量</span></a></li>
+  <li class="toc-sub"><a href="#section363"><span class="toc-title-text">19.2 准备建议与技能地图：产品经理与架构师的2026能力蓝图</span></a></li>
+  <li><a href="#part109"><span class="toc-title-text">全书结语：从"AI焦虑"到"AI行动"</span></a></li>
+</ul>
+</div>
+</div>

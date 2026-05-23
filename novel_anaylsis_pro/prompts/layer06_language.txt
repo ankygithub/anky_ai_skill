@@ -1,0 +1,343 @@
+# 语言风格层分析 Prompt ⭐核心
+
+## 任务目标
+对《{book_title}》进行**语言风格的量化分析**，这是识别作者"指纹"的核心技术层，直接影响仿写的成败。
+
+## ⚠️ 特别注意
+此层分析需要极高的精确度和敏感度。语言风格是最难模仿的维度之一，因为它是作者无意识的习惯集合。请务必深入到微观层面。
+
+---
+
+## 第一部分：可量化指标体系
+
+### 1. 句长统计
+- **平均句长**：字数/句数（中文以字为单位）
+- **中位数句长**：消除极端值影响后的典型句长
+- **句长标准差**：反映句长变化的剧烈程度
+- **短句占比**（<15字）：节奏感、紧张感、力量感的来源
+- **中句占比**（15-30字）：常规叙述的主力
+- **长句占比**（>30字）：复杂描写、心理活动、学术性内容
+
+**分布模式识别**：
+- 均匀型：各种句长均衡使用
+- 短句主导型：快节奏、口语化、动作感强
+- 长句主导型：复杂、书面化、思辨性强
+- 交替波动型：长短交替形成呼吸节奏
+
+### 2. 词汇丰富度指标
+- **不重复词汇量 / 总词汇量**：反映词汇多样性
+- **高频词TOP20**：出现最频繁的实词（非虚词）
+- **低频特色词**：使用频率不高但极具辨识度的词
+- **专业术语密度**：特定领域词汇的出现频率
+- **生僻字/词使用率**：是否刻意使用罕见表达？
+
+### 3. 句式结构统计
+- **陈述句占比**：基础叙述
+- **疑问句占比**：设问、反问、真正的疑问
+- **感叹句占比**：情绪表达的直接程度
+- **祈使句占比**：命令、请求、号召
+- **复句比例**：包含多个分句的句子
+- **倒装句频率**：特殊语序的使用
+
+### 4. 对话占比与特征
+- **对话占总文字量的百分比**
+- **对话段落平均长度**：长对话 vs 短交锋
+- **对话标签（他说/她道）的使用频率**
+- **无语标签对话的比例**：纯通过内容辨识说话人
+- **对话中的动作描写嵌入方式**
+
+### 5. 标点符号使用习惯
+- **逗号密度**：每百字的逗号数量
+- **句号密度**：每百字的句号数量
+- **感叹号使用率**：情绪强烈程度指标
+- **省略号使用场景**：犹豫/留白/话未说完/过渡
+- **破折号用法**：解释/转折/强调/声音延长
+- **引号嵌套层级**：最多用到几层？
+- **特殊标点偏好**：是否使用非常规标点？
+
+---
+
+## 第二部分：词汇偏好深度分析
+
+### A. 高频实词分析
+提取全书出现频率最高的50个实词（名词/动词/形容词），分类：
+- **动作动词TOP10**：最常用的动作描述
+- **情感形容词TOP10**：情绪表达的词汇库
+- **抽象名词TOP10**：概念性词汇的使用倾向
+- **具体名词TOP10**：实物描写的偏好领域
+
+**模式识别**：
+- 这些高频词反映了什么样的世界观和关注点？
+- 是否有明显的行业/地域/时代烙印？
+- 与同类作品相比的特色之处？
+
+### B. 黑话/行话/自造词系统
+- **圈内黑话**：特定读者群体才能理解的词汇
+- **自造词汇**：作者独创的词语或表达方式
+- **术语系统**：本书特有的概念命名规则
+- **外来语/音译词**：是否频繁使用？
+
+**分析要点**：
+- 这些特殊词汇的功能是什么？（增强代入感/建立世界观/制造距离感）
+- 学习成本如何？新读者能否快速理解？
+- 是否有词汇表或解释机制？
+
+### C. 文白比例分析
+- **纯白话文比例**：现代口语化表达
+- **浅文言成分**：适度典雅的表达（如"已然""未曾"）
+- **深文言成分**：较难的古文表达（如"何其""岂非"）
+- **诗词引用**：直接引用古诗词的频率
+- **成语使用率**：每千字的成语数量
+
+**风格定位**：
+- 纯白话型：通俗易懂，接地气
+- 文白夹杂型：雅俗共赏，有韵味
+- 偏文言型：古典气息浓厚，有文化门槛
+- 创新型：自创语言风格，难以归类
+
+### D. 比喻取材域分析
+收集并分类书中的比喻句，分析其取材来源：
+
+**常见取材域**：
+- 自然界（天气/动植物/地理/天文）
+- 日常生活（饮食/服饰/建筑/器具）
+- 人体（器官/感觉/疾病/姿态）
+- 抽象概念（时间/情感/命运/哲学）
+- 武术/战斗（兵器/招式/内力/境界）
+- 特定文化领域（历史/宗教/神话/科技）
+
+**分析**：
+- 最常用的比喻取材域是哪个？
+- 比喻的新颖度如何（陈旧/尚可/新颖/惊艳）？
+- 比喻的统一性（是否有贯穿全书的比喻系统）？
+- 明喻vs暗喻vs借喻的比例？
+
+### E. 禁忌词/回避词分析
+- **绝对不使用的词或表达**：作者的禁忌
+- **极少使用的词**：几乎不出现的常见词汇类型
+- **过度谨慎的回避**：是否有些词该用不用？
+- **故意挑战禁忌**：是否故意使用敏感词？
+
+---
+
+## 第三部分：句式与节奏分析
+
+### A. 标志句式提取
+识别作者的**标志性句式模式**（至少5种）：
+
+**示例格式**：
+```
+句式类型：【名称】
+结构模板：[具体的句法结构]
+出现频率：高/中/低
+功能效果：[这种句式达到什么叙事或美学效果]
+典型例句："[原文摘录]"（章节X）
+变体形式：[该句式的变化版本]
+```
+
+**常见标志句式类型**：
+- 排比句式：三个或以上并列结构
+- 反问句式：明知故问，加强语气
+- 递进句式：层层加深，推向高潮
+- 对比句式：两相对照，突出差异
+- 倒装句式：特殊语序，强调重点
+- 省略句式：留白给人想象空间
+- 重复句式：关键词反复，强化印象
+- 条件句式：如果...就...的逻辑链条
+
+### B. 修辞偏好统计
+- **比喻**（明喻/暗喻/借喻）的使用频率
+- **拟人**：赋予物以人的特征
+- **夸张**：故意夸大或缩小
+- **反语**：说反话表达真实意思
+- **双关**：一词多义，言在此而意在彼
+- **通感**：感官通道的交叉（如"甜美的声音"）
+- **象征**：用具体事物代表抽象概念
+- **用典**：引用历史/神话/文学典故
+
+**质量评估**：修辞的自然度（生硬/恰当/精妙）
+
+### C. 对话风格细分
+- **角色A的说话特点**：
+  - 句式偏好（长/短/完整/破碎）
+  - 口头禅/惯用语
+  - 礼貌程度（正式/随意/粗鲁）
+  - 情绪表达方式（直接/含蓄/压抑）
+  - 知识水平体现（用词复杂度）
+
+- **角色B的说话特点**：（重复上述分析）
+- ...
+
+**区分度测试**：遮住名字，仅凭对话能否辨识出说话人？
+
+### D. 语气变化图谱
+分析叙述语气的动态变化：
+
+- **平静叙述段**：客观中立的基调
+- **紧张加速段**：短句增多，节奏加快
+- **抒情慢速段**：长句为主，细腻描写
+- **幽默轻松段**：轻松调侃，可能用夸张
+- **悲壮沉重段**：庄重肃穆，可能有排比
+- **愤怒激烈段**：感叹号增多，力度强
+
+**变化规律**：语气变化是否配合剧情节奏？是否有多样性？
+
+## 输出格式要求
+
+```json
+{
+  "layer": "language",
+  "book_title": "{book_title}",
+  "analysis": {
+    "quantifiable_metrics": {
+      "sentence_length": {
+        "average": number,
+        "median": number,
+        "std_dev": number,
+        "short_sentence_ratio": number,
+        "medium_sentence_ratio": number,
+        "long_sentence_ratio": number,
+        "distribution_pattern": "uniform|short_dominated|long_dominated|alternating"
+      },
+      "vocabulary_richness": {
+        "unique_words_ratio": number,
+        "top_20_frequent_content_words": ["string"],
+        "distinctive_low_freq_words": ["string"],
+        "technical_term_density": number,
+        "rare_character_usage_rate": number
+      },
+      "sentence_structure": {
+        "declarative_ratio": number,
+        "interrogative_ratio": number,
+        "exclamatory_ratio": number,
+        "imperative_ratio": number,
+        "complex_sentence_ratio": number,
+        "inversion_frequency": number
+      },
+      "dialogue_characteristics": {
+        "dialogue_percentage": number,
+        "avg_dialogue_paragraph_length": number,
+        "dialogue_tag_frequency": number,
+        "tagless_dialogue_ratio": number,
+        "action_embedding_style": "string"
+      },
+      "punctuation_habits": {
+        "comma_density": number,
+        "period_density": number,
+        "exclamation_mark_rate": number,
+        "ellipsis_usage_scenarios": ["string"],
+        "dash_functions": ["string"],
+        "max_quotation_nesting_level": number,
+        "special_punctuation_preferences": ["string"]
+      }
+    },
+    "vocabulary_preferences": {
+      "high_frequency_content_words": {
+        "action_verbs_top10": ["string"],
+        "emotional_adjectives_top10": ["string"],
+        "abstract_nouns_top10": ["string"],
+        "concrete_nouns_top10": ["string"],
+        "worldview_reflection": "string",
+        "distinctive_features": ["string"]
+      },
+      "jargon_and_neologisms": {
+        "insider_terms": ["string"],
+        "author_created_words": ["string"],
+        "terminology_system": {"rules": "string", "examples": ["string"]},
+        "loanwords_frequency": "low|medium|high",
+        "learning_curve": "easy|moderate|steep"
+      },
+      "classical_modern_balance": {
+        "purevernacular_ratio": number,
+        "light_classical_ratio": number,
+        "deep_classical_ratio": number,
+        "poetry_quotation_frequency": number,
+        "idiom_usage_rate": number,
+        "style_positioning": "vernacular|mixed|classical|innovative"
+      },
+      "metaphor_source_domains": {
+        "primary_domain": "string",
+        "domain_ranking": [
+          {"domain": "string", "frequency": "high|medium|low"}
+        ],
+        "novelty_assessment": "cliche|acceptable|fresh|stunning",
+        "metaphor_system_consistency": boolean,
+        "simile_vs_metaphor_vs_metonymy_ratio": "string"
+      },
+      "taboo_words": {
+        "absolutely_avoided": ["string"],
+        "rarely_used": ["string"],
+        "overly_cautious_avoidance": ["string"],
+        "deliberate_taboo_challenging": ["string"]
+      }
+    },
+    "sentence_patterns_and_rhythm": {
+      "signature_sentence_patterns": [
+        {
+          "name": "string",
+          "structure_template": "string",
+          "frequency": "high|medium|low",
+          "effect": "string",
+          "example": "string (chapter X)",
+          "variants": ["string"]
+        }
+      ],
+      "rhetorical_device_preference": {
+        "metaphor": {"frequency": "high|medium|low", "quality": "stiff|appropriate|brilliant"},
+        "personification": {"frequency": "high|medium|low", "quality": "stiff|appropriate|brilliant"},
+        "hyperbole": {"frequency": "high|medium|low", "quality": "stiff|appropriate|brilliant"},
+        "irony": {"frequency": "high|medium|low", "quality": "stiff|appropriate|brilliant"},
+        "pun": {"frequency": "high|medium|low", "quality": "stiff|appropriate|brilliant"},
+        "synesthesia": {"frequency": "high|medium|low", "quality": "stiff|appropriate|brilliant"},
+        "symbolism": {"frequency": "high|medium|low", "quality": "stiff|appropriate|brilliant"},
+        "allusion": {"frequency": "high|medium|low", "quality": "stiff|appropriate|brilliant"}
+      },
+      "dialogue_style_differentiation": [
+        {
+          "character": "string",
+          "sentence_pattern": "string",
+          "catchphrases": ["string"],
+          "politeness_level": "formal|casual|rude",
+          "emotion_expression": "direct|subtle|suppressed",
+          "intellectual_level": "simple|moderate|complex"
+        }
+      ],
+      "tone_variation_map": {
+        "calm_narration": "string",
+        "tense_acceleration": "string",
+        "lyric_slowness": "string",
+        "humorous_relaxation": "string",
+        "solemn_gravity": "string",
+        "fierce_intensity": "string",
+        "variation_discipline": "boolean",
+        "coordination_with_plot": "strong|moderate|weak"
+      }
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "fingerprint_strength": "high|medium|low",
+    "imitation_difficulty": "easy|moderate|hard|very_hard",
+    "key_difficulties": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取可量化的语言参数、句式库、词汇表、标点统计数据
+**文学侧**：感知语言的温度和质感、节奏的音乐性、表达的独特美学、文字的灵魂
+
+⭐ **特别强调**：此层的仿写规则必须能够指导创作者"写出看起来像原作者的文字"，而非仅仅是语法正确的中文。要捕捉的是那种难以言传的"味道"。
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的语言特征
+2. **典型证据**：至少2-3个原文例句（含章节引用）
+3. **仿写规则**：可操作的语言风格指导原则（越具体越好）
+4. **稳定度判断**：该语言特征的一致性和独特性（高/中/低）
+
+---
+**上下文输入**：{context}

@@ -1,0 +1,283 @@
+# 叙事视角与信息控制层分析 Prompt
+
+## 任务目标
+对《{book_title}》的**叙事工程技术**进行解构，包括POV选择、信息差管理、镜头语言和时间操控。
+
+## 分析维度
+
+### 1. POV（Point of View）类型与运用
+
+#### A. POV类型判定
+- **第一人称（我）**：完全主观，沉浸感强，信息受限
+- **第三人称有限视角（他/她，聚焦单一角色）**：平衡沉浸与全能
+- **第三人称全知视角（上帝视角）**：信息全面，距离感较强
+- **多重视角切换**：在不同角色间切换，丰富但不混乱
+- **混合视角**：以上类型的创造性组合
+
+**分析要点**：
+- 本书主要采用哪种POV？
+- POV的选择如何服务于主题表达？
+- 是否有POV的创新用法或突破常规的操作？
+- POV的一致性问题（是否出现过意外跳切）？
+
+#### B. 视角聚焦对象
+- **主角聚焦**：绝大多数时候跟随主角
+- **配角聚焦**：偶尔切换到重要配角视角
+- **反派聚焦**：是否展示反派内心世界？
+- **旁观者/次要角色聚焦**：用于特殊效果
+
+**统计**：各类视角的占比大致分布
+
+#### C. 叙述距离控制
+- **近距离**：深入角色内心，体验其感官和情绪
+- **中距离**：观察角色行为，适度解读心理
+- **远距离**：概述事件，保持客观冷静
+
+**分析**：叙述距离的变化规律和叙事功能
+
+### 2. 信息差结构（三种类型）
+
+#### A. 读者 > 角色（读者拥有更多信息）
+- **戏剧反讽**：读者知道角色不知道的事，产生紧张或幽默
+- **全知俯瞰**：读者看到多方布局，角色只能看到局部
+- **伏笔可见**：读者注意到细节暗示，角色尚未察觉
+
+**典型应用**：
+- 何时使用？达到什么效果？
+- 信息透露的方式和节奏？
+- 是否过度使用导致读者焦虑或厌烦？
+
+#### B. 角色 > 读者（角色保留秘密）
+- **不可靠叙述者**：角色的讲述可能有偏差或隐瞒
+- **秘密计划**：角色在策划某事但不告诉读者
+- **隐瞒身份/过去**：角色身世或经历的逐步揭露
+- **内心独白保留**：即使在内视角中也保留隐私
+
+**典型应用**：
+- 什么样的秘密会被保留？
+- 揭秘的时机选择标准？
+- 秘密揭晓的冲击力管理？
+
+#### C. 读者 = 角色（同步知情）
+- **共同发现**：读者和角色同时获得信息
+- **共同困惑**：面对谜团时一起探索
+- **共同惊讶**：突发事件同时震惊双方
+
+**典型应用**：
+- 这种模式的使用频率？
+- 适合什么样的剧情段落？
+- 如何避免平淡（因为缺乏信息差）？
+
+### 3. 旁白风格分析
+
+#### A. 旁白声音特征
+- ** invisible narrator（隐形旁白）**：尽量不让人意识到叙述者存在
+- ** character-narrator（角色化旁白）**：旁白带有明显的人格色彩
+- ** authorial voice（作者声音）**：直接或间接地表达作者观点
+- ** meta-fictional（元小说旁白）**：打破第四面墙，承认自己在讲故事
+
+**分析**：本书旁白属于哪种类型？一致性如何？
+
+#### B. 旁白介入程度
+- **零介入**：纯展示，不加评论
+- **轻度介入**：偶尔解释或点评
+- **中度介入**：经常发表看法，引导读者理解
+- **重度介入**：旁白本身成为特色，甚至抢戏
+
+**评价**：介入程度的适当性，是否增强或削弱了叙事？
+
+#### C. 旁白的语言风格
+- 正式/口语化/文白夹杂？
+- 幽默/严肃/冷峻/温暖？
+- 是否使用特定的口头禅或标志性表达？
+- 旁白风格与角色对话风格的区分度？
+
+### 4. 镜头语言偏好
+
+#### A. 景别运用习惯
+- **远景（广角）**：环境描写、战场全景、城市场景
+- **全景**：完整场景，人物与环境的关系
+- **中景**：人物上半身，互动和对话
+- **近景**：面部表情，情绪细节
+- **特写**：眼睛、手部动作、物品细节
+- **大特写**：极端聚焦，强调某个元素
+
+**统计**：各景别的使用频率和偏好
+
+#### B. 镜头运动
+- **固定镜头**：静止观察，营造凝重或悬疑
+- **推镜头**：逐渐靠近，加强紧张或亲密
+- **拉镜头**：逐渐远离，展示全局或疏离感
+- **摇镜头**：扫视场景，介绍环境或发现
+- **跟镜头**：跟随角色移动，增强代入感
+- **蒙太奇**：快速剪辑，并列或多线并行
+
+**分析**：镜头运动如何配合情绪节奏？
+
+#### C. 视角角度
+- **平视**：平等、正常、客观
+- **俯视**：渺小、压迫、上帝视角
+- **仰视**：高大、威严、敬畏
+- **倾斜（荷兰角）**：不安、扭曲、异常
+
+**分析**：角度选择的叙事功能和心理学效果
+
+### 5. 时间处理技法
+
+#### A. 时间流速控制
+- **实时叙事**：与阅读时间接近1:1
+- **压缩时间**：数句话概括数天/数月/数年
+- **膨胀时间**：数秒的事件用数千字展开
+- **时间冻结**：关键时刻的慢动作描写
+
+**分析**：时间流速变化的规律和功能
+
+#### B. 闪回（Flashback）
+- **触发方式**：物件/话语/梦境/气味/ pain flash
+- **长度变化**：从一句话到整个章节
+- **整合程度**：无缝融入还是明确标记？
+- **功能分类**：
+  - 解释性闪回（填补背景信息）
+  - 情感性闪回（唤起情绪共鸣）
+  - 对比性闪回（今昔对照，显示变化）
+  - 悬念性闪回（揭示隐藏信息）
+
+**统计**：闪回的使用频率和典型长度
+
+#### C. 插叙（Flash-forward）
+- **预兆性插叙**：短暂的未来画面，制造悬念
+- **平行时间线**：同时讲述现在和未来的故事
+- **框架式结构**：故事在未来某点被回忆
+
+**分析**：插叙的使用谨慎度和效果
+
+#### D. 时间跳跃与省略
+- **章节间跳跃**：省略过渡期，直接进入下一个有意义的时间点
+- **时间空白**：故意留白，让读者自行脑补
+- **非线性叙事**：打乱时间顺序，重新编排
+- **时间循环/重复**：同一时间段多次从不同角度讲述
+
+**评价**：时间处理的创新性和可读性平衡
+
+## 输出格式要求
+
+```json
+{
+  "layer": "narrative",
+  "book_title": "{book_title}",
+  "analysis": {
+    "pov_system": {
+      "primary_type": "string",
+      "secondary_types": ["string"],
+      "focus_distribution": {
+        "protagonist": number,
+        "supporting_character": number,
+        "antagonist": number,
+        "minor_character": number
+      },
+      "narrative_distance_control": {
+        "close": {"usage": "string", "function": "string"},
+        "medium": {"usage": "string", "function": "string"},
+        "distant": {"usage": "string", "function": "string"}
+      },
+      "consistency_issues": ["string"]
+    },
+    "information_gap_structure": {
+      "reader_superior": {
+        "techniques": ["string"],
+        "typical_usage": "string",
+        "effectiveness": "high|medium|low"
+      },
+      "character_secrets": {
+        "secret_types": ["string"],
+        "reveal_timing_strategy": "string",
+        "reveal_impact_management": "string"
+      },
+      "synchronized_knowledge": {
+        "frequency": "string",
+        "suitable_scenarios": ["string"],
+        "avoiding_flatness": "string"
+      }
+    },
+    "narrator_style": {
+      "voice_type": "string",
+      "intervention_level": "none|light|moderate|heavy",
+      "language_style": "string",
+      "separation_from_dialogue": "high|medium|low",
+      "signature_expressions": ["string"]
+    },
+    "cinematic_language": {
+      "shot_size_preferences": {
+        "extreme_long_shot": number,
+        "long_shot": number,
+        "full_shot": number,
+        "medium_shot": number,
+        "close_up": number,
+        "extreme_close_up": number
+      },
+      "camera_movement": {
+        "static": "string",
+        "push_in": "string",
+        "pull_out": "string",
+        "pan": "string",
+        "tracking": "string",
+        "montage": "string"
+      },
+      "camera_angle": {
+        "eye_level": "string",
+        "high_angle": "string",
+        "low_angle": "string",
+        "dutch_angle": "string"
+      }
+    },
+    "time_manipulation": {
+      "pace_control": {
+        "realtime": "string",
+        "compression": "string",
+        "expansion": "string",
+        "frozen_moment": "string"
+      },
+      "flashback_technique": {
+        "triggers": ["string"],
+        "length_range": "string",
+        "integration_style": "string",
+        "functional_types": ["string"],
+        "frequency": "string"
+      },
+      "flash_forward_usage": {
+        "presence": boolean,
+        "caution_level": "high|medium|low",
+        "effectiveness": "string"
+      },
+      "temporal_jumps": {
+        "between_chapters": "string",
+        "ellipses": "string",
+        "nonlinear_elements": "string",
+        "time_loops": boolean
+      }
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "innovations": ["string"],
+    "issues": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取POV切换规则、信息差管理算法、镜头调度方案、时间操控模板
+**文学侧**：评估叙事的沉浸感、悬念营造的艺术性、时空处理的诗意、读者心理操控的精妙程度
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的叙事技术特征
+2. **典型证据**：至少2-3个具体例子（含章节引用和原文片段）
+3. **仿写规则**：可操作的叙事技术指导原则
+4. **稳定度判断**：该技术运用的成熟度和一致性（高/中/低）
+
+---
+**上下文输入**：{context}

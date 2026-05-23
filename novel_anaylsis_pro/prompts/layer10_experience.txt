@@ -1,0 +1,481 @@
+# 读者体验层分析 Prompt
+
+## 任务目标
+对《{book_title}》进行**读者心理学**层面的分析，解构阅读体验的形成机制和情绪调控策略。
+
+## ⚠️ 分析立场
+站在"理想读者"的角度，模拟真实的阅读体验过程，记录情绪波动、注意力分配、满足感来源等微观体验数据。
+
+---
+
+## 第一部分：爽点类型分布
+
+### 爽点分类体系（7-8大类 + 子类型）
+
+#### 1. 战力爽（Power Fantasy）
+- **实力展示爽**：轻松击败对手，展示强大实力
+- **突破界限爽**：打破被认为不可能的限制
+- **新技术/技能解锁**：获得强大的新能力
+- **实力被认可**：长期隐藏的实力终于被发现/承认
+- **以弱胜强爽**：凭借智慧和勇气战胜更强的敌人
+
+**本书表现**：
+- 出现频率：约每__章一次
+- 强度范围：1-10分，平均__分
+- 典型场景：[具体例子]
+- 独特之处：[本书战力爽的特色]
+
+#### 2. 打脸爽（Social Domination）
+- **预期颠覆**：被低估后证明所有人错了
+- **羞辱报复**：让曾经侮辱主角的人付出代价
+- **地位翻转**：从底层爬到顶层，俯视曾经看不起自己的人
+- **智商碾压**：所有人都以为主角是棋子，其实主角是棋手
+- **低调装逼**：不经意间展露实力，周围人震惊
+
+**本书表现**：
+- 出现频率：约每__章一次
+- 强度范围：1-10分，平均__分
+- 典型场景：[具体例子]
+- 独特之处：[本书打脸爽的特色]
+
+#### 3. 情感爽（Emotional Satisfaction）
+- **爱情甜蜜**：与心仪对象的亲密互动
+- **友情深厚**：伙伴间的信任和支持
+- **亲情温暖**：家庭关系的感人时刻
+- **被理解/被接纳**：孤独灵魂找到知音
+- **守护成功**：保护了重要的人
+
+**本书表现**：
+- 出现频率：约每__章一次
+- 强度范围：1-10分，平均__分
+- 典型场景：[具体例子]
+
+#### 4. 智商爽（Intellectual Triumph）
+- **料敌先机**：提前预判对手的行动
+- **布局成功**：精心策划的计划完美执行
+- **识破阴谋**：看穿别人的诡计
+- **巧妙解困**：用智慧解决看似无解的难题
+- **信息优势**：掌握别人不知道的关键信息
+
+**本书表现**：
+- 出现频率：约每__章一次
+- 强度范围：1-10分，平均__分
+- 典型场景：[具体例子]
+
+#### 5. 获得爽（Acquisition Joy）
+- **宝物获得**：得到珍贵的物品/功法/资源
+- **地位提升**：晋升/获得头衔/扩大影响力
+- **财富增长**：金钱/资源的显著增加
+- **人脉拓展**：认识重要人物/加入强大组织
+- **领地/势力扩张**：掌控范围的扩大
+
+**本书表现**：
+- 出现频率：约每__章一次
+- 强度范围：1-10分，平均__分
+- 典型场景：[具体例子]
+
+#### 6. 成长爽（Progress Satisfaction）
+- **境界突破**：修炼等级的提升
+- **技能精进**：能力的明显进步
+- **心智成熟**：性格/观念的成长
+- **克服弱点**：战胜自身的缺陷
+- **回顾对比**：现在的自己 vs 过去的自己，差距惊人
+
+**本书表现**：
+- 出现频率：约每__章一次
+- 强度范围：1-10分，平均__分
+- 典型场景：[具体例子]
+
+#### 7. 复仇/正义爽（Retributive Justice）
+- **大仇得报**：长期的仇恨终于偿还
+- **恶人受惩**：坏人得到应有的惩罚
+- **冤屈洗刷**：被误解的清白终于恢复
+- **秩序重建**：混乱的世界恢复公正
+- **守护成功**：阻止了邪恶计划的实施
+
+**本书表现**：
+- 出现频率：约每__章一次
+- 强度范围：1-10分，平均__分
+- 典型场景：[具体例子]
+
+#### 8. 探索/发现爽（Discovery Wonder）
+- **新世界揭露**：发现前所未见的领域/境界
+- **谜题解开**：长期困惑的问题终于有了答案
+- **真相大白**：隐藏的秘密被揭示
+- **奇观见证**：目睹壮观/神奇的场景
+- **知识获取**：学习到有趣/重要的新知识
+
+**本书表现**：
+- 出现频率：约每__章一次
+- 强度范围：1-10分，平均__分
+- 典型场景：[具体例子]
+
+### 爽点分布图表（概念性描述）
+绘制全书爽点分布的概念图：
+- X轴：章节进度（开始 → 中间 → 结尾）
+- Y轴：爽点强度（低 → 高）
+- 不同颜色/形状代表不同类型的爽点
+
+**分布规律总结**：
+- 开篇期的爽点策略：[密集/稀疏/渐进]
+- 中期的爽点策略：[稳定/波动/升级]
+- 高潮期的爽点策略：[爆发/持续/多样]
+- 结尾期的爽点策略：[收束/回味/升华]
+
+---
+
+## 第二部分：情绪曲线描述
+
+### 整体情绪走势
+用文字描绘阅读全程的情绪变化轨迹：
+
+```
+【开篇阶段】（第1-__章）
+情绪基调：______
+关键转折：______
+情绪峰值/谷值：______
+
+【发展阶段】（第__-__章）
+情绪基调：______
+主要波动：______
+读者状态：______
+
+【高潮阶段】（第__-__章）
+情绪基调：______
+冲击强度：______
+生理反应模拟：______
+
+【收尾阶段】（第__-终章）
+情绪基调：______
+余韵处理：______
+最终情绪状态：______
+```
+
+### 情绪维度细分
+- **兴奋度曲线**：激动/平静的变化
+- **焦虑度曲线**：紧张/放松的变化
+- **愉悦度曲线**：快乐/痛苦的变化
+- **投入度曲线**：沉迷/疏离的变化
+- **期待度曲线**：急切/耐心的变化
+
+**五条曲线的同步性分析**：它们是同步波动还是各自独立？
+
+### 关键情绪节点
+标记全书最重要的10-15个情绪转折点：
+| 章节 | 事件 | 情绪变化方向 | 强度(1-10) | 持续影响 |
+|------|------|-------------|-----------|---------|
+| ... | ... | ... | ... | ... |
+
+---
+
+## 第三部分：压抑释放周期分析
+
+### 小周期（微观周期，3-10章为一个单元）
+
+#### 典型小周期结构
+```
+阶段1：铺垫期（__章）
+- 情绪状态：相对平静/轻度期待
+- 叙事功能：介绍新情况/建立新目标
+- 读者心理：好奇但不太紧张
+
+阶段2：积蓄期（__章）
+- 情绪状态：逐渐紧张/期待感增强
+- 叙事功能：障碍出现/困难加剧
+- 读者心理：开始着急，希望快点解决
+
+阶段3：压抑期（__章）
+- 情绪状态：高度紧张/焦虑/憋屈
+- 叙事功能：主角遭遇挫折/陷入困境
+- 读者心理：难受但知道会有转机
+
+阶段4：临界点（__章/-1章）
+- 情绪状态：极度压抑/快要爆炸
+- 叙事功能：最后一根稻草/最低谷
+- 读者心理：忍耐到达极限
+
+阶段5：释放期（1-2章）
+- 情绪状态：爆发式宣泄/狂喜/畅快
+- 叙事功能：反转/突破/胜利
+- 读者心理：爽！！！（或多重情绪混合）
+
+阶段6：缓冲期（1-2章）
+- 情绪状态：平复/回味/新的平静
+- 叙事功能：处理余波/建立新平衡
+- 读者心理：满足，准备进入下一个周期
+```
+
+**本书的小周期参数**：
+- 平均周期长度：__章
+- 压抑期占比：__%
+- 释放强度：平均__分（1-10）
+- 压释比（压抑:释放）大约 __:__
+
+### 大周期（宏观周期，30-100章/整卷为一个单元）
+
+#### 典型大周期结构
+```
+卷初：新格局建立
+- 新的目标/新的舞台/新的挑战
+- 情绪基线调整
+- 读者适应期
+
+卷中：多重小周期的叠加
+- 几个小周期嵌套进行
+- 总体趋势：向上攀升 or 向下探底？
+- 复杂性增加
+
+卷高潮：整卷的最大冲突
+- 所有线索汇聚
+- 最大规模的对抗
+- 情绪的最高点（或最低点）
+
+卷末：收束与过渡
+- 本卷问题的解决
+- 为下一卷铺垫
+- 情绪回落/升华
+```
+
+**本书的大周期特征**：
+- 每卷的大周期是否明显？
+- 卷与卷之间的情绪衔接如何？
+- 是否有"整本书"级别的超大周期？
+
+### 虐爽比分析
+
+#### "虐"的定义和表现
+- **肉体之虐**：主角受伤/受苦/濒死
+- **精神之虐**：被误解/被背叛/失去至亲
+- **尊严之虐**：被羞辱/被践踏/被轻视
+- **希望之虐**：即将成功时失败/眼看得到却失去
+- **等待之虐**：知道的秘密不能说/想救的人救不了
+
+#### "爽"的定义和表现
+- （参见第一部分的爽点分类）
+
+#### 虐爽平衡评估
+- **总体虐爽比**：虐的总量 : 爽的总量 ≈ __ : __
+- **虐的质量**：虐得是否有意义？是否让人成长？
+- **爽的质量**：爽得是否合理？是否让人觉得廉价？
+- **虐爽交替节奏**：是否安排得当？
+- **极端测试**：
+  - 最虐的连续章节：第__-__章（共__章）
+  - 最爽的连续章节：第__-__章（共__章）
+  - 读者的最大承受能力是否被挑战？
+
+---
+
+## 第四部分：读者体验模型总结
+
+### 体验画像
+如果要把这本书的阅读体验"画"出来：
+
+**体验色调**：______（用颜色形容，如"热血红带忧郁蓝"）
+**体验质地**：______（如"粗糙有力"/"细腻绵长"/"跌宕起伏"）
+**体验温度**：______（如"炽热"/"温润"/"冷峻"）
+**体验节奏**：______（如"急促如鼓点"/"悠扬如流水"/"变幻如交响"）
+
+### 目标读者画像
+这本书最适合什么样的读者？
+- **年龄层**：__
+- **性别倾向**：__
+- **阅读经验**：新手/有经验/老书虫
+- **心理需求**：逃避现实/寻求激励/情感共鸣/智力满足/...
+- **耐心阈值**：高（能忍受慢热）/中/低（需要快速吸引）
+- **接受度边界**：能接受__/不能接受__
+
+### 成瘾性分析
+- ** hook 能力**：开头__章内能否抓住读者？（是/否/视情况）
+- **弃书风险点**：哪些地方最容易让读者放弃？（第__章左右）
+- **追更动力**：如果连载，读者追更的动力是什么？
+- **推荐意愿**：读者看完后推荐给他人的可能性（高/中/低）
+- **重读价值**：值得重读吗？为什么？
+
+### 体验缺陷诊断
+- **疲劳点**：哪些部分让读者感到疲惫或厌烦？
+- **失望点**：哪些地方未能满足期待？
+- **困惑点**：哪些地方让读者感到不解？
+- **出戏点**：哪些地方破坏了沉浸感？
+- **冗余点**：哪些内容可以删减而不影响体验？
+
+## 输出格式要求
+
+```json
+{
+  "layer": "experience",
+  "book_title": "{book_title}",
+  "analysis": {
+    "satisfaction_type_distribution": {
+      "power_fantasy": {
+        "subtypes": ["string"],
+        "frequency": "string",
+        "intensity_range": {"min": 1, "max": 10, "avg": 7},
+        "typical_scenarios": ["string"],
+        "unique_features": "string"
+      },
+      "social_domination": {
+        "subtypes": ["string"],
+        "frequency": "string",
+        "intensity_range": {"min": 1, "max": 10, "avg": 7},
+        "typical_scenarios": ["string"],
+        "unique_features": "string"
+      },
+      "emotional_satisfaction": {
+        "subtypes": ["string"],
+        "frequency": "string",
+        "intensity_range": {"min": 1, "max": 10, "avg": 7},
+        "typical_scenarios": ["string"]
+      },
+      "intellectual_triumph": {
+        "subtypes": ["string"],
+        "frequency": "string",
+        "intensity_range": {"min": 1, "max": 10, "avg": 7},
+        "typical_scenarios": ["string"]
+      },
+      "acquisition_joy": {
+        "subtypes": ["string"],
+        "frequency": "string",
+        "intensity_range": {"min": 1, "max": 10, "avg": 7},
+        "typical_scenarios": ["string"]
+      },
+      "progress_satisfaction": {
+        "subtypes": ["string"],
+        "frequency": "string",
+        "intensity_range": {"min": 1, "max": 10, "avg": 7},
+        "typical_scenarios": ["string"]
+      },
+      "retributive_justice": {
+        "subtypes": ["string"],
+        "frequency": "string",
+        "intensity_range": {"min": 1, "max": 10, "avg": 7},
+        "typical_scenarios": ["string"]
+      },
+      "discovery_wonder": {
+        "subtypes": ["string"],
+        "frequency": "string",
+        "intensity_range": {"min": 1, "max": 10, "avg": 7},
+        "typical_scenarios": ["string"]
+      },
+      "distribution_map_description": "string",
+      "distribution_patterns": {
+        "opening_phase": "string",
+        "development_phase": "string",
+        "climax_phase": "string",
+        "conclusion_phase": "string"
+      }
+    },
+    "emotional_curve": {
+      "overall_trajectory": {
+        "opening": {"tone": "string", "turning_points": ["string"], "peaks_valleys": "string"},
+        "development": {"tone": "string", "fluctuations": "string", "reader_state": "string"},
+        "climax": {"tone": "string", "impact_intensity": "string", "physiological_simulation": "string"},
+        "conclusion": {"tone": "string", "aftertaste": "string", "final_state": "string"}
+      },
+      "emotional_dimensions": {
+        "excitement_curve": "string",
+        "anxiety_curve": "string",
+        "pleasure_curve": "string",
+        "engagement_curve": "string",
+        "anticipation_curve": "string",
+        "synchronicity_analysis": "string"
+      },
+      "key_emotional_nodes": [
+        {"chapter": "string", "event": "string", "direction": "string", "intensity": 1, "lasting_impact": "string"}
+      ]
+    },
+    "tension_release_cycles": {
+      "micro_cycle": {
+        "average_length_chapters": number,
+        "structure": {
+          "setup": {"chapters": number, "emotion": "string", "reader_psychology": "string"},
+          "buildup": {"chapters": number, "emotion": "string", "reader_psychology": "string"},
+          "suppression": {"chapters": number, "emotion": "string", "reader_psychology": "string"},
+          "critical_point": {"chapters": number, "emotion": "string", "reader_psychology": "string"},
+          "release": {"chapters": number, "emotion": "string", "reader_psychology": "string"},
+          "buffer": {"chapters": number, "emotion": "string", "reader_psychology": "string"}
+        },
+        "suppression_ratio": number,
+        "release_intensity_avg": number,
+        "suffering_to_release_ratio": "string"
+      },
+      "macro_cycle": {
+        "volume_beginning": "string",
+        "volume_middle": "string",
+        "volume_climax": "string",
+        "volume_end": "string",
+        "inter_volume_transition": "string",
+        "book_level_super_cycle": boolean
+      },
+      "anguish pleasure balance": {
+        "overall_ratio": "string",
+        "suffering_quality": "meaningful|meaningless|mixed",
+        "pleasure_quality": "earned|cheap|mixed",
+        "alternating_rhythm": "well_executed|poorly_executed",
+        "extreme_tests": {
+          "most_anguish_continuous": {"start": "string", "end": "string", "length": number},
+          "most_pleasure_continuous": {"start": "string", "end": "string", "length": number},
+          "reader_tolerance_tested": boolean
+        }
+      }
+    },
+    "reader_experience_model": {
+      "experience_portrait": {
+        "color_tone": "string",
+        "texture": "string",
+        "temperature": "string",
+        "rhythm": "string"
+      },
+      "target_reader_profile": {
+        "age_group": "string",
+        "gender_tendency": "string",
+        "reading_experience": "beginner|experienced|veteran",
+        "psychological needs": ["string"],
+        "patience_threshold": "high|medium|low",
+        "acceptance_boundaries": {
+          "acceptable": ["string"],
+          "unacceptable": ["string"]
+        }
+      },
+      "addictiveness_analysis": {
+        "hook_ability": {"can_capture_in_chapters": number, "assessment": "yes|no|conditional"},
+        "drop_out risk_points": ["string"],
+        "serial_reading_motivation": "string",
+        "recommendation_likelihood": "high|medium|low",
+        "reread_value": {"worthwhile": boolean, "reason": "string"}
+      },
+      "experience_defect_diagnosis": {
+        "fatigue_points": ["string"],
+        "disappointment_points": ["string"],
+        "confusion_points": ["string"],
+        "immersion_breakers": ["string"],
+        "redundancy_points": ["string"]
+      }
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "experience_consistency": "high|medium|low",
+    "strengths": ["string"],
+    "areas_for_improvement": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取爽点分类学、情绪曲线参数、周期模型公式、体验度量指标
+**文学侧**：感知阅读的温度和质感、情感共振的深度、沉浸感的强度、艺术魅力的大小
+
+⭐ **特别强调**：此层分析的核心价值在于"可应用性"——分析结果应该能够指导创作者如何调控读者的阅读体验，如何设计情绪起伏，如何把握虐爽平衡。
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的体验特征
+2. **典型证据**：至少2-3个具体场景（含章节引用和个人体验描述）
+3. **仿写规则**：可操作的体验设计指导原则
+4. **稳定度判断**：体验质量的一致性和整体水准（高/中/低）
+
+---
+**上下文输入**：{context}

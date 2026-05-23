@@ -1,0 +1,401 @@
+<div class="content">
+<h2 class="section-title page-break" id="part4">第四章 核心组件详解</h2>
+
+<blockquote><p>从"知道用什么"到"理解怎么选、怎么配、怎么调优"</p></blockquote>
+
+<h3 id="section20">4.1 接入层组件</h3>
+
+<span class="tag-core">接入层</span> 是AI系统与外部世界的边界，负责流量管理、安全控制和协议转换。在AI系统中，接入层的设计直接影响系统的可用性、安全性和性能。
+
+<h4>4.1.1 API网关</h4>
+
+<table>
+<thead>
+<tr><th style="text-align:left">方案</th><th style="text-align:left">类型</th><th style="text-align:left">特点</th><th style="text-align:left">适用场景</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>Kong</strong></td><td style="text-align:left">开源/商业</td><td style="text-align:left">基于Nginx，插件生态丰富，支持Rate Limiting、JWT认证、请求转换</td><td style="text-align:left">中大型企业，需要丰富插件生态</td></tr>
+<tr><td style="text-align:left"><strong>Nginx</strong></td><td style="text-align:left">开源</td><td style="text-align:left">高性能反向代理，配置灵活，社区成熟</td><td style="text-align:left">简单场景，或作为Kong的底层引擎</td></tr>
+<tr><td style="text-align:left"><strong>APISIX</strong></td><td style="text-align:left">开源</td><td style="text-align:left">国产网关，动态配置热加载，性能优异，适合云原生</td><td style="text-align:left">中国团队，云原生架构</td></tr>
+<tr><td style="text-align:left"><strong>Envoy</strong></td><td style="text-align:left">开源</td><td style="text-align:left">云原生服务代理，支持gRPC、HTTP/2、高级负载均衡</td><td style="text-align:left">微服务架构、Service Mesh</td></tr>
+</tbody>
+</table>
+
+<strong>AI系统的特殊需求：</strong>
+<ul>
+  <li><strong>流式响应支持</strong>：LLM的SSE（Server-Sent Events）流式输出需要网关正确透传，不能缓存或截断</li>
+  <li><strong>长超时配置</strong>：某些Agent任务可能运行数分钟，需要配置足够长的超时时间</li>
+  <li><strong>大请求体支持</strong>：多模态输入（图片+文本）可能产生较大的请求体</li>
+</ul>
+
+<strong>Kong配置示例（AI流式响应透传）：</strong>
+
+<pre><code class="language-yaml"># Kong Service 配置
+service:
+  name: ai-model-service
+  url: http://model-server:8000
+  connect_timeout: 60000    # 连接超时 60s
+  write_timeout: 300000     # 写入超时 5分钟
+  read_timeout: 300000      # 读取超时 5分钟
+
+# 禁止响应缓存
+plugins:
+  - name: response-transformer
+    config:
+      remove:
+        headers:
+          - Cache-Control
+          - X-Accel-Buffering</code></pre>
+
+<h4>4.1.2 限流与熔断</h4>
+
+<table>
+<thead>
+<tr><th style="text-align:left">组件</th><th style="text-align:left">功能</th><th style="text-align:left">集成方式</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>Sentinel</strong>（阿里）</td><td style="text-align:left">流量控制、熔断降级、系统自适应保护</td><td style="text-align:left">Java SDK / K8s Sidecar</td></tr>
+<tr><td style="text-align:left"><strong>Redis + Lua</strong></td><td style="text-align:left">基于Redis的滑动窗口限流</td><td style="text-align:left">自定义中间件</td></tr>
+<tr><td style="text-align:left"><strong>Kong Rate Limiting</strong></td><td style="text-align:left">网关层面的限流</td><td style="text-align:left">Kong插件</td></tr>
+<tr><td style="text-align:left"><strong>Envoy Rate Limit</strong></td><td style="text-align:left">服务网格层面的限流</td><td style="text-align:left">Envoy Filter</td></tr>
+</tbody>
+</table>
+
+<strong>AI系统的限流策略：</strong>
+
+<table>
+<thead>
+<tr><th style="text-align:left">维度</th><th style="text-align:left">策略</th><th style="text-align:left">说明</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">按用户</td><td style="text-align:left">每分钟/每小时Token上限</td><td style="text-align:left">防止单个用户过度消耗资源</td></tr>
+<tr><td style="text-align:left">按模型</td><td style="text-align:left">每个模型并发数上限</td><td style="text-align:left">防止某个模型被打满</td></tr>
+<tr><td style="text-align:left">按场景</td><td style="text-align:left">不同场景不同配额</td><td style="text-align:left">核心场景优先保障</td></tr>
+<tr><td style="text-align:left">全局</td><td style="text-align:left">系统总并发上限</td><td style="text-align:left">防止雪崩</td></tr>
+</tbody>
+</table>
+
+<hr>
+
+<h3 id="section21">4.2 编排层组件</h3>
+
+<span class="tag-core">编排层</span> 是AI系统的"大脑"，负责任务规划、工具调用和Agent流程控制。
+
+<h4>4.2.1 Agent编排模式</h4>
+
+<strong>模式一：ReAct（Reasoning + Acting）</strong>
+
+<p>ReAct是最经典的Agent编排模式，核心思想是让模型在"推理"和"行动"之间交替进行：</p>
+
+<pre><code>Thought: 用户想知道今天的销售数据
+Action: 调用 sales_api(query="today")
+Observation: 返回 {total: 1250000, orders: 342}
+Thought: 数据已获取，需要汇总并格式化
+Answer: 今日销售额125万元，共342笔订单...</code></pre>
+
+<strong>适用场景：</strong> 需要多步骤推理和工具调用的任务，如数据查询、信息检索、问题排查。
+
+<strong>模式二：Plan-and-Execute</strong>
+
+<p>先让模型制定完整计划，再按计划逐步执行：</p>
+
+<pre><code>Plan:
+  1. 查询用户历史订单
+  2. 分析用户偏好
+  3. 检索当前促销商品
+  4. 生成个性化推荐列表
+  
+Execute Step 1 → 结果 → Execute Step 2 → ...</code></pre>
+
+<strong>适用场景：</strong> 需要多步骤、可预测流程的复杂任务，如报告生成、数据分析。
+
+<strong>模式三：工具调用（Tool Calling / Function Calling）</strong>
+
+<p>模型直接输出结构化的工具调用请求，由系统执行后返回结果：</p>
+
+<pre><code class="language-json">{
+  "tool_calls": [
+    {
+      "name": "query_database",
+      "arguments": {
+        "sql": "SELECT * FROM orders WHERE date = '2026-01-15'"
+      }
+    }
+  ]
+}</code></pre>
+
+<strong>适用场景：</strong> 需要精确调用外部API的场景，如数据库查询、业务系统操作。
+
+<h4>4.2.2 编排框架选型</h4>
+
+<table>
+<thead>
+<tr><th style="text-align:left">框架</th><th style="text-align:left">语言</th><th style="text-align:left">核心优势</th><th style="text-align:left">劣势</th><th style="text-align:left">成熟度</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>LangChain</strong></td><td style="text-align:left">Python/JS</td><td style="text-align:left">生态最丰富、组件最多、社区最大</td><td style="text-align:left">抽象过重、学习曲线陡</td><td style="text-align:left">★★★★★</td></tr>
+<tr><td style="text-align:left"><strong>LangGraph</strong></td><td style="text-align:left">Python/JS</td><td style="text-align:left">有状态图编排、支持循环和条件分支</td><td style="text-align:left">较新、文档不完善</td><td style="text-align:left">★★★★</td></tr>
+<tr><td style="text-align:left"><strong>AutoGen</strong></td><td style="text-align:left">Python</td><td style="text-align:left">多Agent对话协作、微软支持</td><td style="text-align:left">资源消耗大</td><td style="text-align:left">★★★★</td></tr>
+<tr><td style="text-align:left"><strong>CrewAI</strong></td><td style="text-align:left">Python</td><td style="text-align:left">基于角色、上手简单</td><td style="text-align:left">功能相对简单</td><td style="text-align:left">★★★</td></tr>
+<tr><td style="text-align:left"><strong>Dify</strong></td><td style="text-align:left">全栈</td><td style="text-align:left">可视化编排、RAG+Agent一体化、开源</td><td style="text-align:left">定制性受限</td><td style="text-align:left">★★★★</td></tr>
+<tr><td style="text-align:left"><strong>扣子(Coze)</strong></td><td style="text-align:left">全栈</td><td style="text-align:left">字节生态、丰富插件、低代码</td><td style="text-align:left">平台锁定</td><td style="text-align:left">★★★★</td></tr>
+</tbody>
+</table>
+
+<strong>选型建议：</strong>
+
+<table>
+<thead>
+<tr><th style="text-align:left">场景</th><th style="text-align:left">推荐方案</th><th style="text-align:left">理由</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">快速原型验证</td><td style="text-align:left">Dify / 扣子</td><td style="text-align:left">可视化搭建、开箱即用</td></tr>
+<tr><td style="text-align:left">深度定制开发</td><td style="text-align:left">LangChain + LangGraph</td><td style="text-align:left">灵活度高、生态完善</td></tr>
+<tr><td style="text-align:left">多Agent协作</td><td style="text-align:left">AutoGen / CrewAI</td><td style="text-align:left">原生支持多Agent</td></tr>
+<tr><td style="text-align:left">企业级生产</td><td style="text-align:left">自研编排层（参考LangGraph思想）</td><td style="text-align:left">可控性强、可深度优化</td></tr>
+</tbody>
+</table>
+
+<hr>
+
+<h3 id="section22">4.3 模型层组件</h3>
+
+<span class="tag-core">模型层</span> 是AI系统的"引擎"，提供核心的理解和生成能力。
+
+<h4>4.3.1 主流模型对比（2026年Q1）</h4>
+
+<table>
+<thead>
+<tr><th style="text-align:left">模型</th><th style="text-align:left">厂商</th><th style="text-align:left">上下文窗口</th><th style="text-align:left">输入价格</th><th style="text-align:left">输出价格</th><th style="text-align:left">中文能力</th><th style="text-align:left">特点</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>GPT-4o</strong></td><td style="text-align:left">OpenAI</td><td style="text-align:left">128K</td><td style="text-align:left">¥14/M tokens</td><td style="text-align:left">¥42/M tokens</td><td style="text-align:left">★★★★</td><td style="text-align:left">综合能力最强</td></tr>
+<tr><td style="text-align:left"><strong>Claude 4 Opus</strong></td><td style="text-align:left">Anthropic</td><td style="text-align:left">200K</td><td style="text-align:left">¥18/M tokens</td><td style="text-align:left">¥56/M tokens</td><td style="text-align:left">★★★★</td><td style="text-align:left">长文本推理最强</td></tr>
+<tr><td style="text-align:left"><strong>Qwen-Max</strong></td><td style="text-align:left">阿里</td><td style="text-align:left">200K</td><td style="text-align:left">¥8/M tokens</td><td style="text-align:left">¥24/M tokens</td><td style="text-align:left">★★★★★</td><td style="text-align:left">中文理解最佳</td></tr>
+<tr><td style="text-align:left"><strong>DeepSeek-V3</strong></td><td style="text-align:left">DeepSeek</td><td style="text-align:left">128K</td><td style="text-align:left">¥1/M tokens</td><td style="text-align:left">¥3/M tokens</td><td style="text-align:left">★★★★★</td><td style="text-align:left">性价比之王</td></tr>
+<tr><td style="text-align:left"><strong>DeepSeek V4-Pro</strong></td><td style="text-align:left">DeepSeek</td><td style="text-align:left">256K</td><td style="text-align:left">¥0.025/M tokens</td><td style="text-align:left">¥0.1/M tokens</td><td style="text-align:left">★★★★★</td><td style="text-align:left">极致低价</td></tr>
+<tr><td style="text-align:left"><strong>文心4.5</strong></td><td style="text-align:left">百度</td><td style="text-align:left">200K</td><td style="text-align:left">¥10/M tokens</td><td style="text-align:left">¥30/M tokens</td><td style="text-align:left">★★★★★</td><td style="text-align:left">中文生态完善</td></tr>
+<tr><td style="text-align:left"><strong>混元Pro</strong></td><td style="text-align:left">腾讯</td><td style="text-align:left">128K</td><td style="text-align:left">¥12/M tokens</td><td style="text-align:left">¥36/M tokens</td><td style="text-align:left">★★★★★</td><td style="text-align:left">微信生态集成</td></tr>
+</tbody>
+</table>
+
+<p>（来源：各厂商官方定价页面及评测报告，获取时间：2026-03-15）</p>
+
+<blockquote><p>模型选择不是"选最强的"，而是"选最合适的"。2026年的务实策略是建立<strong>模型分级体系</strong>：简单任务用小模型，复杂任务用大模型，关键任务用多模型协作。</p></blockquote>
+
+<h4>4.3.2 模型路由设计</h4>
+
+<pre><code>用户请求
+    │
+    ▼
+┌─────────────┐
+│ 意图分类器   │  ← 判断任务复杂度（L1-L4）
+└──────┬──────┘
+       │
+  ┌────┼────┬────┐
+  ▼    ▼    ▼    ▼
+ L1   L2   L3   L4
+小模型 中模型 大模型 多模型
+DeepSeek Qwen  GPT-4o +人工审核
+V4-Pro  -7B   Claude 4</code></pre>
+
+<strong>路由策略规则示例：</strong>
+
+<pre><code class="language-yaml">routing_rules:
+  - condition: task_type IN ["classification", "extraction", "formatting"]
+    model: deepseek-v4-pro
+    reason: "简单任务，小模型足够"
+  
+  - condition: task_type == "rag_qa" AND doc_count &lt; 10
+    model: qwen-7b
+    reason: "中等任务，本地模型即可"
+  
+  - condition: task_type == "complex_reasoning" OR user_tier == "premium"
+    model: gpt-4o
+    reason: "复杂推理或VIP用户"
+  
+  - condition: risk_level == "critical"
+    strategy: multi_model_vote
+    models: [gpt-4o, claude-4, qwen-max]
+    reason: "关键任务需要多模型交叉验证"</code></pre>
+
+<h4>4.3.3 Prompt管理</h4>
+
+<span class="tag-core">Prompt管理</span> 是AI系统工程化的重要基础，核心要求是：可版本化、可测试、可回滚。
+
+<strong>最佳实践：</strong>
+
+<ol>
+  <li><strong>模板化</strong>：将Prompt参数化，通过模板引擎（Jinja2、Mustache）渲染</li>
+  <li><strong>版本化</strong>：每个Prompt模板有明确的版本号，记录变更历史</li>
+  <li><strong>A/B测试</strong>：同时运行多个版本的Prompt，对比效果</li>
+  <li><strong>自动化评估</strong>：使用LLM-as-a-Judge或RAGAS自动评估Prompt效果</li>
+  <li><strong>回滚机制</strong>：新Prompt效果不佳时能快速回滚到上一版本</li>
+</ol>
+
+<hr>
+
+<h3 id="section23">4.4 数据层组件</h3>
+
+<span class="tag-core">数据层</span> 管理AI系统的所有知识数据，是RAG架构的核心支撑。
+
+<h4>4.4.1 向量数据库选型</h4>
+
+<table>
+<thead>
+<tr><th style="text-align:left">数据库</th><th style="text-align:left">类型</th><th style="text-align:left">规模</th><th style="text-align:left">性能</th><th style="text-align:left">特点</th><th style="text-align:left">适用场景</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>Milvus</strong></td><td style="text-align:left">开源/商业</td><td style="text-align:left">十亿级</td><td style="text-align:left">高</td><td style="text-align:left">分布式、功能最全、国产</td><td style="text-align:left">大规模生产环境</td></tr>
+<tr><td style="text-align:left"><strong>Qdrant</strong></td><td style="text-align:left">开源/商业</td><td style="text-align:left">亿级</td><td style="text-align:left">高</td><td style="text-align:left">Rust编写、过滤查询强</td><td style="text-align:left">中等规模、需要复杂过滤</td></tr>
+<tr><td style="text-align:left"><strong>Weaviate</strong></td><td style="text-align:left">开源/商业</td><td style="text-align:left">亿级</td><td style="text-align:left">中</td><td style="text-align:left">GraphQL接口、内置向量化</td><td style="text-align:left">快速原型、GraphQL生态</td></tr>
+<tr><td style="text-align:left"><strong>Pinecone</strong></td><td style="text-align:left">SaaS</td><td style="text-align:left">十亿级</td><td style="text-align:left">高</td><td style="text-align:left">全托管、零运维</td><td style="text-align:left">SaaS优先、不想运维</td></tr>
+<tr><td style="text-align:left"><strong>Chroma</strong></td><td style="text-align:left">开源</td><td style="text-align:left">百万级</td><td style="text-align:left">中</td><td style="text-align:left">轻量、Python原生</td><td style="text-align:left">开发测试、小规模</td></tr>
+<tr><td style="text-align:left"><strong>Faiss</strong></td><td style="text-align:left">开源库</td><td style="text-align:left">十亿级</td><td style="text-align:left">极高</td><td style="text-align:left">Facebook出品、极致性能</td><td style="text-align:left">嵌入式、极致性能需求</td></tr>
+</tbody>
+</table>
+
+<strong>选型决策树：</strong>
+
+<pre><code>需要全托管SaaS？
+  ├─ 是 → Pinecone
+  └─ 否 → 数据规模 &gt; 1亿向量？
+           ├─ 是 → Milvus（分布式）
+           └─ 否 → 需要复杂过滤？
+                    ├─ 是 → Qdrant
+                    └─ 否 → Chroma（开发）/ Weaviate（生产）</code></pre>
+
+<h4>4.4.2 知识图谱</h4>
+
+<span class="tag-core">知识图谱</span> 用于存储实体和实体之间的关系，适合需要推理和关联查询的场景。
+
+<table>
+<thead>
+<tr><th style="text-align:left">数据库</th><th style="text-align:left">查询语言</th><th style="text-align:left">特点</th><th style="text-align:left">适用场景</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>Neo4j</strong></td><td style="text-align:left">Cypher</td><td style="text-align:left">最成熟、生态最丰富</td><td style="text-align:left">通用知识图谱</td></tr>
+<tr><td style="text-align:left"><strong>NebulaGraph</strong></td><td style="text-align:left">nGQL</td><td style="text-align:left">分布式、国产、高性能</td><td style="text-align:left">大规模图数据</td></tr>
+<tr><td style="text-align:left"><strong>JanusGraph</strong></td><td style="text-align:left">Gremlin</td><td style="text-align:left">Apache开源、后端可插拔</td><td style="text-align:left">已有Hadoop生态</td></tr>
+</tbody>
+</table>
+
+<strong>GraphRAG：</strong> 2025-2026年新兴的技术方向，将知识图谱与向量检索结合：先用向量检索找到相关实体，再通过图谱关系扩展检索范围，最后将结构化知识注入Prompt。这种方式比纯向量检索更擅长回答需要多跳推理的问题。
+
+<h4>4.4.3 文档解析与分块</h4>
+
+<strong>文档解析工具：</strong>
+
+<table>
+<thead>
+<tr><th style="text-align:left">工具</th><th style="text-align:left">支持格式</th><th style="text-align:left">特点</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>Unstructured</strong></td><td style="text-align:left">PDF、Word、HTML、Email等40+格式</td><td style="text-align:left">开源、格式支持最广</td></tr>
+<tr><td style="text-align:left"><strong>LlamaParse</strong></td><td style="text-align:left">PDF（含复杂表格/图表）</td><td style="text-align:left">LlamaIndex出品、对复杂PDF效果好</td></tr>
+<tr><td style="text-align:left"><strong>Docling</strong></td><td style="text-align:left">PDF、Word、PPT</td><td style="text-align:left">IBM出品、结构化提取能力强</td></tr>
+</tbody>
+</table>
+
+<strong>分块策略：</strong>
+
+<table>
+<thead>
+<tr><th style="text-align:left">策略</th><th style="text-align:left">说明</th><th style="text-align:left">适用场景</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">固定大小分块</td><td style="text-align:left">按Token数等长切分</td><td style="text-align:left">通用场景</td></tr>
+<tr><td style="text-align:left">语义分块</td><td style="text-align:left">按段落/标题自然边界切分</td><td style="text-align:left">结构化文档</td></tr>
+<tr><td style="text-align:left">递归分块</td><td style="text-align:left">先大块、再递归细分</td><td style="text-align:left">长文档</td></tr>
+<tr><td style="text-align:left">文档特定分块</td><td style="text-align:left">按文档类型定制（如法律合同、代码）</td><td style="text-align:left">专业领域</td></tr>
+</tbody>
+</table>
+
+<hr>
+
+<h3 id="section24">4.5 运维层组件</h3>
+
+<span class="tag-core">运维层</span> 提供AI系统的质量评估、监控和持续改进能力。
+
+<h4>4.5.1 质量评估框架</h4>
+
+<table>
+<thead>
+<tr><th style="text-align:left">框架</th><th style="text-align:left">语言</th><th style="text-align:left">评估维度</th><th style="text-align:left">特点</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>RAGAS</strong></td><td style="text-align:left">Python</td><td style="text-align:left">忠实度、答案相关性、上下文相关性、上下文召回率</td><td style="text-align:left">最成熟的RAG评估框架</td></tr>
+<tr><td style="text-align:left"><strong>TruLens</strong></td><td style="text-align:left">Python</td><td style="text-align:left">groundedness、answer relevance、context relevance</td><td style="text-align:left">支持多维度、可视化仪表盘</td></tr>
+<tr><td style="text-align:left"><strong>DeepEval</strong></td><td style="text-align:left">Python</td><td style="text-align:left">全面指标、支持LLM-as-a-Judge</td><td style="text-align:left">使用简单、社区活跃</td></tr>
+<tr><td style="text-align:left"><strong>Arize Phoenix</strong></td><td style="text-align:left">Python</td><td style="text-align:left">追踪、评估、可观测性一体化</td><td style="text-align:left">企业级、可视化强</td></tr>
+</tbody>
+</table>
+
+<h4>4.5.2 LLM-as-a-Judge</h4>
+
+<span class="tag-core">LLM-as-a-Judge</span> 是用一个更强的LLM来评估其他模型的输出质量。这是2026年最主流的AI质量评估方法。
+
+<strong>基本流程：</strong>
+
+<pre><code>1. 准备测试集（问题 + 标准答案）
+2. 待评估模型生成回答
+3. Judge模型根据评分标准打分
+4. 统计分析各项指标</code></pre>
+
+<strong>Judge Prompt 示例：</strong>
+
+<pre><code>你是一个专业的AI回答质量评估员。请根据以下标准评估AI回答的质量：
+
+问题：{question}
+标准答案：{reference_answer}
+AI回答：{model_response}
+
+评估维度：
+1. 准确性（0-5）：回答是否正确、无事实错误
+2. 完整性（0-5）：是否覆盖了问题的所有方面
+3. 相关性（0-5）：是否直接回答问题
+4. 可读性（0-5）：语言是否流畅、易懂
+
+请逐项给出评分和简短理由。</code></pre>
+
+<h4>4.5.3 可观测性</h4>
+
+<strong>三大支柱：</strong>
+
+<table>
+<thead>
+<tr><th style="text-align:left">支柱</th><th style="text-align:left">内容</th><th style="text-align:left">工具</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><strong>日志（Logging）</strong></td><td style="text-align:left">结构化记录每次请求的输入输出、Token消耗、模型选择</td><td style="text-align:left">ELK、Loki</td></tr>
+<tr><td style="text-align:left"><strong>指标（Metrics）</strong></td><td style="text-align:left">延迟、吞吐、错误率、成本、用户满意度</td><td style="text-align:left">Prometheus、Grafana</td></tr>
+<tr><td style="text-align:left"><strong>追踪（Tracing）</strong></td><td style="text-align:left">完整记录请求在各层之间的执行路径和耗时</td><td style="text-align:left">OpenTelemetry、LangSmith</td></tr>
+</tbody>
+</table>
+
+<blockquote><p>可观测性是AI系统从Demo走向生产的<strong>必备能力</strong>。没有可观测性的AI系统就像"蒙眼开车"——出了问题不知道原因，更无法持续优化。</p></blockquote>
+
+<hr>
+
+<h3 id="section25">4.6 本章小结</h3>
+
+<p>本章逐层详解了AI系统的核心组件和技术选型：</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">层级</th><th style="text-align:left">关键组件</th><th style="text-align:left">选型要点</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">接入层</td><td style="text-align:left">Kong/Nginx/Sentinel</td><td style="text-align:left">流式透传、长超时、限流熔断</td></tr>
+<tr><td style="text-align:left">编排层</td><td style="text-align:left">ReAct/Plan-and-Execute/工具调用</td><td style="text-align:left">按任务复杂度选择编排模式</td></tr>
+<tr><td style="text-align:left">模型层</td><td style="text-align:left">GPT-4o/Claude/Qwen/DeepSeek</td><td style="text-align:left">分级使用，不盲目追求大模型</td></tr>
+<tr><td style="text-align:left">数据层</td><td style="text-align:left">Milvus/Qdrant/Neo4j</td><td style="text-align:left">按数据规模和查询需求选择</td></tr>
+<tr><td style="text-align:left">运维层</td><td style="text-align:left">RAGAS/TruLens/LLM-as-a-Judge</td><td style="text-align:left">质量评估是可观测性的核心</td></tr>
+</tbody>
+</table>
+
+<p>每个组件的选择都需要权衡功能、性能、成本和团队能力。下一章将深入对比AI系统与传统系统的本质差异，帮助架构师做出正确的架构决策。</p>
+
+<hr>
+
+</div>

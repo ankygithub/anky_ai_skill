@@ -1,0 +1,367 @@
+# 文学维度五：节奏呼吸感分析 Prompt
+
+## 任务目标
+对《{book_title}》进行**叙事节奏**的微观和中观分析，解构其"呼吸感"——即文字流动的韵律、张弛、快慢变化。
+
+## ⚠️ 核心比喻
+好的叙事像呼吸——有吸气（积蓄/紧张/慢）和呼气（释放/松弛/快），有节奏地交替，形成自然的生命律动。节奏失调会让读者"窒息"或"缺氧"。
+
+---
+
+## 第一部分：微节奏分析（句子-段落级别）
+
+### A. 句子级别的节奏
+#### 句长节奏
+- **短句群**（连续多个短句）：
+  - 节奏效果：急促、紧张、有力、干脆
+  - 适用场景：动作、对话、高潮、决心
+  - 本书示例：[原文]
+  
+- **长句群**（连续多个长句）：
+  - 节奏效果：舒缓、深沉、复杂、缠绵
+  - 适用场景：描写、抒情、心理、议论
+  - 本书示例：[原文]
+
+- **长短交替**（规律性或不规律性交替）：
+  - 节奏效果：如同音乐般的起伏
+  - 适用场景：大多数叙述场景
+  - 本书示例：[原文]
+
+#### 句式节奏
+- **陈述句主导**：平稳、客观、叙述性强
+- **疑问句插入**：引起注意、制造悬念、模拟思考
+- **感叹句爆发**：情绪高点、强调重点
+- **省略句/碎片句**：模拟思维跳跃、紧张、口语化
+- **排比句铺陈**：气势增强、节奏统一后突然打破
+
+**本书的句式节奏偏好**：__
+
+### B. 段落级别的节奏
+#### 段落长度与节奏
+- **短段落**（1-3行）：
+  - 节奏：快速、轻盈、频繁换气
+  - 视觉：大量空白，阅读速度快
+  - 心理：轻松、紧张（取决于内容）
+  
+- **中段落**（4-8行）：
+  - 节奏：适中、稳定
+  - 视觉：舒适的阅读块
+  
+- **长段落**（9行以上）：
+  - 节奏：慢速、厚重、沉浸
+  - 视觉：文字墙，需要耐心
+  - 心理：压抑或深沉（取决于内容）
+
+**本书的段落长度分布**：
+- 平均段落长度：__行
+- 短段落占比：__%
+- 长段落占比：__%
+- 段落长度变化幅度：__(大/中/小)
+
+#### 段落内部的呼吸点
+一个好的段落应该有"呼吸点"——读者可以短暂停顿的地方：
+- **话题转换处**：从一件事转到另一件事
+- **时间跳转处**：从现在到过去/未来
+- **视角切换处**：从外部到内部
+- **情绪转折处**：从一种情绪到另一种
+- **强调处**：独立成段以突出
+
+**本书的段落切分逻辑**：__
+
+### C. 对话节奏
+#### 对话的快慢
+- **快速对话**：短句、来回交锋、极少标签
+  - 效果：紧张、活泼、充满能量
+  - 本书示例：[原文]
+
+- **慢速对话**：长句、深思熟虑、较多描写嵌入
+  - 效果：严肃、深情、重要决策
+  - 本书示例：[原文]
+
+- **变速对话**：一场对话内速度变化
+  - 效果：最真实，反映情绪起伏
+  - 本书示例：[原文]
+
+#### 对话的"留白"
+- **沉默的运用**：对话中的停顿和空白
+- **未尽之言**：说了半截的话、暗示、潜台词
+- **动作代替回答**：用行动回应而非语言
+- **环境介入**：外界打断或参与对话
+
+**本书对话留白的艺术**：[评价]
+
+---
+
+## 第二部分：宏节奏分析（章节-卷级别）
+
+### A. 章节内部节奏
+一个典型的本章，其内部节奏是怎样的？
+
+#### 章节节奏模板（如果有稳定的模板）
+```
+【开头】（约占本章__%）
+节奏：慢/中/快
+功能：承接上章/引入新内容/钩住读者
+
+【发展】（约占本章__%）
+节奏：渐进加速/保持稳定/波浪式
+功能：推进剧情/展开冲突/积累张力
+
+【高潮】（约占本章__%）
+节奏：最快/最强
+功能：情绪峰值/关键事件/转折点
+
+【结尾】（约占本章__%）
+节奏：放缓/骤停/悬置
+功能：收束本章/钩住下一章/余韵
+```
+
+**本书的章节节奏一致性**：__(高度一致/有一定模式/每章不同)
+
+### B. 多章组合节奏
+连续几章形成一个更大的节奏单元：
+
+#### 节奏单元类型
+1. **积累单元**（3-5章）：连续铺垫，张力递增
+   - 每章的功能：层层加码
+   - 结束状态：到达临界点
+   
+2. **释放单元**（1-3章）：压力释放，情绪宣泄
+   - 每章的功能：逐步或一次性释放
+   - 结束状态：新的平衡
+   
+3. **过渡单元**（1-2章）：调整期，为下一单元准备
+   - 每章的功能：缓冲、埋线、转换
+   - 结束状态：准备好进入新模式
+
+4. **变奏单元**（2-4章）：节奏模式的突破和创新
+   - 每章的功能：打破预期、提供新鲜感
+   - 结束状态：读者被惊喜
+
+**本书的多章节奏组织方式**：__[描述]
+
+### C. 卷级节奏
+一整卷（通常30-100章）的大节奏曲线：
+
+#### 卷节奏曲线绘制（概念性）
+```
+张力/兴趣度
+     ↑
+  10 |     ╱╲     ╱╲
+   8 |    ╱  ╲   ╱  ╲
+   6 |   ╱    ╲ ╱    ╲___
+   4 |  ╱              ╲
+   2 | ╱                ╲
+   0 +──────────────────→ 章节
+     开头    中段      结尾
+```
+**请根据本书实际情况绘制和描述**
+
+#### 卷首的节奏策略
+- 如何从前一卷过渡过来？
+- 开篇的节奏定位（快/慢/变）？
+- 前10章的节奏任务？
+
+#### 卷中的节奏维持
+- 中段是否会出现"疲软期"？
+- 如何维持读者的兴趣？
+- 节奏变化的频率和幅度？
+
+#### 卷尾的节奏收束
+- 高潮如何安排？（位置/长度/强度）
+- 收束的速度？（急刹车/缓缓停下）
+- 为下一卷留下的钩子？
+
+---
+
+## 第三部分：时间流速感知
+
+### A. 主观时间 vs 客观时间
+读者感受到的时间流速与实际文字量的关系：
+
+- **时间膨胀**：很少的文字覆盖很短的时间（如一秒钟的动作用500字）
+  - 效果：强调重要性、放慢让读者仔细体会
+  - 触发条件：关键时刻、情感高潮、重要决定
+  
+- **时间压缩**：很多文字覆盖很长的时间（如三年用一句话）
+  - 效果：快速推进、跳过无聊部分
+  - 触发条件：过渡期、成长蒙太奇、无大事发生的时期
+  
+- **时间正常**：文字量与所描述时间大致成正比
+  - 效果：真实感、沉浸感
+  - 触发条件：大多数日常叙述
+
+**本书的时间操控偏好**：__
+
+### B. 时间流速的变化模式
+- **匀速模式**：全程保持相对稳定的时间流速
+- **加速-减速交替**：有规律的快慢变化
+- **渐进变速**：逐渐加快或逐渐减慢
+- **突变模式**：突然的极速或急停
+- **混沌模式**：无明显规律，随心所欲
+
+**本书的时间流速模式**：__
+**效果评价**：__
+
+### C. 时间的质感
+同是"过了一年"，不同的写法给人完全不同的感受：
+- **苍白的一年**："一年过去了"（无质感）
+- **丰满的一年**：通过四季变化/人物变化/环境变化填充（有质感）
+- **沉重的一年**：每一秒都是煎熬（高密度质感）
+- **飞逝的一年**：快乐不知时日过（轻快感）
+
+**本书时间质感的处理水平**：__/10
+
+---
+
+## 第四部分：节奏失常诊断
+
+### A. 可能的节奏问题
+检查本书是否存在以下问题：
+
+#### 1. 窒息（过度紧凑）
+- **症状**：长时间高强度，没有喘息空间
+- **后果**：读者疲劳、焦虑、可能弃书
+- **检测方法**：连续__章以上没有缓冲场景？
+- **本书情况**：__[如有，举例]
+
+#### 2. 缺氧（过度松散）
+- **症状**：长时间低强度，缺乏吸引力
+- **后果**：读者无聊、失去耐心、忘记剧情
+- **检测方法**：连续__章没有高潮或进展？
+- **本书情况**：__[如有，举例]
+
+#### 3. 心律不齐（节奏紊乱）
+- **症状**：快慢变化无规律、无逻辑
+- **后果**：读者不适、出戏、困惑
+- **检测方法**：相邻章之间的节奏变化是否合理？
+- **本书情况**：__[如有，举例]
+
+#### 4. 停搏（节奏崩塌）
+- **症状**：完全失去节奏感，文字变成流水账
+- **后果**：严重的质量问题
+- **检测方法**：是否有整章或连续多章毫无节奏可言？
+- **本书情况**：__[如有，举例]
+
+### B. 本书节奏的最大亮点
+- 最精彩的节奏处理：[具体例子]
+- 最具创新性的节奏尝试：[具体例子]
+- 节奏与内容的最佳配合：[具体例子]
+
+## 输出格式要求
+
+```json
+{
+  "literary_dimension": "rhythm",
+  "book_title": "{book_title}",
+  "analysis": {
+    "micro_rhythm": {
+      "sentence_level": {
+        "short_sentence_clusters": {"effect": "string", "usage": "string", "example": "string"},
+        "long_sentence_clusters": {"effect": "string", "usage": "string", "example": "string"},
+        "alternating_length": {"effect": "string", "usage": "string", "example": "string"},
+        "sentence_pattern_preferences": "string"
+      },
+      "paragraph_level": {
+        "length_distribution": {
+          "avg_length_lines": number,
+          "short_paragraph_ratio": number,
+          "long_paragraph_ratio": number,
+          "variation_amplitude": "large|medium|small"
+        },
+        "internal_breathing_points": ["string"],
+        "segmentation_logic": "string"
+      },
+      "dialogue_rhythm": {
+        "fast_dialogue": {"effect": "string", "example": "string"},
+        "slow_dialogue": {"effect": "string", "example": "string"},
+        "variable_dialogue": {"effect": "string", "example": "string"},
+        "dialogue_whitespace": {
+          "silence_usage": "string",
+          "unsaid_words": "string",
+          "action_over_words": "string",
+          "environment_interruption": "string"
+        }
+      }
+    },
+    "macro_rhythm": {
+      "chapter_internal_template": {
+        "opening": {"percentage": number, "pace": "string", "function": "string"},
+        "development": {"percentage": number, "pace": "string", "function": "string"},
+        "climax": {"percentage": number, "pace": "string", "function": "string"},
+        "ending": {"percentage": number, "pace": "string", "function": "string"},
+        "consistency": "highly_consistent|some_pattern|varies_per_chapter"
+      },
+      "multi_chapter_units": {
+        "accumulation_unit": {"chapters": number, "structure": "string", "end_state": "string"},
+        "release_unit": {"chapters": number, "structure": "string", "end_state": "string"},
+        "transition_unit": {"chapters": number, "structure": "string", "end_state": "string"},
+        "variation_unit": {"chapters": number, "structure": "string", "end_state": "string"},
+        "organization_method": "string"
+      },
+      "volume_level_curve": {
+        "conceptual_diagram": "string",
+        "opening_strategy": "string",
+        "midsection_maintenance": "string",
+        "climax_arrangement": "string",
+        "conclusion_pace": "string"
+      }
+    },
+    time_flow_perception: {
+      subjective_vs_objective: {
+        time_expansion: {"effect": "string", "trigger_conditions": ["string"]},
+        time_compression: {"effect": "string", "trigger_conditions": ["string"]},
+        time_normal: {"effect": "string", "trigger_conditions": ["string"]},
+        "manipulation_preference": "string"
+      },
+      variation_patterns": "uniform|acceleration_deceleration_alternating|progressive|abrupt|chaotic",
+      effect_evaluation: "string",
+      time_texture_quality: {
+        "pale_time": "string",
+        "full_time": "string",
+        "heavy_time": "string",
+        "fleeting_time": "string",
+        "overall_rating": number
+      }
+    },
+    rhythm_diagnosis: {
+      potential_issues: {
+        suffocation: {"symptoms": "string", "detection": "string", "book_status": "string"},
+        hypoxia: {"symptoms": "string", "detection": "string", "book_status": "string"},
+        arrhythmia: {"symptoms": "string", "detection": "string", "book_status": "string"},
+        cardiac_arrest": {"symptoms": "string", "detection": "string", "book_status": "string"}
+      },
+      "rhythm_highlights": {
+        "finest_rhythm_handling": "string",
+        "most_innovative_attempt": "string",
+        "best_content_rhythm_match": "string"
+      }
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "rhythm_consistency": "high|medium|low",
+    "breathing_quality": "natural|forced|erratic",
+    "unique_contributions": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取节奏参数表、句长分布数据、章节模板、时间流速公式
+**文学侧**：感知呼吸的自然与否、韵律的音乐性、张弛的艺术性、时间处理的诗意
+
+⭐ **特别强调**：节奏是" invisible art"——读者可能说不清楚为什么某本书读起来舒服，但节奏是主要原因之一。好的节奏让阅读像呼吸一样自然，坏的节奏让阅读成为一种折磨。
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的节奏特征
+2. **典型证据**：至少2-3个具体例子（含原文摘录和节奏标注）
+3. **仿写规则**：可操作的节奏控制指导原则
+4. **稳定度判断**：全书节奏的一致性和质量（高/中/低）
+
+---
+**上下文输入**：{context}

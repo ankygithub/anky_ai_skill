@@ -1,0 +1,357 @@
+# 文学维度三：人味指数分析 Prompt
+
+## 任务目标
+对《{book_title}》进行**"人味"（Humanity Quotient）**的量化与质性分析，评估作品中的人间烟火气、关系温度和生活实感。
+
+## ⚠️ 核心问题
+这本书读起来像是"真人写的关于真人的故事"，还是"AI生成的完美但空洞的文本"？人味指数衡量的是作品的生命力和血肉感。
+
+---
+
+## 第一部分：烟火气分析（Life's Vapor Index）
+
+### A. 日常生活细节的丰富度
+检测书中"非功能性"日常描写的密度：
+
+#### 高人味的日常细节类型
+1. **饮食描写**
+   - 不只是"吃了饭"，而是食物的颜色/香气/口感/温度
+   - 吃的动作、表情、满足感
+   - 与谁一起吃、吃的氛围、吃时的对话
+   - **本书表现**：[具体例子和评价]
+
+2. **衣着服饰**
+   - 不只是"穿了一身黑衣"，而是布料的质感/合身程度/磨损痕迹
+   - 衣服的来源（买的/送的/抢的/传承的）
+   - 穿衣的习惯和小动作（整理袖口/拉扯衣角）
+   - **本书表现**：[具体例子和评价]
+
+3. **居住环境**
+   - 房间的布局、光线、气味
+   - 个人物品的摆放（透露性格的秘密）
+   - 空间的历史（住多久/有什么回忆）
+   - **本书表现**：[具体例子和评价]
+
+4. **身体感知**
+   - 不适感（饿了/累了/痒了/冷了/热了）
+   - 生理节律（困意/晨起的不适/久坐的酸痛）
+   - 身体的局限（不能彻夜不眠/会受伤/会生病）
+   - **本书表现**：[具体例子和评价]
+
+5. **琐碎习惯**
+   - 无意义的小动作（转笔/抖腿/摸鼻子）
+   - 个人怪癖（特定的顺序/迷信/强迫症）
+   - 浪费时间的活动（发呆/看云/逗猫）
+   - **本书表现**：[具体例子和评价]
+
+### B. 烟火气密度计算
+- **高密度区段**：日常生活占比>30%的场景 → 人味浓郁
+- **中密度区段**：日常生活占比10-30% → 有一定人味
+- **低密度区段**：日常生活占比<10% → 偏向传奇/神话感
+- **零密度区段**：完全没有日常生活 → 可能过于悬浮
+
+**本书整体烟火气密度**：__/10
+**分布特点**：__
+
+### C. 烟火气的叙事功能
+- **角色立体化**：英雄也是人，也要吃饭睡觉
+- **节奏调节**：在紧张情节间插入日常，张弛有度
+- **世界观落地**：让幻想世界有真实感
+- **情感锚定**：日常是最容易引发共鸣的部分
+- **对比衬托**：日常的珍贵在失去后才显现
+
+**本书烟火气的最佳运用**：[具体例子]
+
+---
+
+## 第二部分：关系温度分析（Relationship Temperature Index）
+
+### A. 关系温度测量
+对书中主要人际关系进行"温度"测量：
+
+#### 温度等级定义
+- **冰点（0°C）**：敌对、仇恨、毫无感情
+- **冷淡（1-20°C）**：陌生、礼貌、公事公办
+- **微温（21-40°C）**：认识、有好感、但不深入
+- **温暖（41-60°C）**：朋友、信任、互相关心
+- **炽热（61-80°C）**：亲人/恋人、深爱、愿意牺牲
+- **灼烧（81-99°C）**：激情、执念、可能有害的强烈感情
+- **沸点（100°C）**：超越常规的极致情感
+
+#### 关系温度图谱
+| 关系双方 | 初始温度 | 最高温度 | 最低温度 | 最终温度 | 温度变化轨迹 |
+|---------|---------|---------|---------|---------|------------|
+| 主角-A | | | | | |
+| 主角-B | | | | | |
+| A-B | | | | | |
+| ... | | | | | |
+
+**分析要点**：
+- 哪段关系的温度变化最动人？
+- 是否存在"表面冷淡实际炽热"的关系？
+- 温度变化的触发事件是什么？
+- 有没有"永远无法升温"的遗憾关系？
+
+### B. 关系温度的表达方式
+- **语言层面**：称呼的变化、语气的变化、话语量的变化
+- **行为层面**：身体距离、触碰频率、为对方做事
+- **心理层面**：想念频率、担忧程度、信任程度
+- **特殊仪式**：只有两人懂的默契/习惯/玩笑
+- **冲突与修复**：吵架的方式、和好的方式
+
+**本书最温暖的关系瞬间**：[原文摘录]
+**最心痛的关系降温瞬间**：[原文摘录]
+
+### C. 群体化学反应
+不止一对多的关系，而是多人在一起时的"气场"：
+- **三人行动态**：A-B-C三人时，关系如何变化？
+- **团队氛围**：整个团体在一起的"味道"
+- **派对/聚会场景**：热闹中的孤独 or 融入的快乐
+- **分离与重聚**：群体解散后的各自思念
+
+**本书的群体化学应最佳场景**：[具体描述]
+
+---
+
+## 第三部分：脆弱时刻分析（Vulnerability Moments Index）
+
+### A. 脆弱性的定义
+脆弱 ≠ 弱小。脆弱是指：
+- 展示真实自我（包括缺点和伤口）
+- 承认恐惧/无助/困惑
+- 依赖他人（信任的表现）
+- 失去控制（情绪/身体/局面）
+- 面对死亡/失去/失败
+
+**高人味 = 允许角色（尤其是主角）有脆弱时刻**
+
+### B. 主角的脆弱时刻清点
+列出主角展示脆弱的关键时刻：
+
+| 章节 | 触发事件 | 脆弱表现形式 | 谁在场 | 后果/影响 |
+|------|---------|-------------|-------|----------|
+| | | | | |
+
+**分类统计**：
+- 身体脆弱（受伤/生病/疲惫）：__次
+- 情感脆弱（哭泣/崩溃/恐惧）：__次
+- 社交脆弱（被误解/孤立/拒绝）：__次
+- 存在脆弱（怀疑意义/想要放弃）：__次
+- **总计**：__次 / 全书__章 → 平均每__章__次
+
+### C. 脆弱时刻的质量评估
+- **真实性**：这种脆弱是否符合人物设定？
+- **必要性**：是否推动人物成长或深化关系？
+- **时机性**：是否出现在合适的叙事节点？
+- **恢复方式**：脆弱后如何重新站起来？（这比脆弱本身更重要）
+- **过度风险**：是否因为过多脆弱而显得软弱可欺？
+
+**本书最动人的脆弱时刻**：[详细分析，含原文]
+
+### D. 配角的脆弱时刻
+配角是否也被允许有脆弱时刻？
+- 主要配角的脆弱展示：__
+- 反派的脆弱展示（如有）：__
+- 脆弱是否只属于"好人"阵营？
+
+---
+
+## 第四部分：非功能性对话比例（Non-functional Dialogue Ratio）
+
+### A. 对话功能分类
+- **功能性对话**：推进剧情、传递信息、做出决策
+- **半功能性对话**：既推进又有情感/性格展示
+- **非功能性对话**：纯粹的闲聊、废话、情感交流、幽默
+
+### B. 非功能性对话的子类型
+1. **闲聊型**："今天天气真好""你吃了没"
+   - 功能：建立真实感、展示关系亲密度
+   - **本书例子**：__
+
+2. **调侃/吐槽型**：朋友间的玩笑互损
+   - 功能：展示关系轻松面、缓解紧张
+   - **本书例子**：__
+
+3. **无意义重复型**：反复说同一件事（通常表示紧张/在意）
+   - 功能：暗示心理状态
+   - **本书例子**：__
+
+4. **情感宣泄型**：没有目的的情绪表达
+   - function：展示真实人性
+   - **本书例子**：__
+
+5. **哲学发散型**：突然聊到深奥话题
+   - function：展示思想深度/角色智识
+   - **本书例子**：__
+
+### C. 非功能性对话比例计算
+- 抽样方法：随机抽取10章，统计对话总量和非功能性对话量
+- **本书的非功能性对话比例**：约__%
+- **健康范围参考**：
+  - <5%：过于功利，缺少人情味
+  - 5-15%：适中，有基本人味
+  - 15-25%：较高，生活气息浓厚
+  - >25%：很高，偏向生活流
+
+### D. 非功能性对话的质量
+- **有趣吗**：即使无用，读起来是否愉快？
+- **符合角色吗**：这些废话是否符合说话人的性格？
+- **时机恰当吗**：是否在合适的时候出现（不在紧急关头闲聊）？
+- **隐藏功能**：表面无用，实际上在塑造人物/关系？
+
+**本书最佳的非功能性对话片段**：[原文摘录及点评]
+
+---
+
+## 第五部分：综合人味指数评定
+
+### 评分卡
+| 维度 | 得分(1-10) | 权重 | 加权分 |
+|------|-----------|------|--------|
+| 烟火气丰富度 | __ | 25% | __ |
+| 关系温度 | __ | 25% | __ |
+| 脆弱时刻质量 | __ | 25% | __ |
+| 非功能性对话 | __ | 15% | __ |
+| 整体生命感 | __ | 10% | __ |
+| **总分** | | | **__** |
+
+### 人味等级
+- **9-10分**：极具人味，仿佛真人真事，极高的代入感和共鸣
+- **7-8分**：有明显人味，角色鲜活，有血有肉
+- **5-6分**：有一定人味，但偏重功能性，略显生硬
+- **3-4分**：人味稀薄，角色偏向符号化/工具化
+- **1-2分**：几乎无人味，机械/AI感严重
+
+### 人味的最强场景 vs 最弱场景
+- **最有人味的一页**：[描述+原因]
+- **最没人味的一页**：[描述+原因+改进建议]
+
+## 输出格式要求
+
+```json
+{
+  "literary_dimension": "humanity",
+  "book_title": "{book_title}",
+  "analysis": {
+    "lifes_vapor_index": {
+      "daily_life_detail_types": {
+        "food_description": {"richness": "high|medium|low", "examples": ["string"], "evaluation": "string"},
+        "clothing_apparel": {"richness": "high|medium|low", "examples": ["string"], "evaluation": "string"},
+        "living_environment": {"richness": "high|medium|low", "examples": ["string"], "evaluation": "string"},
+        "bodily_perception": {"richness": "high|medium|low", "examples": ["string"], "evaluation": "string"},
+        "trivial_habits": {"richness": "high|medium|low", "examples": ["string"], "evaluation": "string"}
+      },
+      "vapor_density_score": number,
+      "distribution_characteristics": "string",
+      "narrative_functions": ["string"],
+      "best_utilization_example": "string"
+    },
+    "relationship_temperature_index": {
+      "temperature_scale_definition": "string",
+      "relationship_temperature_map": [
+        {
+          "parties": "string",
+          "initial_temp": number,
+          "max_temp": number,
+          "min_temp": number,
+          "final_temp": number,
+          "trajectory": "string"
+        }
+      ],
+      "expression_methods": ["string"],
+      "warmest_moment": "string",
+      "most_painful_cooling_moment": "string",
+      "group_chemistry": {
+        "triple_dynamics": "string",
+        "team_atmosphere": "string",
+        "party_gathering_scenes": "string",
+        "separation_reunion": "string"
+      }
+    },
+    "vulnerability_moments_index": {
+      "vulnerability_definition": "string",
+      "protagonist_vulnerability_ledger": [
+        {"chapter": "string", "trigger": "string", "expression": "string", "witnesses": "string", "consequence": "string"}
+      ],
+      "category_statistics": {
+        "physical_vulnerability": number,
+        "emotional_vulnerability": number,
+        "social_vulnerability": number,
+        "existential_vulnerability": number,
+        "total": number,
+        "frequency_per_chapter": "string"
+      },
+      "quality_assessment": {
+        "authenticity": "1-10",
+        "necessity": "1-10",
+        "timing": "1-10",
+        "recovery_method": "string",
+        "overexposure_risk": "string"
+      },
+      "most_moving_vulnerability_moment": "string",
+      "supporting_cast_vulnerability": "string"
+    },
+    "non_functional_dialogue_ratio": {
+      dialogue_classification: {
+        "functional": "definition",
+        "semi_functional": "definition",
+        "non_functional": "definition"
+      },
+      "non_functional_subtypes": {
+        "casual_chat": {"description": "string", "function": "string", "examples": ["string"]},
+        "banter_roast": {"description": "string", "function": "string", "examples": ["string"]},
+        "meaningless_repetition": {"description": "string", "function": "string", "examples": ["string"]},
+        "emotional_catharsis": {"description": "string", "function": "string", "examples": ["string"]},
+        "philosophical_divergence": {"description": "string", "function": "string", "examples": ["string"]}
+      },
+      "calculated_ratio": number,
+      "health_range_reference": "string",
+      "quality_evaluation": {
+        "interesting": boolean,
+        "character_consistent": boolean,
+        "timing_appropriate": boolean,
+        "hidden_function": "string"
+      },
+      "best_non_functional_dialogue_fragment": "string"
+    },
+    "humanity_composite_index": {
+      "scorecard": {
+        "lifes_vapor richness": {"score": 1, "weight": 0.25, "weighted": 0.25},
+        "relationship_temperature": {"score": 1, "weight": 0.25, "weighted": 0.25},
+        "vulnerability_moments_quality": {"score": 1, "weight": 0.25, "weighted": 0.25},
+        "non_functional_dialogue": {"score": 1, "weight": 0.15, "weighted": 0.15},
+        "overall_vitality": {"score": 1, "weight": 0.1, "weighted": 0.1}
+      },
+      "total_score": number,
+      "humanity_grade": "extremely_human|clearly_human|somewhat_human|barely_human|almost_inhuman",
+      "most_human_page": "string",
+      "least_human_page": "string",
+      "improvement_suggestions": "string"
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "humanity_consistency": "high|medium|low",
+    "unique_approach_to_humanity": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取人味度量指标、烟火气检查清单、关系温度计、脆弱时刻记录表
+**文学侧**：感知生命的温度和质感、人性的真实深度、情感的血肉感、灵魂的重量
+
+⭐ **特别强调**：人味指数是区分"好作品"和"伟大作品"的重要指标之一。技术完美的作品可能无人味，而有瑕疵的作品可能因极高的人味而打动人心。
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的人味特征
+2. **典型证据**：至少2-3个具体场景（含原文摘录）
+3. **仿写规则**：可操作的"注入人味"指导原则
+4. **稳定度判断**：全书人味的一致性和质量（高/中/低）
+
+---
+**上下文输入**：{context}

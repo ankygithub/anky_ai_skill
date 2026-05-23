@@ -1,0 +1,292 @@
+# 主题母题与价值观层分析 Prompt
+
+## 任务目标
+对《{book_title}》进行**主题深度挖掘**，揭示表层故事之下隐藏的价值体系、哲学思考和作者的精神世界。
+
+## 分析维度
+
+### 1. 高频主题列表（6-10个）
+
+识别并深入分析书中反复出现的核心主题：
+
+#### 主题分析框架（每个主题都按此框架展开）
+```
+主题名称：【关键词】
+出现频率：高/中/低
+首次出现：[章节/情节]
+表现形式：[如何在情节/人物/对话/象征中呈现]
+演变轨迹：[随着故事发展，该主题是如何深化的]
+与其他主题的关系：[交叉、对立、互补]
+作者态度：[支持/批判/探讨/模糊]
+现实映射：[对应现实世界的什么议题]
+```
+
+#### 常见主题参考（请根据实际书籍调整）
+- **成长与蜕变**：从弱到强的过程，不仅是力量更是心智
+- **力量与责任**：拥有力量后如何使用？权力的腐蚀性
+- **正义与秩序**：什么是正义？法律/道德/个人判断的冲突
+- **自由与宿命**：人能在多大程度上掌控自己的命运？
+- **孤独与连接**：强者的孤独，人与人之间的理解和隔阂
+- **复仇与宽恕**：仇恨的驱动力和放下仇恨的艰难
+- **传统与创新**：继承与突破的张力
+- **爱情与欲望**：各种形式的情感关系
+- **生命与死亡**：对死亡的看法，生命的意义
+- **善与恶的本质**：人性本善/本恶/复杂的讨论
+- **忠诚与背叛**：信任的脆弱和珍贵
+- **知识与愚昧**：真理的追求和无知的危险
+- **个人与集体**：个人利益与集体利益的平衡
+- **时间与记忆**：过去对现在的影响，记忆的重量
+- **身份认同**：我是谁？我从哪里来？我要到哪里去？
+
+**要求**：选出本书最重要的6-10个主题进行分析，不要面面俱到但要深入透彻
+
+### 2. 价值冲突矩阵
+
+构建本书核心价值的冲突图谱：
+
+#### A. 主要价值对立轴
+识别书中存在的价值观对立（至少3-5组）：
+
+**对立轴示例**：
+```
+轴1：[价值A] ←———→ [价值B]
+     （例如：个人自由 ←———→ 集体责任）
+     书中立场：偏向A / 偏向B / 动态平衡 / 探讨无定论
+     冲突表现：[具体情节或人物抉择]
+     解决方式：[如何处理这种冲突]
+```
+
+**请为本书构建实际的对立轴**
+
+#### B. 价值优先级排序
+当多种价值发生冲突时，本书（通过主角行为和叙事倾向）显示的优先级：
+1. [最高优先级] ...
+2. ...
+3. ...
+...
+
+**验证方法**：找出主角面临的多重价值困境案例，观察TA的实际选择
+
+#### C. 价值灰色地带
+本书是否存在以下情况：
+- **表面坚持某种价值，实际行动却违背**？
+- **同一价值在不同情境下有不同解读**？
+- **角色之间的价值观念冲突**（反映作者内心的矛盾）？
+- **结局时的价值立场与开局时相比发生了变化**？
+
+### 3. 作者私货与价值观显影
+
+#### A. 作者的"私货"检测
+"私货"指作者通过作品表达的 personal beliefs：
+- **政治观点**：对权力、制度、革命的看法
+- **社会观点**：对阶层、性别、教育的看法
+- **哲学观点**：对存在、认知、伦理的看法
+- **人生经验投射**：作者个人经历的影子
+- **情感宣泄**：通过角色发泄的情绪
+- **理想寄托**：作者心中理想世界/理想人的模样
+
+**分析方法**：
+- 找出那些"超出剧情需要"的论述或情节
+- 注意反复出现的"说教"时刻
+- 观察作者赋予最高评价的角色特质
+- 检查反面角色的"罪状"是否反映了作者的厌恶对象
+
+#### B. 价值观的一致性与演变
+- **一致性检查**：全书价值观是否前后一致？
+- **演变追踪**：作者的观点是否随着写作过程发生变化？
+  - 前期 vs 后期的态度差异
+  - 可能的原因（作者成长/读者反馈/商业考量）
+- **矛盾点**：是否存在不自洽的价值表述？
+
+#### C. 作者的盲区与偏见
+- **选择性失明**：某些显而易见的问题被忽略？
+- **刻板印象**：对某类人群/事物的固定看法？
+- **特权盲区**：作者未意识到的自身立场局限性？
+- **时代烙印**：作品反映的时代局限？
+
+**注意**：分析时要保持客观，指出问题但不做道德审判
+
+### 4. 作者信念体系深度解析
+
+#### A. 对力量的本质理解
+本书的力量体系背后反映了对"力量"的什么理解？
+- 力量是中性的工具还是有道德属性？
+- 力量的来源是什么？（天赋/努力/机缘/牺牲/传承）
+- 力量的终极形态是什么？（无限强大？与天道合一？超越力量本身？）
+- 追求力量的动机是正当的还是可疑的？
+- 力量带来的异化？（是否探讨了力量对人性的腐蚀）
+
+**本书的独特观点**：（请具体阐述）
+
+#### B. 对善意/人性的态度
+- 人性本善/本恶/复杂/空白？
+- 善良是力量还是弱点？
+- 在残酷的世界中保持善良可能吗？值得吗？
+- 什么是真正的善良？（天真的善良 vs 经过考验的善良）
+- 本书对"好人有好报"这一命题的态度？
+
+**本书的独特观点**：（请具体阐述）
+
+#### C. 对孤独的理解
+- 孤独是强者的宿命还是可避免的状态？
+- 孤独的价值是什么？（思考/成长/清醒/痛苦）
+- 如何应对孤独？（享受/忍受/逃避/寻求连接）
+- 理解与被理解的稀缺性和珍贵性
+- 全书的孤独质感（凄美/苍凉/平静/绝望/超脱）
+
+**本书的独特观点**：（请具体阐述）
+
+#### D. 合书余味（读完后的 lingering feeling）
+合上这本书后，读者会被留下什么样的"味道"？
+- **情绪余味**：振奋/感动/怅然若失/深思/温暖/寒冷
+- **思想余味**：值得回味的问题/颠覆性的观点/新的视角
+- **审美余味**：难忘的画面/动人的句子/独特的氛围
+- **人生余味**：对自身生活的反思/对未来的想法/价值观的微调
+
+**用一段话描述本书的"合书余味"**：
+
+---
+
+## 特别分析：主题的显性 vs 隐性
+
+### 显性主题
+- 直接在对话/旁白/情节中被讨论的主题
+- 读者能明确感知到的"这本书讲的是什么"
+
+### 隐性主题
+- 从未被明确说出，但渗透在每个选择和细节中的主题
+- 可能作者自己也未完全意识到的深层关怀
+- 需要通过文本细读才能发现的潜流
+
+**任务**：尝试挖掘本书的隐性主题（至少1-2个）
+
+## 输出格式要求
+
+```json
+{
+  "layer": "themes",
+  "book_title": "{book_title}",
+  "analysis": {
+    "core_themes": [
+      {
+        "name": "string",
+        "keywords": ["string"],
+        "frequency": "high|medium|low",
+        "first_appearance": "string",
+        "manifestations": ["string"],
+        "evolution_trajectory": "string",
+        "relationships_with_other_themes": "string",
+        "author_stance": "supportive|critical|exploratory|ambiguous",
+        "real_world_mapping": "string"
+      }
+    ],
+    "value_conflict_matrix": {
+      "primary_opposing_axes": [
+        {
+          "axis": "[Value A] <--> [Value B]",
+          "book_position": "favor_A|favor_B|dynamic_balance|open_discussion",
+          "conflict_manifestation": "string",
+          "resolution_approach": "string"
+        }
+      ],
+      "value_priority_ranking": ["string"],
+      "validation_cases": ["string"],
+      "gray_areas": [
+        {"phenomenon": "string", "analysis": "string"}
+      ]
+    },
+    "author_agenda_and_values": {
+      "detected_personal_beliefs": {
+        "political_views": "string",
+        "social_views": "string",
+        "philosophical_views": "string",
+        "life_experience_projection": "string",
+        "emotional_catharsis": "string",
+        "ideal_projection": "string"
+      },
+      "value_consistency_and_evolution": {
+        "consistency_check": "consistent|mostly_consistent|inconsistent",
+        "evolution_tracking": {
+          "early_vs_late_stance": "string",
+          "possible_reasons": "string"
+        },
+        "contradictions": ["string"]
+      },
+      "author_blind_spots_and_biases": {
+        "selective_blindness": ["string"],
+        "stereotypes": ["string"],
+        "privilege_blind_spots": ["string"],
+        "era_limitations": "string"
+      }
+    },
+    "belief_system_deep_dive": {
+      "understanding_of_power": {
+        "moral_neutrality": "string",
+        "source_of_power": "string",
+        "ultimate_form": "string",
+        "motivation_legitimacy": "string",
+        "corrupting_influence": "string",
+        "unique_perspective": "string"
+      },
+      "attitude_toward_goodness_humanity": {
+        "human_nature_assessment": "string",
+        "goodness_as_strength_or_weakness": "string",
+        "feasibility_in_cruel_world": "string",
+        "definition_of_true_goodness": "string",
+        "karma_proposition": "string",
+        "unique_perspective": "string"
+      },
+      "understanding_of_loneliness": {
+        "loneliness_as_destiny_or_avoidable": "string",
+        "value_of_solitude": "string",
+        "coping_mechanisms": "string",
+        "scarcity_of_understanding": "string",
+        "textural_quality": "string",
+        "unique_perspective": "string"
+      },
+      "closing_impression": {
+        "emotional_aftertaste": "string",
+        "intellectual_aftertaste": "string",
+        "aesthetic_aftertaste": "string",
+        "life_reflection_aftertaste": "string",
+        "one_paragraph_summary": "string"
+      }
+    },
+    "explicit_vs_implicit_themes": {
+      "explicit_themes": ["string"],
+      "implicit_themes": [
+        {
+          "theme": "string",
+          "evidence_of_presence": "string",
+          "author_awareness": "likely_aware|likely_unaware"
+        }
+      ]
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "thematic_depth": "superficial|moderate|deep|profound",
+    "philosophical_sophistication": "naive|developed|mature|wise",
+    "unique_contribution": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取主题清单、价值矩阵、论证结构、信念体系框架
+**文学侧**：洞察作品的灵魂重量、思想深度、精神高度、人文关怀的温度
+
+⭐ **特别强调**：此层的分析目标是回答"这本书到底想说什么？"以及"作者是一个什么样的人？"这两个根本性问题。不要停留在表面，要敢于做出有深度的解读。
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的主题/价值观表达
+2. **典型证据**：至少2-3个具体例子（含原文引用和章节标注）
+3. **仿写规则**：可操作的主题表达指导原则（如何在自己的作品中处理类似主题）
+4. **稳定度判断**：主题表达的一致性和深度（高/中/低）
+
+---
+**上下文输入**：{context}

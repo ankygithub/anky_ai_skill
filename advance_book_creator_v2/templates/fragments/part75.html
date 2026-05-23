@@ -1,0 +1,217 @@
+<div class="content">
+<h2 class="section-title page-break" id="part75">第12.7章 医疗AI——技术选型与示例代码</h2>
+
+<h3 id="section276">12.7.1 医疗AI技术栈全景</h3>
+
+<p>医疗AI系统的技术栈横跨医学影像处理、自然语言理解、大模型推理和知识检索四大领域。<span class="tag-core">医疗AI技术栈</span>按功能分层如下：</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">层级</th><th style="text-align:left">技术组件</th><th style="text-align:left">代表产品/框架</th><th style="text-align:left">医疗场景</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">数据处理层</td><td style="text-align:left">DICOM解析</td><td style="text-align:left">pydicom/dcm4che</td><td style="text-align:left">CT/MRI影像读取</td></tr>
+<tr><td style="text-align:left">数据处理层</td><td style="text-align:left">多序列对齐</td><td style="text-align:left">SimpleITK/AntiX</td><td style="text-align:left">不同期相影像配准</td></tr>
+<tr><td style="text-align:left">数据处理层</td><td style="text-align:left">异构数据统一建模</td><td style="text-align:left">FHIR/OMOP CDM</td><td style="text-align:left">多源医疗数据标准化</td></tr>
+<tr><td style="text-align:left">模型层</td><td style="text-align:left">医疗垂类大模型</td><td style="text-align:left">Med-PaLM/华佗/扁鹊</td><td style="text-align:left">临床问答/病历生成</td></tr>
+<tr><td style="text-align:left">模型层</td><td style="text-align:left">RAG检索增强</td><td style="text-align:left">LangChain/LlamaIndex</td><td style="text-align:left">知识问答/诊疗建议</td></tr>
+<tr><td style="text-align:left">模型层</td><td style="text-align:left">向量检索</td><td style="text-align:left">Milvus/Faiss/Weaviate</td><td style="text-align:left">医学文献/病历检索</td></tr>
+<tr><td style="text-align:left">模型层</td><td style="text-align:left">病灶检测/分割</td><td style="text-align:left">3D U-Net/SwinUNETR</td><td style="text-align:left">影像辅助诊断</td></tr>
+<tr><td style="text-align:left">部署层</td><td style="text-align:left">模型服务化</td><td style="text-align:left">Triton/vLLM</td><td style="text-align:left">大模型/影像模型推理</td></tr>
+</tbody>
+</table>
+
+<h3 id="section277">12.7.2 DICOM解析示例</h3>
+
+<pre><code class="language-python">import pydicom
+import numpy as np
+from pydicom.uid import UID
+
+def parse_dicom_series(dicom_dir):
+    """解析DICOM序列文件，返回三维影像数组和元数据"""
+    slices = []
+    for f in glob.glob(f"{dicom_dir}/*.dcm"):
+        ds = pydicom.dcmread(f)
+        
+        # 提取关键元数据
+        metadata = {
+            "patient_id": ds.get("PatientID", ""),
+            "study_date": ds.get("StudyDate", ""),
+            "modality": ds.get("Modality", ""),
+            "slice_thickness": float(ds.get("SliceThickness", 1.0)),
+            "pixel_spacing": [float(x) for x in ds.get("PixelSpacing", [1, 1])],
+            "image_position": [float(x) for x in ds.get("ImagePositionPatient", [0, 0, 0])],
+            "window_center": float(ds.get("WindowCenter", 40)),
+            "window_width": float(ds.get("WindowWidth", 400)),
+        }
+        
+        # 提取像素数据并转换为HU值（CT）
+        pixel_array = ds.pixel_array.astype(np.float32)
+        if hasattr(ds, 'RescaleSlope') and hasattr(ds, 'RescaleIntercept'):
+            pixel_array = pixel_array * ds.RescaleSlope + ds.RescaleIntercept
+        
+        slices.append({
+            "data": pixel_array,
+            "position": metadata["image_position"][2],
+            "metadata": metadata
+        })
+    
+    # 按Z轴位置排序
+    slices.sort(key=lambda x: x["position"])
+    volume = np.stack([s["data"] for s in slices], axis=-1)
+    
+    return volume, slices[0]["metadata"]</code></pre>
+
+<h3 id="section278">12.7.3 RAG检索逻辑示例</h3>
+
+<pre><code class="language-python">from langchain.vectorstores import Milvus
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.llms import VLLM
+
+class MedicalRAG:
+    def __init__(self, milvus_uri, model_path):
+        self.embeddings = HuggingFaceEmbeddings(
+            model_name="shibing624/text2vec-base-chinese"
+        )
+        self.vectorstore = Milvus(
+            embedding_function=self.embeddings,
+            connection_args={"uri": milvus_uri},
+            collection_name="medical_knowledge"
+        )
+        self.llm = VLLM(model=model_path, temperature=0.1)
+    
+    def query(self, question: str, department: str = None) -&gt; dict:
+        """医疗知识问答"""
+        # 1. 混合检索
+        search_filter = {"department": department} if department else {}
+        docs = self.vectorstore.similarity_search(
+            question, k=5, filter=search_filter
+        )
+        
+        # 2. 构建Prompt（带来源引用）
+        context = "\n\n".join([
+            f"[来源{i+1}] {doc.metadata['source']}\n{doc.page_content}"
+            for i, doc in enumerate(docs)
+        ])
+        
+        prompt = f"""基于以下医学知识回答问题。如果知识不足以回答，请明确告知。
+        
+参考知识：
+{context}
+
+问题：{question}
+
+回答（请附带参考来源编号）："""
+        
+        # 3. 生成答案
+        answer = self.llm(prompt)
+        
+        # 4. 返回结果（含来源引用）
+        return {
+            "question": question,
+            "answer": answer,
+            "sources": [
+                {
+                    "title": doc.metadata.get("title", ""),
+                    "source": doc.metadata.get("source", ""),
+                    "evidence_level": doc.metadata.get("evidence_level", "")
+                }
+                for doc in docs
+            ]
+        }</code></pre>
+
+<h3 id="section279">12.7.4 病历结构化JSON Schema示例</h3>
+
+<pre><code class="language-json">{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "门诊病历结构化",
+  "type": "object",
+  "required": ["visit_type", "chief_complaint", "diagnosis"],
+  "properties": {
+    "visit_type": {
+      "type": "string",
+      "enum": ["门诊", "急诊", "复诊", "会诊"]
+    },
+    "chief_complaint": {
+      "type": "string",
+      "description": "主诉：症状+持续时间",
+      "maxLength": 200
+    },
+    "history_of_present_illness": {
+      "type": "object",
+      "properties": {
+        "onset": { "type": "string" },
+        "symptoms": { 
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "severity": { 
+          "type": "string",
+          "enum": ["轻度", "中度", "重度"]
+        }
+      }
+    },
+    "past_medical_history": {
+      "type": "object",
+      "properties": {
+        "chronic_diseases": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "allergies": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "surgeries": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "diagnosis": {
+      "type": "string",
+      "description": "诊断结论（ICD-10编码）"
+    },
+    "treatment_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "enum": ["处方", "检查", "检验", "手术", "随访"] },
+          "content": { "type": "string" }
+        }
+      }
+    }
+  }
+}</code></pre>
+
+<h3 id="section280">12.7.5 技术选型决策矩阵</h3>
+
+<table>
+<thead>
+<tr><th style="text-align:left">场景</th><th style="text-align:left">推荐方案</th><th style="text-align:left">备选方案</th><th style="text-align:left">决策依据</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">DICOM解析</td><td style="text-align:left">pydicom（Python）</td><td style="text-align:left">dcm4che（Java）</td><td style="text-align:left">Python生态更丰富</td></tr>
+<tr><td style="text-align:left">向量数据库</td><td style="text-align:left">Milvus</td><td style="text-align:left">Faiss</td><td style="text-align:left">Milvus支持分布式、权限管理</td></tr>
+<tr><td style="text-align:left">大模型推理</td><td style="text-align:left">vLLM</td><td style="text-align:left">Triton</td><td style="text-align:left">vLLM对LLM推理优化更好</td></tr>
+<tr><td style="text-align:left">影像分割</td><td style="text-align:left">3D U-Net</td><td style="text-align:left">nnU-Net</td><td style="text-align:left">nnU-Net自动调参更适合生产</td></tr>
+<tr><td style="text-align:left">知识图谱</td><td style="text-align:left">Neo4j</td><td style="text-align:left">NebulaGraph</td><td style="text-align:left">Neo4j生态更成熟</td></tr>
+</tbody>
+</table>
+
+<h3 id="section281">12.7.6 验收标准</h3>
+
+<table>
+<thead>
+<tr><th style="text-align:left">指标</th><th style="text-align:left">目标值</th><th style="text-align:left">测量方法</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">DICOM解析成功率</td><td style="text-align:left">≥99.5%（兼容主流厂商格式）</td><td style="text-align:left">多厂商PACS数据测试</td></tr>
+<tr><td style="text-align:left">RAG问答准确率</td><td style="text-align:left">≥85%（与专家意见一致）</td><td style="text-align:left">盲法对照评估</td></tr>
+<tr><td style="text-align:left">病历结构化JSON合规率</td><td style="text-align:left">≥95%（符合JSON Schema验证）</td><td style="text-align:left">Schema校验</td></tr>
+<tr><td style="text-align:left">模型推理吞吐量</td><td style="text-align:left">≥10 TPS（影像）/ ≥50 TPS（文本）</td><td style="text-align:left">性能基准测试</td></tr>
+</tbody>
+</table>
+
+</div>

@@ -1,0 +1,141 @@
+<div class="content">
+<h2 class="section-title page-break" id="part71">第12.3章 医疗AI——智能问诊与病历结构化</h2>
+
+<h3 id="section252">12.3.1 智能问诊的业务场景</h3>
+
+<p>传统问诊流程中，患者候诊时间长、就诊时间短，医生需要在有限的门诊时间内完成问诊、查体、开具检查/处方等一系列工作。<span class="tag-core">智能问诊AI</span>通过在诊前、诊中、诊后三个环节引入AI能力，优化问诊全流程：</p>
+
+<strong>诊前——智能预问诊</strong>：
+<ul>
+  <li>患者通过手机/自助机完成症状描述</li>
+  <li>AI基于知识图谱+大模型进行多轮追问（"症状持续多久了？""是否伴随发热？"）</li>
+  <li>自动生成预问诊报告，包含主诉/现病史/既往史/过敏史</li>
+  <li>医生接诊时可直接查看预问诊报告，节省问诊时间</li>
+</ul>
+
+<strong>诊中——多模态交互辅助</strong>：
+<ul>
+  <li>语音识别：实时转写医患对话，自动生成门诊病历草稿</li>
+  <li>语义理解：识别关键医学术语（症状/体征/诊断/用药）</li>
+  <li>OCR识别：患者自带的外院检查报告/处方拍照识别</li>
+  <li>病历结构化：自由文本病历自动转化为结构化字段</li>
+</ul>
+
+<strong>诊后——随访与康复指导</strong>：
+<ul>
+  <li>基于诊断自动生成随访计划（复查时间/复查项目）</li>
+  <li>用药提醒与健康指导</li>
+  <li>症状变化追踪与异常预警</li>
+</ul>
+
+<h3 id="section253">12.3.2 医生个性化配置</h3>
+
+<p>不同科室、不同医生的问诊习惯和病历书写风格存在差异。智能问诊AI需支持个性化配置：</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">配置维度</th><th style="text-align:left">示例</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">科室模板</td><td style="text-align:left">内科/外科/儿科/妇产科/中医科各有专属问诊模板</td></tr>
+<tr><td style="text-align:left">问诊流程</td><td style="text-align:left">自定义问诊路径（先问主诉→再问既往史 vs 先问既往史→再问主诉）</td></tr>
+<tr><td style="text-align:left">病历格式</td><td style="text-align:left">自定义病历字段顺序和必填项</td></tr>
+<tr><td style="text-align:left">术语偏好</td><td style="text-align:left">医生习惯使用"上呼吸道感染" vs "感冒"</td></tr>
+<tr><td style="text-align:left">处方习惯</td><td style="text-align:left">常用药品/剂量/疗程偏好设置</td></tr>
+</tbody>
+</table>
+
+<h3 id="section254">12.3.3 病历结构化系统</h3>
+
+<p>病历结构化是医疗AI的核心基础能力。医院现有病历系统中存在大量非结构化文本（主诉/现病史/既往史/查体/诊断/医嘱），AI需要从这些文本中自动抽取结构化字段：</p>
+
+<strong>门诊病历结构化</strong>：
+<pre><code class="language-json">{
+  "visit_type": "门诊",
+  "chief_complaint": "反复咳嗽2周，加重3天",
+  "history_of_present_illness": {
+    "onset": "2周前",
+    "symptoms": ["咳嗽", "咳痰"],
+    "aggravation": "3天前加重",
+    "associated_symptoms": ["低热"],
+    "treatment_history": "自行服用止咳药，效果不佳"
+  },
+  "past_medical_history": {
+    "chronic_diseases": ["高血压"],
+    "allergies": ["青霉素"],
+    "surgeries": []
+  },
+  "physical_exam": {
+    "temperature": 37.8,
+    "lung_auscultation": "双肺呼吸音粗，未闻及干湿性啰音"
+  },
+  "diagnosis": "急性支气管炎",
+  "icd_10": "J20.900"
+}</code></pre>
+
+<strong>住院病历结构化</strong>：
+<ul>
+  <li>入院记录：入院情况/入院诊断/诊疗计划</li>
+  <li>病程记录：每日病情变化/医嘱变更/检查结果分析</li>
+  <li>出院小结：入院情况/诊疗经过/出院诊断/出院医嘱</li>
+  <li>手术记录：手术名称/手术方式/术中发现/术后处理</li>
+</ul>
+
+<strong>检查/检验报告字段抽取</strong>：
+<ul>
+  <li>检查报告：检查项目/检查方法/影像所见/诊断意见</li>
+  <li>检验报告：检验项目/结果值/参考范围/异常标志</li>
+</ul>
+
+<h3 id="section255">12.3.4 医学术语标准化</h3>
+
+<p>病历结构化的前提是医学术语标准化。同一概念在不同医生笔下可能有多种表达：</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">标准术语</th><th style="text-align:left">常见变体</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">"2型糖尿病"</td><td style="text-align:left">"二型糖尿病"、"T2DM"、"非胰岛素依赖型糖尿病"</td></tr>
+<tr><td style="text-align:left">"高血压3级"</td><td style="text-align:left">"三级高血压"、"重度高血压"、"BP 180/110"</td></tr>
+<tr><td style="text-align:left">"冠状动脉粥样硬化性心脏病"</td><td style="text-align:left">"冠心病"、"CHD"、"缺血性心脏病"</td></tr>
+</tbody>
+</table>
+
+<p>AI系统需建立医学术语映射词典，将自由文本中的各种表达映射到标准术语（ICD-10/SNOMED CT/中医病证分类代码）。</p>
+
+<h3 id="section256">12.3.5 病历辅助功能矩阵</h3>
+
+<table>
+<thead>
+<tr><th style="text-align:left">功能</th><th style="text-align:left">描述</th><th style="text-align:left">价值</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">报告摘要</td><td style="text-align:left">将长篇幅病历浓缩为关键信息摘要</td><td style="text-align:left">快速了解患者概况</td></tr>
+<tr><td style="text-align:left">病程辅助</td><td style="text-align:left">基于昨日病历+今日检验自动生成病程草稿</td><td style="text-align:left">减少文书工作量</td></tr>
+<tr><td style="text-align:left">出院小结</td><td style="text-align:left">自动汇总住院期间诊疗经过</td><td style="text-align:left">节省30-50%书写时间</td></tr>
+<tr><td style="text-align:left">相似病例</td><td style="text-align:left">基于当前病历检索历史相似病例</td><td style="text-align:left">辅助诊疗决策</td></tr>
+<tr><td style="text-align:left">随访计划</td><td style="text-align:left">基于诊断自动生成随访方案</td><td style="text-align:left">规范化随访管理</td></tr>
+<tr><td style="text-align:left">数据质控</td><td style="text-align:left">检查病历完整性/一致性/规范性</td><td style="text-align:left">提升病历质量评分</td></tr>
+</tbody>
+</table>
+
+<blockquote><p>[!NOTE] 病历结构化质量要求</p></blockquote>
+<blockquote><p>病历字段抽取准确率需≥95%，关键字段（诊断/用药/过敏史）准确率需≥99%。错误抽取可能导致用药错误或误诊，需建立人工复核机制。</p></blockquote>
+
+<h3 id="section257">12.3.6 验收标准</h3>
+
+<table>
+<thead>
+<tr><th style="text-align:left">指标</th><th style="text-align:left">目标值</th><th style="text-align:left">测量方法</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">预问诊报告完整率</td><td style="text-align:left">≥90%（核心字段填写完整）</td><td style="text-align:left">医生评分</td></tr>
+<tr><td style="text-align:left">语音转写准确率</td><td style="text-align:left">≥95%（医学术语场景）</td><td style="text-align:left">与人工录音对照</td></tr>
+<tr><td style="text-align:left">病历字段抽取准确率</td><td style="text-align:left">≥95%（关键字段≥99%）</td><td style="text-align:left">抽样人工复核</td></tr>
+<tr><td style="text-align:left">文书时间减少</td><td style="text-align:left">门诊病历书写时间减少30-50%</td><td style="text-align:left">上线前后对比</td></tr>
+<tr><td style="text-align:left">医生满意度</td><td style="text-align:left">≥80%认可AI辅助效果</td><td style="text-align:left">问卷调查</td></tr>
+</tbody>
+</table>
+
+</div>

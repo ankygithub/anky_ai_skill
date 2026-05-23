@@ -1,0 +1,310 @@
+# 文学维度二：氛围配方分析 Prompt
+
+## 任务目标
+对《{book_title}》进行**氛围营造技术**的解构，提取其独特的"氛围配方"——即作者是如何调动各种元素创造出令人沉浸的阅读氛围的。
+
+## ⚠️ 核心概念
+氛围不是抽象的感觉，而是可以通过**镜头调度、画面色调、声音设计、气味空间、温度场**等具体技术手段精确调控的"人工环境"。
+
+---
+
+## 第一部分：镜头调度与氛围
+
+### A. 镜头距离的氛围功能
+不同的镜头距离创造不同的氛围效果：
+
+- **极远景（EWS）**：人物在环境中显得渺小 → 孤独/苍凉/哲思氛围
+- **远景（WS）**：展现人与环境的关系 → 史诗/壮阔/孤寂氛围
+- **全景（FS）**：完整的环境信息 → 沉浸/真实/日常氛围
+- **中景（MS）**：聚焦人物互动 → 亲密/紧张/戏剧氛围
+- **近景（CS）**：面部表情为主 → 情感浓烈/心理聚焦氛围
+- **特写（CU）**：极端细节 → 压迫/神秘/紧张氛围
+- **大特写（ECU）**：单一元素的极致放大 → 执念/异常/超现实氛围
+
+**本书镜头距离偏好分析**：
+- 最常用于营造__氛围的距离：__
+- 创造__氛围的独特距离运用：[具体例子]
+- 镜头距离切换的节奏：__
+
+### B. 镜头运动的氛围效应
+- **固定镜头**：凝视感、压迫感、时间凝固的氛围
+- **缓慢推镜头**：逼近、侵入、揭示的氛围
+- **缓慢拉镜头**：疏离、孤独、虚无的氛围
+- **摇镜头**：巡视、搜索、不安的氛围
+- **跟镜头**：跟随、卷入、身临其境的氛围
+- **手持晃动**：混乱、紧张、真实的氛围
+- **旋转镜头**：眩晕、迷失、疯狂的氛围
+
+**本书特色运镜**：[分析独特的镜头运动如何服务于氛围营造]
+
+### C. 视角角度的氛围影响
+- **俯视（上帝视角）**：宿命、冷漠、全知氛围
+- **仰视（虫视角）**：压迫、敬畏、威胁氛围
+- **平视（人视角）**：平等、正常、亲切氛围
+- **倾斜（荷兰角）**：不安、扭曲、异常氛围
+- **POV主观视角**：代入、限制、紧张氛围
+
+**本书角度选择的氛围策略**：__
+
+---
+
+## 第二部分：画面色调分析
+
+### A. 色彩基调
+虽然文字不直接呈现颜色，但通过描写可以建立读者的"心象色彩"：
+
+#### 主色调识别
+- **冷色调主导**（蓝/灰/白/黑）：冷静、孤独、忧伤、科技感
+- **暖色调主导**（红/橙/黄/金）：热情、活力、温暖、危险
+- **中性色调**（棕/绿/土）：自然、朴实、沉稳、日常
+- **对比色调**：冷暖交替或强对比，制造张力
+- **单色/有限色调**：刻意限制色彩，营造特殊氛围
+
+**本书的主色调**：__
+**色调变化规律**：__
+
+### B. 光影设计
+文字中的"光影"指明暗对比的处理：
+
+- **高调（明亮为主）**：希望、纯真、轻松氛围
+- **低调（阴暗为主）**：悬疑、压抑、危险氛围
+- **明暗对比强烈**：戏剧性、冲突、张力氛围
+- **柔光漫射**：梦幻、朦胧、浪漫氛围
+- **逆光剪影**：神秘、威严、悲壮氛围
+- **光影流动**：时间流逝、变幻莫测氛围
+
+**本书的光影风格**：__
+
+### C. 画面构图感
+文字描写的空间布局暗示：
+
+- **开阔构图**：自由、辽阔、渺小感
+- **封闭构图**：压抑、安全、幽闭恐惧
+- **对称构图**：秩序、稳定、庄重
+- **不对称构图**：动态、不安、张力
+- **框架构图**（门框/窗框）：窥视、隔绝、聚焦
+- **纵深构图**：层次、距离、旅程感
+
+**本书的构图偏好**：__
+
+---
+
+## 第三部分：声音设计分析
+
+⚠️ 小说是 silent medium，但优秀的文字可以"写出声音"，甚至"写出寂静"。
+
+### A. 声音层次
+- **前景音**：直接的声响（对话、动作声、环境音）
+- **中景音**：背景的声音（远处的喧闹、自然声）
+- **背景音**：几乎意识不到但存在的环境底噪
+- **内心音**：角色的内心声音（思考、回忆、心跳）
+
+**本书的声音层次丰富度**：__/10
+
+### B. 声音类型统计
+- **人声**：对话、呼喊、低语、笑声、哭声
+- **自然声**：风声、雨声、雷声、水声、鸟鸣
+- **物体声**：兵器碰撞、脚步、开门、器皿
+- **抽象声**：某种难以名状的声音（如有超自然设定）
+- **静默/无声**：刻意描写的安静时刻
+
+**各类型的出现频率和功能**：__
+
+### C. 声音的氛围功能
+- **声音作为情绪指标**：同一声音在不同情绪下的不同描写
+- **声音作为伏笔**：异常的声音预示危险或转折
+- **声音作为记忆触发**：特定声音引发回忆
+- **声音作为节奏工具**：声音的疏密调节阅读节奏
+- **静默的力量**：不写声音本身就是最强的声音
+
+**本书最独特的声音设计**：[具体例子]
+
+### D. 特殊声音场景
+找出书中"写得最有声音感"的3个片段：
+1. [章节引用 + 原文 + 为什么好]
+2. [章节引用 + 原文 + 为什么好]
+3. [章节引用 + 原文 + 为什么好]
+
+---
+
+## 第四部分：五类核心氛围配方
+
+基于以上分析，归纳本书最擅长的5类氛围及其完整配方：
+
+### 配方1：【名称】
+- **目标氛围**：______（用3-5个形容词描述）
+- **适用场景**：______
+- **镜头调度**：______
+- **画面色调**：______
+- **光影设计**：______
+- **声音设计**：______
+- **嗅觉/触觉元素**：______（如有）
+- **关键词汇**：______（这类氛围的高频词）
+- **标志句式**：______
+- **典型例段**：[原文摘录]
+- **仿写难度**：★☆☆☆☆ ~ ★★★★★
+- **独特性评分**：__/10
+
+### 配方2-5：（重复上述结构）
+
+---
+
+## 第五部分：氛围转换的艺术
+
+### A. 氛围切换的方式
+- **渐变式**：慢慢过渡，读者几乎察觉不到
+- **突变式**：突然切换，制造冲击
+- **对比式**：两种截然不同的氛围并置
+- **融合式**：多种氛围混合产生新氛围
+- **循环式**：在几种氛围间周期性切换
+
+**本书的切换偏好**：__
+
+### B. 氛围与剧情的配合
+- **氛围先行**：先建立氛围，再发生事件（增强冲击）
+- **氛围同步**：氛围随剧情实时变化
+- **氛围滞后**：事件发生后氛围才转变（余波效应）
+- **氛围反衬**：氛围与事件情绪相反（悲剧中的欢乐氛围等）
+
+**本书的最佳实践**：[具体例子]
+
+### C. 失败案例分析（如有）
+- 哪些地方的氛围营造失败了？为什么？
+- 哪些地方氛围与剧情脱节？
+- 哪些地方氛围过于刻意/矫揉造作？
+
+## 输出格式要求
+
+```json
+{
+  "literary_dimension": "atmosphere",
+  "book_title": "{book_title}",
+  "analysis": {
+    "cinematography_and_atmosphere": {
+      "shot_distance_functions": {
+        "extreme_long_shot": {"atmosphere": "string", "usage": "string"},
+        "long_shot": {"atmosphere": "string", "usage": "string"},
+        "full_shot": {"atmosphere": "string", "usage": "string"},
+        "medium_shot": {"atmosphere": "string", "usage": "string"},
+        "close_up": {"atmosphere": "string", "usage": "string"},
+        "extreme_close_up": {"atmosphere": "string", "usage": "string"}
+      },
+      "camera_movement_effects": {
+        "static": "string",
+        "slow_push_in": "string",
+        "slow_pull_out": "string",
+        "pan": "string",
+        "tracking": "string",
+        "handheld_shake": "string",
+        "rotating": "string"
+      },
+      "viewing_angle_strategy": {
+        "high_angle_god_view": "string",
+        "low_angle_bug_view": "string",
+        "eye_level_human_view": "string",
+        "dutch_angle": "string",
+        "pov_subjective": "string"
+      },
+      "unique_cinematic_choices": "string"
+    },
+    visual_color_palette: {
+      dominant_color_tone: "string",
+      tone_variation_patterns: "string",
+      lighting_design: {
+        "high_key": "string",
+        "low_key": "string",
+        "high_contrast": "string",
+        "soft_diffused": "string",
+        "backlight_silhouette": "string",
+        "flowing_light_shadow": "string"
+      },
+      compositional_feeling: {
+        "open_composition": "string",
+        "closed_composition": "string",
+        "symmetrical": "string",
+        "asymmetrical": "string",
+        "frame_within_frame": "string",
+        "depth_composition": "string"
+      }
+    },
+    sound_design: {
+      sonic_layer_richness: number,
+      sound_type_statistics: {
+        "human_voices": {"frequency": "string", "function": "string"},
+        "natural_sounds": {"frequency": "string", "function": "string"},
+        "object_sounds": {"frequency": "string", "function": "string"},
+        "abstract_sounds": {"frequency": "string", "function": "string"},
+        "silence_quiet": {"frequency": "string", "function": "string"}
+      },
+      sound_atmosphere_functions: [
+        "sound_as_emotion_indicator",
+        "sound_as_foreshadowing",
+        "sound_as_memory_trigger",
+        "sound_as_rhythm_tool",
+        "power_of_silence"
+      ],
+      "unique_sound_design": "string",
+      "exceptional_sound_passages": [
+        {"chapter": "string", "excerpt": "string", "why_effective": "string"}
+      ]
+    },
+    core_atmosphere_recipes: [
+      {
+        "recipe_name": "string",
+        "target_atmosphere": ["string"],
+        "applicable_scenarios": "string",
+        "cinematography": "string",
+        "visual_color_palette": "string",
+        "lighting_design": "string",
+        "sound_design": "string",
+        "olfactory_tactile_elements": "string",
+        "key_vocabulary": ["string"],
+        "signature_sentence_patterns": ["string"],
+        "typical_excerpt": "string",
+        "imitation_difficulty": "1-5 stars",
+        "uniqueness_score": 1
+      }
+    ],
+    atmosphere_transition_art: {
+      "transition_methods": {
+        "gradual": "string",
+        "abrupt": "string",
+        "contrast": "string",
+        "fusion": "string",
+        "cyclical": "string"
+      },
+      "plot_coordination": {
+        "atmosphere_first": "string",
+        "synchronized": "string",
+        "lagging": "string",
+        "counterpoint": "string"
+      },
+      "best_practices": ["string"],
+      "failure_analysis": ["string"]
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "immersion_quality": "high|medium|low",
+    "sensory_synesthesia_level": "high|medium|low",
+    "unique_contributions": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取氛围配方参数表、镜头调度方案、声音设计模板、色调配置
+**文学侧**：感知氛围的厚度和质感、沉浸感的深度、美学感染力的强度、通感能力的高低
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的氛围特征
+2. **典型证据**：至少2-3个具体场景（含原文摘录）
+3. **仿写规则**：可操作的氛围营造指导原则
+4. **稳定度判断**：氛围营造的一致性和质量（高/中/低）
+
+---
+**上下文输入**：{context}

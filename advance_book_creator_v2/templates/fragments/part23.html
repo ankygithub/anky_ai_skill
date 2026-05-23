@@ -1,0 +1,279 @@
+<div class="content">
+<h2 class="section-title page-break" id="part23">第二十三章 企业知识库——多路召回与重排</h2>
+
+<blockquote><p>从"单一检索"到"多维召回"——让每一条知识都无处遁形</p></blockquote>
+
+<h3 id="section143">5.6.1 为什么需要多路召回</h3>
+
+<p>单一向量检索虽然能解决"语义匹配"问题，但在实际生产环境中面临诸多局限：</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">场景</th><th style="text-align:left">向量检索表现</th><th style="text-align:left">根因</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">精确关键词查询（如"制度编号2026-003"）</td><td style="text-align:left">差</td><td style="text-align:left">向量检索擅长语义模糊匹配，不擅长精确匹配</td></tr>
+<tr><td style="text-align:left">跨文档多跳推理（如"A制度中提到的B流程的审批人是谁"）</td><td style="text-align:left">差</td><td style="text-align:left">单次检索无法跨越文档边界建立关联</td></tr>
+<tr><td style="text-align:left">结构化数据查询（如"Q3销售额"）</td><td style="text-align:left">差</td><td style="text-align:left">向量检索无法直接查询数据库中的结构化数据</td></tr>
+<tr><td style="text-align:left">专有名词查询（如产品型号"XPS-1590"）</td><td style="text-align:left">一般</td><td style="text-align:left">Embedding模型对专有名词的语义表示不够精准</td></tr>
+</tbody>
+</table>
+
+<span class="tag-core">多路召回</span>的核心思想是：<strong>不同检索方式各有所长，组合使用才能覆盖所有场景</strong>。通过向量检索、关键词检索、图检索、NL2SQL等多路召回，再加上重排器进行精排序，才能实现高召回率和高准确率的统一。
+
+<hr>
+
+<h3 id="section144">5.6.2 五种召回策略详解</h3>
+
+<h4>策略一：向量检索（语义模糊查询）</h4>
+
+<span class="tag-core">向量检索</span>是多路召回的核心策略，用于解决语义理解问题。
+
+<table>
+<thead>
+<tr><th style="text-align:left">维度</th><th style="text-align:left">说明</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">技术原理</td><td style="text-align:left">将查询和文档都转化为向量，计算余弦相似度</td></tr>
+<tr><td style="text-align:left">适用场景</td><td style="text-align:left">自然语言提问、同义词匹配、模糊意图理解</td></tr>
+<tr><td style="text-align:left">推荐模型</td><td style="text-align:left">BGE-M3、text2vec、E5-large-v2</td></tr>
+<tr><td style="text-align:left">参数建议</td><td style="text-align:left">Top-K=20-50，相似度阈值0.5-0.7</td></tr>
+</tbody>
+</table>
+
+<strong>适用问题类型</strong>：
+
+<table>
+<thead>
+<tr><th style="text-align:left">问题示例</th><th style="text-align:left">向量检索效果</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">"年假怎么算？"</td><td style="text-align:left">✅ 能匹配到"年休假规定"相关文档</td></tr>
+<tr><td style="text-align:left">"报销需要什么材料？"</td><td style="text-align:left">✅ 能匹配到"费用报销流程"相关文档</td></tr>
+<tr><td style="text-align:left">"新人入职要做什么？"</td><td style="text-align:left">✅ 能匹配到"新员工入职指南"相关文档</td></tr>
+</tbody>
+</table>
+
+<h4>策略二：关键词检索（BM25精确查询）</h4>
+
+<span class="tag-core">BM25关键词检索</span>是传统搜索引擎的核心算法，用于解决精确匹配问题。
+
+<table>
+<thead>
+<tr><th style="text-align:left">维度</th><th style="text-align:left">说明</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">技术原理</td><td style="text-align:left">基于词频和逆文档频率的统计模型</td></tr>
+<tr><td style="text-align:left">适用场景</td><td style="text-align:left">精确关键词、专有名词、编号、型号</td></tr>
+<tr><td style="text-align:left">推荐引擎</td><td style="text-align:left">Elasticsearch、OpenSearch</td></tr>
+<tr><td style="text-align:left">参数建议</td><td style="text-align:left">结合分词器（如：IK Analyzer、Jieba）</td></tr>
+</tbody>
+</table>
+
+<strong>适用问题类型</strong>：
+
+<table>
+<thead>
+<tr><th style="text-align:left">问题示例</th><th style="text-align:left">BM25效果</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">"制度编号2026-003"</td><td style="text-align:left">✅ 精确匹配文档编号</td></tr>
+<tr><td style="text-align:left">"XPS-1590产品规格"</td><td style="text-align:left">✅ 精确匹配产品型号</td></tr>
+<tr><td style="text-align:left">"Q3季度财报"</td><td style="text-align:left">✅ 精确匹配时间+文档类型</td></tr>
+</tbody>
+</table>
+
+<h4>策略三：图检索（GraphRAG跨文档多跳推理）</h4>
+
+<span class="tag-core">GraphRAG</span>将文档中的实体和关系构建成知识图谱，通过图查询实现跨文档的多跳推理。
+
+<table>
+<thead>
+<tr><th style="text-align:left">维度</th><th style="text-align:left">说明</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">技术原理</td><td style="text-align:left">从文档中提取实体（人、事、物）和关系，构建图数据库</td></tr>
+<tr><td style="text-align:left">适用场景</td><td style="text-align:left">跨文档关联查询、多跳推理、复杂业务逻辑</td></tr>
+<tr><td style="text-align:left">推荐引擎</td><td style="text-align:left">Neo4j、NebulaGraph</td></tr>
+<tr><td style="text-align:left">实现成本</td><td style="text-align:left">高（需要实体抽取和关系抽取模型）</td></tr>
+</tbody>
+</table>
+
+<strong>典型场景</strong>：
+
+<pre><code>问题："A制度中提到的B流程的审批人是谁？"
+
+向量检索 → 找到A制度文档 → 但无法直接回答"审批人是谁"
+GraphRAG → A制度 --包含--&gt; B流程 --审批人--&gt; 张三 → 直接给出答案</code></pre>
+
+<table>
+<thead>
+<tr><th style="text-align:left">问题示例</th><th style="text-align:left">向量检索</th><th style="text-align:left">GraphRAG</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">"A流程的上级审批是谁？"</td><td style="text-align:left">❌ 需要多跳推理</td><td style="text-align:left">✅ 图中直接查询</td></tr>
+<tr><td style="text-align:left">"这个产品的所有相关文档？"</td><td style="text-align:left">❌ 只能单次召回</td><td style="text-align:left">✅ 通过产品实体关联</td></tr>
+<tr><td style="text-align:left">"谁负责处理这个问题？"</td><td style="text-align:left">❌ 需要关联人和事</td><td style="text-align:left">✅ 图中责任人关系</td></tr>
+</tbody>
+</table>
+
+<blockquote><p>实施建议：GraphRAG建设成本高，建议在知识库成熟度达到一定阶段后再引入。初期可先用向量检索+关键词检索覆盖80%场景，剩余20%复杂场景再考虑GraphRAG。</p></blockquote>
+
+<h4>策略四：NL2SQL（结构化数据查询）</h4>
+
+<span class="tag-core">NL2SQL</span>（Natural Language to SQL）将自然语言问题转化为SQL查询，用于检索数据库中的结构化数据。
+
+<table>
+<thead>
+<tr><th style="text-align:left">维度</th><th style="text-align:left">说明</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">技术原理</td><td style="text-align:left">LLM将自然语言问题翻译为SQL语句，执行后返回结果</td></tr>
+<tr><td style="text-align:left">适用场景</td><td style="text-align:left">查表统计、数据报表、实时业务数据</td></tr>
+<tr><td style="text-align:left">推荐方案</td><td style="text-align:left">Vanna（开源）、阿里百炼NL2SQL、自研Prompt工程</td></tr>
+<tr><td style="text-align:left">安全要求</td><td style="text-align:left">只读权限、SQL白名单、结果校验</td></tr>
+</tbody>
+</table>
+
+<strong>典型场景</strong>：
+
+<table>
+<thead>
+<tr><th style="text-align:left">用户问题</th><th style="text-align:left">生成的SQL</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">"上个月退订单有多少？"</td><td style="text-align:left"><code>SELECT COUNT(*) FROM orders WHERE type='refund' AND MONTH(created_at)=MONTH(CURDATE())-1</code></td></tr>
+<tr><td style="text-align:left">"北京办公室有多少人？"</td><td style="text-align:left"><code>SELECT COUNT(*) FROM employees WHERE office='Beijing'</code></td></tr>
+<tr><td style="text-align:left">"产品A的价格是多少？"</td><td style="text-align:left"><code>SELECT price FROM products WHERE name='产品A'</code></td></tr>
+</tbody>
+</table>
+
+<h4>策略五：混合检索（向量+BM25融合）</h4>
+
+<span class="tag-core">混合检索</span>是2026年最主流的多路召回方案，将向量检索和BM25检索的结果进行融合排序。
+
+<strong>融合算法</strong>：
+
+<pre><code>最终得分 = α × 向量相似度得分 + (1-α) × BM25得分
+
+其中α通常取0.5-0.7（偏向语义检索）</code></pre>
+
+<table>
+<thead>
+<tr><th style="text-align:left">融合策略</th><th style="text-align:left">说明</th><th style="text-align:left">适用场景</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">线性加权</td><td style="text-align:left">如上公式</td><td style="text-align:left">通用场景</td></tr>
+<tr><td style="text-align:left">倒数排名融合（RRF）</td><td style="text-align:left">排名倒数相加</td><td style="text-align:left">不同检索结果量级差异大时</td></tr>
+<tr><td style="text-align:left">学习排序（Learning to Rank）</td><td style="text-align:left">用ML模型学习最优融合权重</td><td style="text-align:left">有充足标注数据时</td></tr>
+</tbody>
+</table>
+
+<hr>
+
+<h3 id="section145">5.6.3 重排技术</h3>
+
+<p>多路召回后，通常会得到20-100个候选文档片段。重排器的任务是<strong>对候选片段进行精细排序，选出最相关的Top-N个</strong>（通常3-5个）送入大模型生成答案。</p>
+
+<h4>为什么需要重排</h4>
+
+<table>
+<thead>
+<tr><th style="text-align:left">对比维度</th><th style="text-align:left">向量检索（粗排）</th><th style="text-align:left">重排器（精排）</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">计算方式</td><td style="text-align:left">点积/余弦相似度</td><td style="text-align:left">交叉编码器（Cross-Encoder）</td></tr>
+<tr><td style="text-align:left">计算复杂度</td><td style="text-align:left">低（O(n)）</td><td style="text-align:left">高（O(n×m)，m为序列长度）</td></tr>
+<tr><td style="text-align:left">精度</td><td style="text-align:left">中等</td><td style="text-align:left">高</td></tr>
+<tr><td style="text-align:left">适用阶段</td><td style="text-align:left">初筛（从百万到百级）</td><td style="text-align:left">精选（从百级到个位数）</td></tr>
+</tbody>
+</table>
+
+<strong>重排的本质</strong>：将"查询"和"候选文档"拼接后送入模型，让模型直接判断"查询和文档的相关性"，而非分别编码后计算相似度。
+
+<h4>重排模型推荐</h4>
+
+<table>
+<thead>
+<tr><th style="text-align:left">模型</th><th style="text-align:left">语言</th><th style="text-align:left">准确率</th><th style="text-align:left">延迟</th><th style="text-align:left">部署方式</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left"><span class="tag-core">bge-reranker-large</span></td><td style="text-align:left">中英</td><td style="text-align:left">★★★★★</td><td style="text-align:left">50-100ms/条</td><td style="text-align:left">本地部署</td></tr>
+<tr><td style="text-align:left"><span class="tag-core">bge-reranker-v2-m3</span></td><td style="text-align:left">多语言</td><td style="text-align:left">★★★★★</td><td style="text-align:left">50-100ms/条</td><td style="text-align:left">本地部署</td></tr>
+<tr><td style="text-align:left">Cohere Rerank</td><td style="text-align:left">多语言</td><td style="text-align:left">★★★★</td><td style="text-align:left">网络延迟</td><td style="text-align:left">API调用</td></tr>
+<tr><td style="text-align:left">Jina Reranker</td><td style="text-align:left">多语言</td><td style="text-align:left">★★★★</td><td style="text-align:left">网络延迟</td><td style="text-align:left">API调用/本地部署</td></tr>
+</tbody>
+</table>
+
+<h4>阿里百炼推荐参数</h4>
+
+<p>根据阿里百炼的最佳实践建议：</p>
+
+<table>
+<thead>
+<tr><th style="text-align:left">参数</th><th style="text-align:left">推荐值</th><th style="text-align:left">说明</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">最大召回数</td><td style="text-align:left">≤20</td><td style="text-align:left">超过20条会引入噪音，影响重排效果</td></tr>
+<tr><td style="text-align:left">相似度阈值</td><td style="text-align:left">0.5-0.7</td><td style="text-align:left">低于0.5的候选文档通常不相关</td></tr>
+<tr><td style="text-align:left">融合方式</td><td style="text-align:left">BM25+GTE-ReRank</td><td style="text-align:left">向量+关键词混合，GTE重排</td></tr>
+<tr><td style="text-align:left">最终Top-K</td><td style="text-align:left">3-5</td><td style="text-align:left">送入大模型的文档数量</td></tr>
+</tbody>
+</table>
+
+
+<div class="callout callout-info">
+<div class="callout-title">架构师提醒</div>
+<p>重排器的延迟是需要特别关注的指标。假设召回20条候选文档，每条重排耗时100ms，总重排延迟就是2秒。优化建议：</p>
+<ul>
+  <li><strong>批量重排</strong>：将20条候选文档批量送入重排器，而非逐条处理</li>
+  <li><strong>预过滤</strong>：先用轻量级规则（如权限、时效）过滤掉明显不相关的候选</li>
+  <li><strong>模型蒸馏</strong>：将大模型蒸馏为小模型，在精度损失<2%的前提下降低50%延迟</li>
+  <li><strong>缓存</strong>对高频查询缓存重排结果</li>
+</ul>
+</div>
+
+
+<hr>
+
+<h3 id="section146">5.6.4 多路召回架构示例</h3>
+
+<pre><code>                    用户查询
+                        │
+                    查询改写
+                        │
+          ┌─────────────┼─────────────┐
+          ↓             ↓             ↓
+    ┌──────────┐ ┌──────────┐ ┌──────────┐
+    │ 向量检索  │ │ 关键词检索│ │ 图检索   │
+    │ (BGE-M3) │ │(BM25/ES) │ │(Neo4j)   │
+    └─────┬────┘ └─────┬────┘ └─────┬────┘
+          │             │             │
+          └──────┬──────┘             │
+                 ↓                     │
+          ┌──────────────┐             │
+          │  结果融合     │←────────────┘
+          │  (RRF/加权)   │
+          └──────┬───────┘
+                 │ 候选文档(≤20条)
+                 ↓
+          ┌──────────────┐
+          │  重排器       │
+          │(bge-reranker)│
+          └──────┬───────┘
+                 │ Top-5文档
+                 ↓
+          ┌──────────────┐
+          │  大模型生成   │
+          │  (Qwen/DeepSeek)│
+          └──────────────┘</code></pre>
+
+<hr>
+
+<h3 id="section147">5.6.5 本章小结</h3>
+
+<p>多路召回与重排是RAG系统中决定检索质量的"核心引擎"。向量检索解决语义理解，关键词检索解决精确匹配，图检索解决跨文档推理，NL2SQL解决结构化数据查询，混合检索融合各路优势。重排器则在粗排的基础上进行精细排序，确保最终送入大模型的文档是最相关的。阿里百炼推荐的最佳实践（最大召回≤20、相似度阈值0.5-0.7、BM25+GTE-ReRank融合）是经过大量企业场景验证的可靠方案。下一章将深入讲解查询改写与向量数据库选型。</p>
+
+<hr>
+
+</div>

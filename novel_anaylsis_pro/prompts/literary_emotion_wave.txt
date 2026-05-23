@@ -1,0 +1,331 @@
+# 文学维度一：情绪波形图分析 Prompt
+
+## 任务目标
+对《{book_title}》进行**情绪波形**的微观分析，捕捉文字背后的情感律动和情绪质感。
+
+## ⚠️ 分析哲学
+情绪不是简单的"高兴/难过"二元划分，而是有质地、有层次、有余韵的复杂波动。本分析要像心电图一样精确地记录情绪的每一次跳动。
+
+---
+
+## 第一部分：压抑期的质感分析
+
+### A. 压抑的类型学
+识别书中不同类型的压抑及其独特质感：
+
+#### 1. 憋屈型压抑
+- **特征**：明明有能力却不能用/有话不能说/被误解无法辩白
+- **生理感觉**：胸闷、喉咙发紧、拳头攥紧
+- **心理状态**：愤怒被强行压下去，化作更深的阴郁
+- **典型场景模式**：[本书中的具体表现]
+- **文字痕迹**：短句增多、省略号使用、内心独白的压抑性
+- **读者共情机制**：谁没有被憋屈过？这种压抑最容易引发代入
+
+#### 2. 无力型压抑
+- **特征**：面对强大的不可抗力，个人的渺小和无助
+- **生理感觉**：疲惫、沉重、想放弃
+- **心理状态**：不是不想反抗，是真的做不到
+- **典型场景模式**：[本书中的具体表现]
+- **文字痕迹**：环境描写的灰暗色调、动作的迟缓、希望的微弱
+- **读者共情机制**：唤起读者自身面对命运时的无力感记忆
+
+#### 3. 焦虑型压抑
+- **特征**：知道危险临近但不知道具体是什么/等待审判的煎熬
+- **生理感觉**：心跳加速、坐立难安、冷汗
+- **心理状态**：恐惧未知，想象比现实更可怕
+- **典型场景模式**：[本书中的具体表现]
+- **文字痕迹**：疑问句增多、时间感知扭曲、细节过度关注
+- **读者共情机制**：悬念和期待的双重折磨
+
+#### 4. 悲伤型压抑
+- **特征**：失去之后的空虚、回忆的重量、无法挽回的遗憾
+- **生理感觉**：胸口空落落的、眼泪在眼眶里打转
+- **心理状态**：不是剧烈的痛苦，而是持续的隐痛
+- **典型场景模式**：[本书中的具体表现]
+- **文字痕迹**：回忆穿插、感官触发（某个味道/声音引发）、时间的停滞感
+- **读者共情机制**：每个人失去过重要之物，这种痛是通用的
+
+#### 5. 孤独型压抑
+- **特征**：人群中依然孤独、无人理解的寂寞、必须独自承担的重负
+- **生理感觉**：寒冷（即使周围温暖）、沉默的冲动
+- **心理状态**：不是没有人陪伴，是没有能懂自己的人
+- **典型场景模式**：[本书中的具体表现]
+- **文字痕迹**：人群描写中的疏离感、对话后的落寞、独处时的释放与自语
+- **读者共情机制**：现代人的普遍困境，深刻的共鸣源
+
+### B. 压抑的文字指纹
+分析作者如何用文字制造压抑感：
+- **句式选择**：哪种句式最能传达压抑？（短促破碎？长而沉重？）
+- **词汇色彩**：压抑段落的词汇是否有特定的情感色调？
+- **节奏控制**：是否故意放慢节奏来强化压抑？
+- **感官屏蔽**：是否减少某些感官描写来模拟压抑的心理状态？
+- **空间隐喻**：压抑时的人物空间感受（狭窄/封闭/窒息？）
+
+---
+
+## 第二部分：释放方式分析
+
+### A. 释放的类型学
+
+#### 1. 爆发式释放
+- **特征**：长期积累后的一次性彻底宣泄
+- **强度**：极高，如洪水决堤
+- **持续时间**：较短但强烈
+- **典型场景**：[本书例子]
+- **文字表现**：长句爆发、感叹号密集、排比铺陈
+- **风险**：如果铺垫不足会显得突兀；如果过度会显得狗血
+
+#### 2. 渐进式释放
+- **特征**：压力逐步减轻，如退潮般缓慢
+- **强度**：中等，温和而持久
+- **持续时间**：较长
+- **典型场景**：[本书例子]
+- **文字表现**：节奏逐渐加快、色调由暗转亮、希望一点点出现
+- **优势**：更真实，符合生活经验；但可能缺乏冲击力
+
+#### 3. 转化式释放
+- **特征**：压抑没有直接宣泄，而是转化为其他东西（力量/智慧/决心）
+- **强度**：内在的，不易被察觉但深远
+- **持续时间**：可能持续很久
+- **典型场景**：[本书例子]
+- **文字表现**：人物眼神的变化、语气的变化、行动的变化
+- **艺术价值**：最高级的处理方式，显示人物的成长
+
+#### 4. 延迟式释放
+- **特征**：当时没有释放，很久之后才在某时刻突然涌出
+- **强度**：因延迟而加倍（积压更久）
+- **特殊性**：往往在最意想不到的时候
+- **典型场景**：[本书例子]
+- **文字表现**：看似无关的场景中突然的情绪崩溃或释然
+- **效果**：最具戏剧性和震撼力
+
+#### 5. 替代式释放
+- **特征**：通过替代行为间接释放（战斗/创作/帮助他人）
+- **强度**：中等，但有意义
+- **典型场景**：[本书例子]
+- **功能**：将负面能量转化为正面行动
+
+### B. 释放的质量评估
+- **合理性**：释放是否水到渠成？
+- **充分性**：是否匹配之前积累的压抑量？
+- **创新性**：是否有新颖的释放方式？
+- **余味**：释放后留下的是空虚还是充实？
+
+---
+
+## 第三部分：余韵模式分析
+
+### A. 余韵的类型
+强烈的情绪场景之后，"回味"是如何处理的？
+
+#### 1. 沉寂余韵
+- 场景结束后，留出大段的空白/静默
+- 功能：让读者自己消化情绪
+- 适用：极度强烈的情绪爆发之后
+
+#### 2. 回响余韵
+- 通过环境描写、人物反应、象征物来延续情绪
+- 功能：延长情感的共振
+- 适用：需要让情绪渗透的时刻
+
+#### 3. 转折余韵
+- 在情绪高点突然转向另一个方向
+- 功能：防止情绪泛滥，增加复杂性
+- 适用：成熟作品的常见手法
+
+#### 4. 悬置余韵
+- 情绪未完全解决，留给未来
+- function：制造期待和牵挂
+- 适用：卷末/章末
+
+### B. 本书余韵的特色
+分析本书最独特的余韵处理方式：
+- 最动人的余韵场景：[描述]
+- 余韵的时长偏好：[长/中/短]
+- 余韵的情感色调：[什么颜色/温度/质地]
+
+---
+
+## 第四部分：典型案例深度剖析
+
+选取全书**3个最具代表性的情绪波形案例**进行显微镜级分析：
+
+### 案例1：【压抑→释放的经典波形】
+- **章节范围**：第__章 - 第__章
+- **波形图示**：（文字描述）
+```
+情绪强度
+   ↑
+10 |         ★（释放点）
+ 8 |        / \
+ 6 |       /   \
+ 4 |  ____/     \____
+ 2 | /
+ 0 +------------------→ 章节
+    压抑期  释放期  余韵期
+```
+- **压抑阶段详细分析**：（字数、关键段落、技巧）
+- **临界点分析**：最后一根稻草是什么？
+- **释放阶段详细分析**：（方式、强度、文字技巧）
+- **余韵处理**：如何收尾？
+- **整体评价**：这个波形的成功之处？
+
+### 案例2：【多重叠加的复杂波形】
+- （重复上述结构）
+
+### 案例3：【反直觉的创新波形】
+- （重复上述结构）
+
+---
+
+## 输出格式要求
+
+```json
+{
+  "literary_dimension": "emotion_wave",
+  "book_title": "{book_title}",
+  "analysis": {
+    "suppression_textures": {
+      "frustration_type": {
+        "characteristics": "string",
+        "physical_sensation": "string",
+        "psychological_state": "string",
+        "typical_scenarios": ["string"],
+        "textual_traces": ["string"],
+        "reader_empathy_mechanism": "string"
+      },
+      "powerlessness_type": {
+        "characteristics": "string",
+        "physical_sensation": "string",
+        "psychological_state": "string",
+        "typical_scenarios": ["string"],
+        "textual_traces": ["string"],
+        "reader_empathy_mechanism": "string"
+      },
+      "anxiety_type": {
+        "characteristics": "string",
+        "physical_sensation": "string",
+        "psychological_state": "string",
+        "typical_scenarios": ["string"],
+        "textual_traces": ["string"],
+        "reader_empathy_mechanism": "string"
+      },
+      "grief_type": {
+        "characteristics": "string",
+        "physical_sensation": "string",
+        "psychological_state": "string",
+        "typical_scenarios": ["string"],
+        "textual_traces": ["string"],
+        "reader_empathy_mechanism": "string"
+      },
+      "loneliness_type": {
+        "characteristics": "string",
+        "physical_sensation": "string",
+        "psychological_state": "string",
+        "typical_scenarios": ["string"],
+        "textual_traces": ["string"],
+        "reader_empathy_mechanism": "string"
+      },
+      "suppressions_textual_fingerprint": {
+        "sentence_pattern_preference": "string",
+        "vocabulary_coloration": "string",
+        "rhythm_control": "string",
+        "sensory_blocking": "string",
+        "spatial_metaphor": "string"
+      }
+    },
+    "release_methods": {
+      "explosive_release": {
+        "characteristics": "string",
+        "intensity": "very_high",
+        "duration": "short",
+        "typical_scenarios": ["string"],
+        "textual_expression": ["string"],
+        "risks": ["string"]
+      },
+      "gradual_release": {
+        "characteristics": "string",
+        "intensity": "medium",
+        "duration": "long",
+        "typical_scenarios": ["string"],
+        "textual_expression": ["string"],
+        "advantages": ["string"]
+      },
+      "transformative_release": {
+        "characteristics": "string",
+        "intensity": "internal_deep",
+        "duration": "extended",
+        "typical_scenarios": ["string"],
+        "textual_expression": ["string"],
+        "artistic_value": "highest"
+      },
+      "delayed_release": {
+        "characteristics": "string",
+        "intensity": "doubled_by_delay",
+        "timing": "unexpected",
+        "typical_scenarios": ["string"],
+        "textual_expression": ["string"],
+        "effect": "most_dramatic"
+      },
+      "substitutive_release": {
+        "characteristics": "string",
+        "intensity": "medium_meaningful",
+        "typical_scenarios": ["string"],
+        "function": "string"
+      },
+      "release_quality_assessment": {
+        "plausibility": "1-10",
+        "adequacy": "1-10",
+        "novelty": "1-10",
+        "aftertaste_quality": "empty|fulfilling|complex"
+      }
+    },
+    "aftertaste_patterns": {
+      "silence_aftertaste": {"usage": "string", "function": "string", "applicable_when": "string"},
+      "resonance_aftertaste": {"usage": "string", "function": "string", "applicable_when": "string"},
+      "transition_aftertaste": {"usage": "string", "function": "string", "applicable_when": "string"},
+      "suspension_aftertaste": {"usage": "string", "function": "string", "applicable_when": "string"},
+      "unique_book_characteristics": {
+        "most_moving_aftertaste_scene": "string",
+        "duration_preference": "long|medium|short",
+        "emotional_tone": "string"
+      }
+    },
+    "case_studies": [
+      {
+        "case_name": "string",
+        "chapter_range": "string",
+        "waveform_diagram": "string",
+        "suppression_phase_analysis": "string",
+        "critical_point_analysis": "string",
+        "release_phase_analysis": "string",
+        "aftertaste_handling": "string",
+        "overall_evaluation": "string"
+      }
+    ]
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "emotional_authenticity": "high|medium|low",
+    "waveform_variety": "monotonous|varied|rich",
+    "unique_contributions": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取情绪类型库、波形参数、释放模式清单、余韵处理模板
+**文学侧**：感知情绪的质感和温度、情感的真实深度、艺术表达的独创性、心灵共振的力量
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的情绪特征
+2. **典型证据**：至少2-3个具体场景（含原文摘录）
+3. **仿写规则**：可操作的情绪写作指导原则
+4. **稳定度判断**：该情绪表达的一致性和质量（高/中/低）
+
+---
+**上下文输入**：{context}

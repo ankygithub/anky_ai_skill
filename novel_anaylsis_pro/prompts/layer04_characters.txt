@@ -1,0 +1,255 @@
+# 人物关系与群像层分析 Prompt
+
+## 任务目标
+对《{book_title}》的**人物生态系统**进行全面解剖，包括配角配置、反派塑造、感情线和登场美学。
+
+## 分析维度
+
+### 1. 配角功能配置系统
+识别并分类配角在叙事中的功能角色：
+
+#### 核心功能类型（每类分析2-3位代表角色）
+
+**A. 引路人型**
+- 功能：为主角提供方向、知识、资源
+- 典型特征：比主角强大/智慧/经验丰富
+- 退出方式：牺牲/离开/成为背景/转化为其他类型
+- 与主角的关系演变轨迹
+- 代表角色分析（姓名、功能、经典台词、退场方式）
+
+**B. 战友/伙伴型**
+- 功能：并肩作战、共同成长、互补短板
+- 典型特征：能力互补、性格反差、信任基础
+- 团队动态：竞争还是合作？领导权归属？
+- 个人故事线：是否有独立于主角的成长弧光？
+- 代表角色分析
+
+**C. 红颜/知己型**
+- 功能：情感支撑、人性锚定、柔软面展示窗口
+- 典型特征：理解主角的本质、见过主角的脆弱
+- 感情线的进展速度和障碍
+- 与其他女性角色的差异化设计
+- 代表角色分析
+
+**D. 搞笑担当型**
+- 功能：调节气氛、缓解紧张、增加亲和力
+- 典型特征：言行夸张、常出糗、但关键时刻可靠
+- 笑点的来源和类型（肢体/语言/情境/反差）
+- 是否承担深层功能（如隐藏智慧/象征意义）？
+- 代表角色分析
+
+**E. 对照镜型**
+- 功能：通过对比突出主角特质
+- 典型特征：与主角相似但关键选择不同
+- 结局对比：成功/失败/死亡/觉醒
+- 作者通过此角色想表达什么？
+- 代表角色分析
+
+**F. 工具人型**
+- 功能：推动特定剧情、传递信息、充当障碍
+- 典型特征：功能性大于个性、用完即弃
+- 出场频率和记忆点
+- 是否有机会"活化"（赋予更多个性）？
+- 代表角色分析
+
+### 2. 反派塑造深度分析
+
+#### A. 动机深度评分（1-10）
+- **1-3分**：扁平反派，为坏而坏
+- **4-6分**：有一定理由，但仍显单薄
+- **7-9分**：复杂的动机体系，可理解甚至同情
+- **10分**：极具魅力的反派，有自己的哲学
+
+**分析要点**：
+- 核心动机是什么？（权力/复仇/理想/扭曲的爱/生存恐惧）
+- 过去经历如何塑造了现在的反派？
+- 反派是否认为自己是正义的？
+- 动机的合理性和说服力
+
+#### B. 与主角的关系维度
+- **镜像关系**：反派是主角的可能版本（如果做出不同选择）
+- **宿敌关系**：长期的个人恩怨，超越阵营对立
+- **理念对立**：代表与主角截然不同的价值观
+- **工具关系**：反派只是障碍，没有私人情感
+- **复杂关系**：以上多种关系的混合体
+
+#### C. 智商与威胁等级
+- 战术智商：战斗/对抗中的应变能力
+- 战略智商：长期布局和谋划能力
+- 情报能力：对主角的了解程度
+- 威胁等级：对主角实际造成的困难和伤害
+- 是否有过"碾压主角"的高光时刻？
+
+#### D. 结局处理方式
+- **彻底击败**：被杀死/封印/废掉
+- **转化/救赎**：被说服，加入主角阵营
+- **逃遁**：留下悬念，可能回归
+- **悲剧性结局**：值得同情的收场
+- **共存**：双方达成某种平衡
+
+**评价**：结局是否令人满意？是否充分利用了反派的潜力？
+
+### 3. 女性角色与感情线分析
+
+#### A. 女性角色整体设计
+- 数量和戏份占比
+- 类型分布（温柔型/御姐型/活泼型/高冷型/其他）
+- 是否避免刻板印象？
+- 是否有独立的意志和目标（非围绕主角转）？
+
+#### B. 主要感情线梳理（如有）
+- **感情线1**：
+  - 对象：[姓名]
+  - 相识方式：[如何相遇]
+  - 发展节点：[关键进展时刻]
+  - 障碍因素：[内部/外部阻力]
+  - 当前状态：[暧昧/确立/分离/结婚/其他]
+  - 化学反应：[为什么这对CP有吸引力]
+  - 读者反馈推测：[受欢迎程度]
+
+- **感情线2/3...**：（重复上述结构）
+
+#### C. 感情线处理评价
+- 节奏把控：太快/太慢/恰到好处？
+- 选择处理：后宫/单女主/无CP/开放式？
+- 感情与主线的融合度：相互促进还是相互干扰？
+- 情感戏的质量：甜度/虐度/真实感
+
+### 4. 人物登场方式模板
+
+收集并分类主要角色的登场方式：
+
+**A. 震撼登场型**
+- 先闻其名/传说 → 实际出场时气场全开
+- 典型场景：众人期待/恐惧中缓缓现身
+- 效果：瞬间建立角色的分量感
+
+**B. 低调潜入型**
+- 以普通身份出现，逐步揭示不凡
+- 典型场景：不起眼的角落里藏着高手
+- 效果：制造反差感和惊喜
+
+**C. 危机救援型**
+- 主角陷入绝境时突然出现
+- 典型场景："就在千钧一发之际..."
+- 效果：迅速建立好感度和信赖感
+
+**D. 对抗/冲突型**
+- 一出场就与主角或他人发生冲突
+- 典型场景：言语交锋/试探实力
+- 效果：快速展现角色性格和能力
+
+**E. 日常偶遇型**
+- 在平凡场景中自然相识
+- 典型场景：茶馆/集市/旅途中擦肩而过
+- 效果：亲切感强，便于后续发展
+
+**F. 侧面烘托型**
+- 先通过他人之口/回忆/记录间接介绍
+- 正式出场时读者已有预期
+- 效果：神秘感和期待感
+
+**要求**：每种类型提供1-2个具体例子，分析登场的叙事功能和艺术效果
+
+## 输出格式要求
+
+```json
+{
+  "layer": "characters",
+  "book_title": "{book_title}",
+  "analysis": {
+    "supporting_cast_config": {
+      "mentor_figures": [
+        {"name": "string", "function": "string", "exit_method": "string", "relationship_evolution": "string"}
+      ],
+      "companions": [
+        {"name": "string", "role": "string", "dynamic_with_protagonist": "string", "independent_arc": "boolean"}
+      ],
+      "romantic_interests": [
+        {"name": "string", "type": "string", "progress": "string"}
+      ],
+      "comic_relief": [
+        {"name": "string", "humor_source": "string", "depth_layer": "string"}
+      ],
+      "mirror_characters": [
+        {"name": "string", "contrast_point": "string", "outcome": "string", "thematic_function": "string"}
+      ],
+      "utilitarian_characters": [
+        {"name": "string", "purpose": "string", "memorability": "low|medium|high"}
+      ]
+    },
+    "antagonist_design": {
+      "primary_antagonist": {
+        "name": "string",
+        "motivation_depth_score": 7,
+        "core_motivation": "string",
+        "backstory_influence": "string",
+        "self_justification": "string",
+        "relationship_with_protagonist": "string",
+        "intelligence_rating": {"tactical": 8, "strategic": 7, "intelligence": 7},
+        "threat_level": "high|medium|low",
+        "dominant_moments": ["string"],
+        "resolution_type": "string",
+        "resolution_satisfaction": "high|medium|low"
+      },
+      "secondary_antagonists": [
+        {"name": "string", "brief_analysis": "string"}
+      ]
+    },
+    "female_characters_and_romance": {
+      "overall_design": {
+        "count": number,
+        "screen_time_percentage": number,
+        "type_distribution": ["string"],
+        "agency_level": "high|medium|low",
+        "stereotype_avoidance": "good|acceptable|problematic"
+      },
+      "romance_lines": [
+        {
+          "partner": "string",
+          "meeting_context": "string",
+          "key_milestones": ["string"],
+          "obstacles": ["string"],
+          "current_status": "string",
+          "chemistry_source": "string",
+          "popularity_estimate": "high|medium|low"
+        }
+      ],
+      "romance_quality_assessment": {
+        "pacing": "too_fast|too_slow|well_paced",
+        "resolution_type": "harem|single heroine|no romance|open",
+        "plot_integration": "strong|moderate|weak",
+        "emotional_quality": {"sweetness": "1-10", "angst": "1-10", "realism": "1-10"}
+      }
+    },
+    "introduction_templates": {
+      "dramatic_entry": {"count": number, "examples": ["string"], "narrative_function": "string"},
+      "subtle_introduction": {"count": number, "examples": ["string"], "narrative_function": "string"},
+      "crisis_rescue": {"count": number, "examples": ["string"], "narrative_function": "string"},
+      "conflict_intro": {"count": number, "examples": ["string"], "narrative_function": "string"},
+      "casual_encounter": {"count": number, "examples": ["string"], "narrative_function": "string"},
+      "indirect_buildup": {"count": number, "examples": ["string"], "narrative_function": "string"}
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "strengths": ["string"],
+    "weaknesses": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取人物功能配置表、关系网络图参数、登场模板库
+**文学侧**：评估人物的立体感、独特性、情感真实度、群体化学反应当每个分析项必须包含：
+1. **现象描述**：客观观察到的人物设计特征
+2. **典型证据**：至少2-3个具体场景或台词（含章节引用）
+3. **仿写规则**：可操作的人物塑造指导原则
+4. **稳定度判断**：人物刻画的一致性和深度（高/中/低）
+
+---
+**上下文输入**：{context}

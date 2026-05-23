@@ -1,0 +1,432 @@
+# 文学维度六：作者签名分析 Prompt
+
+## 任务目标
+对《{book_title}》进行**作者指纹**的提取和分析，识别那些独一无二、足以让熟悉读者一眼认出的"签名式"写作特征。
+
+## ⚠️ 核心假设
+每个成熟的作者都有自己独特的"签名"——一组反复出现的、高度个人化的写作习惯和美学偏好。这些签名是作者无意识的暴露，比有意识的风格更加稳定和真实。
+
+---
+
+## 第一部分：眼神写法（The Gaze Signature）
+
+### A. 眼睛描写库
+收集书中所有的眼睛/眼神描写，分析其独特性：
+
+#### 描写维度
+1. **形状描写**：眼型（丹凤眼/桃花眼/杏眼/狭长眼等）
+2. **颜色描写**：瞳色（墨黑/深褐/琥珀/浅碧等）
+3. **光泽描写**：眼神的光泽（清澈/浑浊/深邃/空洞/闪烁等）
+4. **动态描写**：眼神的变化（流转/凝聚/闪烁/黯淡等）
+5. **情感映射**：眼神代表什么情绪（坚定/温柔/冰冷/疯狂等）
+
+#### 作者的眼睛描写"癖好"
+- **最常用的眼神形容词TOP10**：__
+- **独特的眼睛比喻**：__
+- **眼神描写的长度偏好**：一词带过 / 半句描写 / 详细刻画
+- **眼神作为性格标签**：是否用特定眼神标识特定性格？
+
+**本书最独特的眼神描写**：[原文摘录]
+**眼神描写的辨识度**：__/10（如果遮住名字，能否认出是本书作者写的？）
+
+### B. 凝视/注视的写法
+当角色"看着"某物/某人时，作者的惯用表达：
+- "看向..."的变体形式有哪些？
+- 注视的时长如何表达？
+- 目光接触的意义编码（躲闪=害羞？直视=自信？）
+- 特殊的凝视场景（对镜/望月/注视照片/凝视伤口）
+
+**本书凝视描写的独特之处**：__
+
+---
+
+## 第二部分：固定意象系统（Recurring Motif System）
+
+### A. 核心意象识别
+找出书中反复出现的核心意象（出现5次以上）：
+
+#### 自然意象类
+- 天象：日/月/星/云/风/雨/雪/雷/电
+- 地理：山/河/海/沙漠/森林/城市
+- 植物：花/草/树/叶
+- 动物：龙/凤/鸟/兽/鱼/昆虫
+
+**本书高频自然意象TOP10**：__
+
+#### 物品意象类
+- 兵器：剑/刀/枪/弓/暗器
+- 饰物：玉佩/戒指/项链/发饰
+- 日常：茶/酒/书/琴/棋
+- 其他：__
+
+**本书高频物品意象TOP10**：__
+
+#### 抽象意象类
+- 光明/黑暗
+- 自由/枷锁
+- 过去/未来
+- 梦/醒
+- 生/死
+
+**本书高频抽象意象TOP10**：__
+
+### B. 意象的个人化改造
+同样的意象，不同作者有不同的"用法"：
+
+#### 以"月亮"为例
+- 作者A的月亮：浪漫、温柔、思念的寄托
+- 作者B的月亮：寒冷、孤独、遥远的旁观者
+- 作者C的月亮：阴晴圆缺象征人生的无常
+- **本书作者的月亮**：__[详细分析]
+
+**选择3个核心意象进行深度个性化分析**：
+1. [意象]：__[本书的独特用法]
+2. [意象]：__[本书的独特用法]
+3. [意象]：__[本书的独特用法]
+
+### C. 意象网络
+这些核心意象之间是否形成关联网络？
+- 意象A是否总是伴随意象B出现？
+- 是否有对立意象组（如火vs水、光明vs黑暗）？
+- 意象是否随着剧情发展而演变（如花朵从盛开到凋零）？
+
+**本书的意象网络地图**：__[描述]
+
+---
+
+## 第三部分：克制与爆发的辩证法（Restraint & Eruption）
+
+### A. 克制的类型
+作者在哪里"忍住不说"？
+
+#### 1. 情感克制
+- 明明很激动，文字却很平静
+- 用动作代替情绪宣泄
+- 用环境烘托代替直接表达
+- **本书示例**：[原文]
+
+#### 2. 信息克制
+- 故意隐瞒关键信息
+- 旁敲击击而不直说
+- 让读者自己推断
+- **本书示例**：[原文]
+
+#### 3. 描写克制
+- 该详细的地方反而简略
+- 留给读者想象空间
+- "少即是多"的美学
+- **本书示例**：[原文]
+
+#### 4. 评论克制
+- 叙述者不轻易发表观点
+- 让事实自己说话
+- 避免说教
+- **本书示例**：[原文]
+
+### B. 爆发的类型
+作者在哪里"忍不住了"？
+
+#### 1. 情感爆发
+- 积蓄已久的情感终于决堤
+- 通常发生在最关键的时刻
+- 文字突然变得浓烈/激烈
+- **本书示例**：[原文]
+
+#### 2. 语言爆发
+- 平时克制的语言突然变得华丽/繁复
+- 使用平时不用的修辞手法
+- 句子长度突然激增
+- **本书示例**：[原文]
+
+#### 3. 节奏爆发
+- 短句密集轰炸
+- 快速切换
+- 信息高密度输出
+- **本书示例**：[原文]
+
+### C. 克制-爆发的节奏
+- 克制通常持续多久？爆发通常持续多久？
+- 克制与爆发的比例大约是多少？
+- 是否形成固定的模式（长克制+短爆发）？
+- 最成功的克制-爆发转换：[具体例子]
+
+**本书的克制-爆发美学**：__
+
+---
+
+## 第四部分：空间修辞（Spatial Rhetoric）
+
+### A. 空间偏好的类型
+作者更喜欢写什么样的空间？
+
+#### 广阔空间 vs 狭窄空间
+- **广阔偏爱型**：喜欢写天空、平原、大海、广场
+  - 心理投射：向往自由、宏大叙事偏好
+  - **本书证据**：__
+  
+- **狭窄偏爱型**：喜欢写房间、角落、洞穴、密室
+  - 心理投射：注重细节、内省倾向、私密性
+  - **本书证据**：__
+
+- **混合型**：根据需要灵活切换
+  - **本书证据**：__
+
+#### 高处 vs 低处
+- **高处偏爱**：山顶、楼顶、云端、飞行
+  - 象征：超越、俯瞰、权力、孤独
+  
+- **低处偏爱**：谷底、水下、地下室、地面
+  - 象征：扎根、隐蔽、谦卑、压抑
+
+**本书的空间高度偏好**：__
+
+### B. 空间与情感的绑定
+某些空间是否总是与特定情感关联？
+- **快乐空间**：哪里？为什么？
+- **悲伤空间**：哪里？为什么？
+- **恐惧空间**：哪里？为什么？
+- **安全空间**：哪里？为什么？
+- **神圣空间**：哪里？为什么？
+
+**本书的空间-情感绑定图谱**：__
+
+### C. 空间的动态性
+空间在书中是静态背景还是动态参与者？
+- **静态背景**：空间只是事情发生的地点
+- **动态参与**：空间本身影响情节和人物（天气变化/环境反馈/空间的"意志"）
+- **象征空间**：空间承载深层含义
+
+**本书空间的角色**：__
+
+### D. 边界与门槛
+作者如何处理"边界"？
+- 门/窗/路口/渡口的意义
+- 进入/离开的仪式感
+- 内部vs外部的对立
+- 家乡vs异乡的张力
+- 已知世界vs未知世界的界限
+
+**本书边界的修辞方式**：__
+
+---
+
+## 第五部分：诗词基因（Poetic DNA）
+
+### A. 诗词敏感度
+作者的写作是否受到诗词（中国古典诗歌）的影响？
+
+#### 影响的表现
+1. **词汇遗传**：使用诗词中常见的雅词
+2. **句式遗传**：句子结构类似诗词的对仗/排比
+3. **意境遗传**：营造类似诗词的意境和画面
+4. **节奏遗传**：文字的节奏暗合诗词的格律
+5. **思维遗传**：联想方式和审美取向接近诗人
+
+**本书的诗词基因检测**：
+- 词汇遗传程度：__/10
+- 句式遗传程度：__/10
+- 意境遗传程度：__/10
+- 节奏遗传程度：__/10
+- 思维遗传程度：__/10
+- **总体诗词基因强度**：__
+
+### B. 如果有诗词基因，来自何处？
+- **唐诗基因**：豪放/浪漫/气象万千
+- **宋词基因**：婉约/细腻/情感深沉
+- **元曲基因**：通俗/生动/市井气息
+- **楚辞/骚体基因**：瑰丽/奇幻/情感浓烈
+- **现代诗基因**：自由/创新/意象新颖
+- **民歌/童谣基因**：朴素/真诚/节奏简单
+
+**本书主要的诗词基因来源**：__[分析]
+
+### C. 自创的诗性时刻
+即使不直接引用或化用诗词，作者是否创造了属于自己的"诗性时刻"？
+- 散文诗般的段落
+- 如画的静止场景
+- 富有哲理的凝视
+- 超越功利的纯美描写
+
+**本书最美的3个自创诗性时刻**：
+1. [原文摘录 + 为什么有诗意]
+2. [原文摘录 + 为什么有诗意]
+3. [原文摘录 + 为什么有诗意]
+
+---
+
+## 第六部分：签名综合画像
+
+### A. 作者签名的唯一性
+如果把这些签名特征组合起来，是否能构成独一无二的指纹？
+
+#### 指纹要素清单
+1. 眼神写法的独特性：__(高/中/低)
+2. 固定意象系统的独特性：__(高/中/低)
+3. 克制-爆发模式的独特性：__(高/中/低)
+4. 空间修辞的独特性：__(高/中/低)
+5. 诗词基因的独特性：__(高/中/低)
+
+**综合唯一性评分**：__/10
+
+### B. 签名的演化（如果有多部作品可比较）
+对于单本书，这个问题变为：
+- 书的开头和结尾，签名特征是否一致？（检验稳定性）
+- 是否有"签名泄露"的时刻——作者太投入以至于暴露了超出角色需要的个人特质？
+
+### C. 签名的魅力来源
+这个作者签名之所以吸引人，是因为：
+- 审美独特性：别人想不到这样的写法
+- 情感真挚性：能感觉到是真切的体验
+- 技术精湛性：执行到位，效果显著
+- 文化底蕴性：有深厚的文化和知识支撑
+- 人格魅力性：通过文字感受到作者的人格光辉
+
+**本书作者签名的最大魅力**：__[阐述]
+
+## 输出格式要求
+
+```json
+{
+  "literary_dimension": "signature",
+  "book_title": "{book_title}",
+  "analysis": {
+    "the_gaze_signature": {
+      "eye_description_corpus": {
+        "shape_descriptions": ["string"],
+        "color_descriptions": ["string"],
+        "luster_descriptions": ["string"],
+        "dynamic_descriptions": ["string"],
+        "emotion_mapping": ["string"]
+      },
+      "author_eye_description_habits": {
+        "top_10_adjectives": ["string"],
+        "unique_eye_metaphors": ["string"],
+        "length_preference": "single_word|half_sentence|detailed",
+        "eyes_as_personality_tags": "string"
+      },
+      "most_unique_eye_description": "string",
+      "recognizability_score": number,
+      "gaze_stare_writing": {
+        "looking_variants": ["string"],
+        "duration_expression": "string",
+        "eye_contact_meaning_coding": "string",
+        "special_gazing_scenes": ["string"],
+        "uniqueness": "string"
+      }
+    },
+    "recurring_motif_system": {
+      "core_motifs_identified": {
+        "natural_imagery_top10": ["string"],
+        "object_imagery_top10": ["string"],
+        "abstract_imagery_top10": ["string"]
+      },
+      "personalized_motif_transformation": [
+        {"motif": "string", "unique_usage_in_this_book": "string"}
+      ],
+      "motif_network": {
+        "paired_motifs": ["string"],
+        "opposing_pairs": ["string"],
+        "evolution_with_plot": "string"
+      }
+    },
+    "restraint_eruption_dialectics": {
+      "restraint_types": {
+        "emotional_restraint": "string",
+        "information_restraint": "string",
+        "descriptive_restraint": "string",
+        "commentary_restraint": "string"
+      },
+      "eruption_types": {
+        "emotional_eruption": "string",
+        "linguistic_eruption": "string",
+        "rhythmic_eruption": "string"
+      },
+      "restraint_eruption_rhythm": {
+        "restraint_duration": "string",
+        "eruption_duration": "string",
+        "ratio": "string",
+        "pattern": "string",
+        "most_successful_transition": "string"
+      },
+      "aesthetic_philosophy": "string"
+    },
+    spatial_rhetoric: {
+      "space_preference": {
+        "expansive_vs_confined": "preference|mixed",
+        "high_vs_low_elevation": "string",
+        "evidence": "string"
+      },
+      "space_emotion_binding": {
+        "joy_spaces": "string",
+        "sorrow_spaces": "string",
+        "fear_spaces": "string",
+        "safe_spaces": "string",
+        "sacred_spaces": "string"
+      },
+      "spatial_dynamism": "static_background|dynamic_participant|symbolic_space",
+      "boundaries_and_thresholds": "string"
+    },
+    poetic_dna: {
+      poetry_sensitivity_detection: {
+        "vocabulary_heredity": number,
+        "syntax_heredity": number,
+        "imagery_heredity": number,
+        "rhythm_heredity": number,
+        "thinking_heredity": number,
+        "overall_strength": number
+      },
+      "poetry_gene_source": "tang_poetry|song_lyrics|yuan_qu|chu_ci|modern_poetry|folk_song",
+      "original_poetic_moments": [
+        {"excerpt": "string", "why_poetic": "string"}
+      ]
+    },
+    signature_composite_portrait: {
+      "fingerprint_elements": {
+        "gaze_uniqueness": "high|medium|low",
+        "motif_uniqueness": "high|medium|low",
+        "restraint_eruption_uniqueness": "high|medium|low",
+        "spatial_uniqueness": "high|medium|low",
+        "poetic_uniqueness": "high|medium|low"
+      },
+      "composite_uniqueness_score": number,
+      "stability_check": {
+        "beginning_vs_end_consistency": "string",
+        "signature_leakage_moments": ["string"]
+      },
+      "charm_source": {
+        "aesthetic_uniqueness": "string",
+        "emotional_authenticity": "string",
+        "technical_excellence": "string",
+        "cultural_depth": "string",
+        "personality_charisma": "string"
+      },
+      "primary_signature_appeal": "string"
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "signature_distinctiveness": "high|medium|low",
+    "signature_consistency": "high|medium|low",
+    "artistic_identity_strength": "strong|moderate|weak"
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取签名要素库、意象清单、克制-爆发参数、空间修辞模板、诗词基因标记
+**文学侧**：感知作者的灵魂指纹、美学独特性、人格魅力、艺术身份的清晰度
+
+⭐ **特别强调**：作者签名分析是最"侦探性"的维度——像侦探一样从文字的蛛丝马迹中还原出作者的样子。这不是模仿能学会的，而是作者生命体验和审美积淀的自然流露。
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的签名特征
+2. **典型证据**：至少2-3个具体例子（含原文摘录）
+3. **仿写规则**：注意：签名是很难模仿的，这里的规则更多是"理解和欣赏"而非"复制"
+4. **稳定度判断**：签名特征的一致性和独特性（高/中/低）
+
+---
+**上下文输入**：{context}

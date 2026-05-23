@@ -1,0 +1,169 @@
+# 情节结构层分析 Prompt
+
+## 任务目标
+对《{book_title}》进行**情节结构层**的深度分析，提取其叙事模式和戏剧张力构建机制。
+
+## 分析维度
+
+### 1. 高频情节模板提取（核心任务）
+识别并详细拆解至少**3个典型情节模板**，每个模板需包含完整五段结构：
+
+#### 模板结构要求
+```
+模板名称：【类型标签】
+触发条件：[什么事件启动这个情节单元]
+发展阶段：[铺垫、矛盾积累的具体方式]
+中段维持：[如何保持读者兴趣不衰减]
+转折节点：[反转/升级/危机爆发的时机和方式]
+收束模式：[如何收尾并为下一单元铺垫]
+```
+
+#### 常见模板类型参考
+- **实力展示模板**：挑衅→隐忍/低调→露一手→震惊全场→收获声望
+- **奇遇获得模板**：探索→发现线索→突破障碍→获得宝物→实力提升
+- **情感纠葛模板**：相遇→吸引→误会/阻碍→坦诚→关系升温
+- **阴谋揭露模板**：异常迹象→调查→部分真相→对抗→彻底解决
+- **修炼突破模板**：瓶颈→机缘领悟→痛苦蜕变→境界提升→新挑战
+
+**要求**：为每个模板标注出现频率（高频/中频/低频）和适用剧情阶段
+
+### 2. 冲突触发方式
+分析本书制造戏剧冲突的核心机制：
+- **外部冲突触发**：
+  - 敌对势力主动攻击
+  - 任务/使命驱动
+  - 环境危机逼迫
+  - 误会/信息差导致
+- **内部冲突触发**：
+  - 主角价值观与现实碰撞
+  - 欲望与约束的矛盾
+  - 成长带来的身份认同危机
+  - 道德困境的两难选择
+
+统计：外部vs内部冲突的比例（建议7:3到8:2）
+
+### 3. 反转机制
+识别作者惯用的反转手法：
+- **信息反转**：关键信息的隐藏与揭露时机
+- **身份反转**：角色真实身份的颠覆性揭示
+- **动机反转**：行为背后的真实目的与表面不同
+- **局势反转**：优势/劣势地位的突然转换
+- **预期反转**：故意误导读者后打破预期
+
+分析：反转的预警信号（是否有公平性）、反转密度（每多少章一次）、反转质量（是否合理且有冲击力）
+
+### 4. 高潮结构
+拆解典型高潮场景的结构要素：
+- **铺垫长度**：从酝酿到爆发需要多少章节
+- **多线汇聚**：多条故事线如何在高潮点汇合
+- **层次递进**：高潮内部的强度阶梯（小高潮→中高潮→大高潮）
+- **释放方式**：情绪和紧张感的宣泄机制
+- **余波处理**：高潮后的收束和新平衡建立
+
+### 5. 伏笔回收模式
+- **短程伏笔**（1-10章内回收）：快速 payoff 的技巧
+- **中程伏笔**（10-50章）：中期剧情的关键支撑
+- **长程伏笔**（50章以上）：贯穿半本书甚至全书的暗线
+- **烂尾风险检查**：是否存在未回收的重要伏笔
+
+### 6. 爽点密度曲线
+绘制概念性的爽点分布图：
+- **爽点定义**：让读者产生强烈满足感的关键场景
+- **密度计算**：每万字的爽点数量
+- **分布规律**：
+  - 开篇密集期（吸引读者）
+  - 中段稳定期（保持兴趣）
+  - 高潮爆发期（情绪峰值）
+  - 结尾升华期（回味无穷）
+- **爽点类型多样性**：战力爽/情感爽/智商爽/打脸爽/成长爽等
+
+### 7. 压抑释放周期
+分析情绪调控的呼吸节奏：
+- **小周期**（3-10章）：单次"压抑-释放"循环
+- **大周期**（30-100章）：整卷的情绪弧线
+- **虐爽比**：压抑时长 vs 释放时长的比例
+- **极限测试**：最大连续压抑章节数、读者的忍耐阈值
+
+## 输出格式要求
+
+```json
+{
+  "layer": "plot",
+  "book_title": "{book_title}",
+  "analysis": {
+    "plot_templates": [
+      {
+        "name": "string",
+        "type": "string",
+        "frequency": "high|medium|low",
+        "structure": {
+          "trigger": "string",
+          "development": "string",
+          "maintenance": "string",
+          "turning_point": "string",
+          "resolution": "string"
+        },
+        "example_chapters": "string",
+        "variation_notes": "string"
+      }
+    ],
+    "conflict_triggers": {
+      "external_ratio": number,
+      "internal_ratio": number,
+      "primary_mechanisms": ["string"],
+      "effectiveness_rating": "1-10"
+    },
+    "reversal_mechanisms": {
+      "types_used": ["string"],
+      "density": "string",
+      "fairness_score": "1-10",
+      "impact_score": "1-10"
+    },
+    "climax_structure": {
+      "prep_length": "string",
+      "convergence_method": "string",
+      "intensity_layers": ["string"],
+      "release_mechanism": "string",
+      "aftermath_handling": "string"
+    },
+    "foreshadowing_patterns": {
+      "short_range": {"count": number, "recall_rate": number},
+      "medium_range": {"count": number, "recall_rate": number},
+      "long_range": {"count": number, "recall_rate": number},
+      "unresolved_count": number
+    },
+    "satisfaction_density": {
+      "curve_description": "string",
+      "peaks_per_10k_words": number,
+      "type_diversity": ["string"]
+    },
+    "tension_cycles": {
+      "small_cycle": "string",
+      "large_cycle": "string",
+      "suffering_to_release_ratio": "string",
+      "max_continuous_tension": number
+    }
+  },
+  "evidence": ["string"],
+  "imitation_rules": ["string"],
+  "stability_assessment": {
+    "score": "1-10",
+    "reasoning": "string",
+    "variation_points": ["string"]
+  }
+}
+```
+
+## 双视角要求
+
+**技术侧**：提取可复用的结构公式、频率参数、模式库
+**文学侧**：评估戏剧张力的质感、情感冲击力的深度、艺术独创性
+
+每个分析项必须包含：
+1. **现象描述**：客观观察到的特征
+2. **典型证据**：至少2-3个具体例子（含章节引用）
+3. **仿写规则**：可操作的创作指导原则
+4. **稳定度判断**：该特征在全书的稳定性（高/中/低）
+
+---
+**上下文输入**：{context}
