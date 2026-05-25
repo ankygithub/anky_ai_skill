@@ -757,34 +757,54 @@ p {
   font-size: calc(10.5pt * var(--font-scale));
 }
 
-/* ===== 高亮块/信息块（4种类型 - 学习v2的简洁配色） ===== */
+/* ===== 高亮块/信息块（带图标+左边框） ===== */
 .callout {
   margin: 14px 0;
-  padding: 12px 16px;
-  border-radius: 0 8px 8px 0;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
   border-left: 4px solid;
   font-size: calc(10pt * var(--font-scale));
   line-height: 1.75;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  overflow: hidden;
 }
 .callout-info {
   background: var(--note-info-bg);
-  border-color: var(--accent-cyan);
-  color: var(--text-secondary);
+  border-left-color: var(--accent-cyan);
 }
 .callout-tip {
   background: var(--note-tip-bg);
-  border-color: var(--accent-primary);
-  color: var(--text-secondary);
+  border-left-color: var(--accent-primary);
 }
 .callout-warn {
   background: var(--note-warn-bg);
-  border-color: var(--accent-rose);
-  color: var(--text-secondary);
+  border-left-color: var(--accent-rose);
 }
 .callout-violet {
   background: var(--note-violet-bg);
-  border-color: var(--accent-violet);
-  color: var(--text-secondary);
+  border-left-color: var(--accent-violet);
+}
+.callout-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin: 10px 0 10px 10px;
+  border-radius: 8px;
+}
+.callout-info .callout-icon { background: rgba(15, 118, 110, 0.1); }
+.callout-tip .callout-icon { background: rgba(146, 64, 14, 0.1); }
+.callout-warn .callout-icon { background: rgba(190, 18, 60, 0.1); }
+.callout-violet .callout-icon { background: rgba(109, 40, 217, 0.1); }
+.callout-content {
+  flex: 1;
+  padding: 10px 14px 10px 0;
 }
 .callout-title {
   font-weight: 700;
@@ -953,35 +973,97 @@ hr {
   margin-left: 8px;
 }
 
-/* ===== 对比示例块 ===== */
+/* ===== 对比示例块（左右双栏） ===== */
 .compare-block {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 14px 0;
+  gap: 16px;
+  margin: 20px 0;
 }
+
+/* 三栏布局（有中间列时） */
+.compare-block:has(.compare-center) {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 .compare-item {
-  padding: 12px 14px;
-  border-radius: 8px;
+  padding: 16px 18px;
+  border-radius: 10px;
   font-size: calc(9.5pt * var(--font-scale));
   line-height: 1.75;
+  position: relative;
+  overflow: hidden;
 }
+
+.compare-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 10px 10px 0 0;
+}
+
 .compare-bad {
   background: var(--compare-bad-bg);
   border: 1px solid var(--compare-bad-border);
 }
+.compare-bad::before {
+  background: var(--accent-rose);
+}
+
 .compare-good {
   background: var(--compare-good-bg);
   border: 1px solid var(--compare-good-border);
 }
+.compare-good::before {
+  background: var(--accent-cyan);
+}
+
+.compare-center {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+}
+.compare-center::before {
+  background: var(--accent-primary);
+}
+
 .compare-label {
   font-weight: 700;
-  font-size: calc(8.5pt * var(--font-scale));
-  margin-bottom: 4px;
+  font-size: calc(9pt * var(--font-scale));
+  margin-bottom: 8px;
   letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
+
 .compare-bad .compare-label { color: var(--accent-rose); }
-.compare-good .compare-label { color: var(--accent-primary); }
+.compare-good .compare-label { color: var(--accent-cyan); }
+.compare-center .compare-label { color: var(--accent-primary); }
+
+.compare-label::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.compare-bad .compare-label::before { background: var(--accent-rose); }
+.compare-good .compare-label::before { background: var(--accent-cyan); }
+.compare-center .compare-label::before { background: var(--accent-primary); }
+
+.compare-content {
+  color: var(--text-secondary);
+}
+
+.compare-content p {
+  margin-bottom: 6px;
+}
+.compare-content p:last-child {
+  margin-bottom: 0;
+}
 
 /* ===== 保留v2的对比样式 ===== */
 .compare {
@@ -1003,16 +1085,61 @@ hr {
   border: 1px solid var(--compare-good-border);
 }
 
-/* ===== 步骤流程（保留v2） ===== */
-.step {
-  display: flex;
-  gap: 12px;
-  margin: 14px 0;
-  align-items: flex-start;
+/* ===== 简洁步骤卡片 ===== */
+.step-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin: 20px 0;
+  box-shadow: var(--shadow-warm);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
 }
-.step-num {
-  width: 26px;
-  height: 26px;
+
+.step-card:hover {
+  box-shadow: var(--shadow-deep);
+  border-color: var(--border-accent);
+}
+
+/* 顶部渐变色装饰条 */
+.step-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.step-card:hover::before {
+  opacity: 1;
+}
+
+/* 步骤头部：阶段 + 标题 */
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.step-phase {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.step-phase-num {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--accent-primary);
   color: #fff;
@@ -1021,15 +1148,67 @@ hr {
   justify-content: center;
   font-weight: 700;
   font-size: calc(12px * var(--font-scale));
-  font-family: 'Inter', sans-serif;
   flex-shrink: 0;
-  margin-top: 2px;
 }
-.step-content { flex: 1; }
-.step-content h4 {
-  margin: 0 0 5px;
-  font-size: calc(10.5pt * var(--font-scale));
-  line-height: 1.6;
+
+.step-phase-label {
+  font-size: calc(10px * var(--font-scale));
+  font-weight: 600;
+  color: var(--accent-primary);
+  letter-spacing: 0.5px;
+}
+
+.step-card > .step-title {
+  font-size: calc(13pt * var(--font-scale));
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+/* 步骤内容 */
+.step-body {
+  color: var(--text-secondary);
+  font-size: calc(10pt * var(--font-scale));
+  line-height: 1.8;
+}
+
+.step-body p {
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+}
+
+.step-body p:last-child {
+  margin-bottom: 0;
+}
+
+.step-body ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.step-body li {
+  margin-bottom: 5px;
+}
+
+.step-body li::marker {
+  color: var(--accent-primary);
+}
+
+.step-body strong {
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+/* 打印适配 */
+@media print {
+  .step-card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    break-inside: avoid;
+  }
+  .step-card::before {
+    opacity: 0.5;
+  }
 }
 
 /* ===== 文件树（保留v2） ===== */

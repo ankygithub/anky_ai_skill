@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 /**
- * Markdown → HTML 片段转换器（v4 增强版）
+ * Markdown → HTML 片段转换器（v5.3 组件样式升级版）
  *
- * 增强功能：
- * - 按YAML frontmatter的type字段区分封面/正文/尾页
- * - 内嵌HTML标签（callout/step/flow等）原样保留
- * - 目录从所有正文自动提取，构建时生成
- * - 封面和尾页用YAML frontmatter描述元信息
- * - 正文part以 ## 作为顶级章节标题
+ * 核心修复：
+ * - 处理顺序：先转换自定义标签 → 保护代码块 → 保护标准HTML → Markdown转换 → 恢复所有
+ * - 自定义标签先转换为标准HTML div，然后代码块保护可以正确识别 div 内部的 ``` 代码块
+ * - 引用块支持嵌套解析
+ * - Step 组件改为简洁卡片样式
+ * - Callout 组件添加图标
+ * - Compare 组件改为左右双栏对比，带兜底降级
  */
 
 const fs = require('fs');
@@ -81,277 +82,209 @@ function escapeHtml(text) {
     .replace(/>/g, '&gt;');
 }
 
-// ==================== HTML标签检查与修复 ====================
+// ==================== 阶段1：自定义标签 → 标准HTML转换 ====================
 
 /**
- * 检查HTML标签闭合状态
- * @param {string} html - 要检查的HTML内容
- * @returns {Object} - 检查结果 { issues: Array, canFix: boolean }
+ * 将AI Agent使用的自定义标签转换为标准HTML
+ * 此阶段代码块尚未被保护，所以正则可能匹配到代码块内的内容
+ * 但代码块使用 ``` 包裹，不会被 <callout-tip> 等标签匹配到
  */
-function checkHtmlTagBalance(html) {
-  const issues = [];
-  const tagPairs = [
-    { name: 'div', open: /<div(?=[\s>])/g, close: /<\/div>/g },
-    { name: 'span', open: /<span(?=[\s>])/g, close: /<\/span>/g },
-    { name: 'p', open: /<p(?=[\s>])/g, close: /<\/p>/g },
-    { name: 'figure', open: /<figure(?=[\s>])/g, close: /<\/figure>/g },
-    { name: 'figcaption', open: /<figcaption(?=[\s>])/g, close: /<\/figcaption>/g },
-    { name: 'strong', open: /<strong(?=[\s>])/g, close: /<\/strong>/g },
-    { name: 'em', open: /<em(?=[\s>])/g, close: /<\/em>/g },
-  ];
+function convertCustomTagsToHtml(md) {
+  let html = md;
 
-  for (const tag of tagPairs) {
-    const openCount = (html.match(tag.open) || []).length;
-    const closeCount = (html.match(tag.close) || []).length;
+  // 1. <callout-tip> → <div class="callout callout-tip"> (带图标)
+  html = html.replace(/<callout-tip>\s*([\s\S]*?)<\/callout-tip>/gi, (match, content) => {
+    return `<div class="callout callout-tip">\n  <div class="callout-icon">&#x1F4A1;</div>\n  <div class="callout-content">\n${content.trim()}\n  </div>\n</div>`;
+  });
 
-    if (openCount !== closeCount) {
-      issues.push({
-        tag: tag.name,
-        openCount,
-        closeCount,
-        diff: openCount - closeCount,
-        severity: Math.abs(openCount - closeCount) > 2 ? 'high' : 'medium'
-      });
-    }
-  }
+  // 2. <callout-warn> → <div class="callout callout-warn"> (带图标)
+  html = html.replace(/<callout-warn>\s*([\s\S]*?)<\/callout-warn>/gi, (match, content) => {
+    return `<div class="callout callout-warn">\n  <div class="callout-icon">&#x26A0;</div>\n  <div class="callout-content">\n${content.trim()}\n  </div>\n</div>`;
+  });
 
-  return {
-    issues,
-    canFix: issues.every(i => i.diff > 0) // 只有开启标签多于闭合标签时才容易修复
-  };
-}
+  // 3. <callout-info> → <div class="callout callout-info"> (带图标)
+  html = html.replace(/<callout-info>\s*([\s\S]*?)<\/callout-info>/gi, (match, content) => {
+    return `<div class="callout callout-info">\n  <div class="callout-icon">&#x2139;</div>\n  <div class="callout-content">\n${content.trim()}\n  </div>\n</div>`;
+  });
 
-/**
- * 尝试自动修复HTML标签闭合问题
- * @param {string} html - 原始HTML
- * @param {Array} issues - 检查出的问题列表
- * @returns {Object} - { fixed: boolean, html: string, fixedIssues: Array }
- */
-function attemptAutoFix(html, issues) {
-  let result = html;
-  const fixedIssues = [];
+  // 4. <step number="N" title="...">...</step> → 简洁步骤卡片
+  // 逐个替换，绝不删除中间内容
+  html = html.replace(/<step\s+number="(\d+)"\s+title="([^"]*)">\s*([\s\S]*?)<\/step>/gi,
+    (match, num, title, content) => {
+      return `<div class="step-card" data-step="${num}">\n` +
+        `  <div class="step-header">\n` +
+        `    <div class="step-phase">\n` +
+        `      <span class="step-phase-num">${num}</span>\n` +
+        `      <span class="step-phase-label">阶段</span>\n` +
+        `    </div>\n` +
+        `    <div class="step-title">${title}</div>\n` +
+        `  </div>\n` +
+        `  <div class="step-body">\n${content.trim()}\n  </div>\n` +
+        `</div>`;
+    });
 
-  for (const issue of issues) {
-    if (issue.diff > 0) {
-      // 开启标签多于闭合标签 → 在块末尾补全闭合标签
-      const missingCount = issue.diff;
-      const closeTag = `</${issue.tag}>`;
+  // 5. <step step="N">...</step> (简化版，无title属性)
+  html = html.replace(/<step\s+step="(\d+)">\s*([\s\S]*?)<\/step>/gi,
+    (match, num, content) => {
+      return `<div class="step-card" data-step="${num}">\n` +
+        `  <div class="step-header">\n` +
+        `    <div class="step-phase">\n` +
+        `      <span class="step-phase-num">${num}</span>\n` +
+        `      <span class="step-phase-label">阶段</span>\n` +
+        `    </div>\n` +
+        `  </div>\n` +
+        `  <div class="step-body">\n${content.trim()}\n  </div>\n` +
+        `</div>`;
+    });
 
-      // 在内容块结束前补全缺失的闭合标签
-      for (let i = 0; i < missingCount; i++) {
-        // 找到最后一个未闭合的标签位置
-        const lastOpenIndex = result.lastIndexOf(`<${issue.tag}`);
-        if (lastOpenIndex !== -1) {
-          // 在该标签所在块的末尾插入闭合标签
-          result = result + closeTag;
+  // 6. <compare ...>...</compare> → 左右双栏对比
+  html = html.replace(/<compare\s+([^>]*)>([\s\S]*?)<\/compare>/gi,
+    (match, attrs, content) => {
+      const leftTitle = (attrs.match(/left-title="([^"]*)"/) || [])[1] || '方案A';
+      const rightTitle = (attrs.match(/right-title="([^"]*)"/) || [])[1] || '方案B';
+      const centerTitle = (attrs.match(/center-title="([^"]*)"/) || [])[1] || '';
+
+      // 使用更精确的方式提取 slot 内容：找到 slot="xxx" 后的第一个 > 和最后一个 </div>
+      function extractSlot(slotName) {
+        const pattern = new RegExp(`<div\\s+slot="${slotName}">([\\s\\S]*?)<\\/div>`, 'i');
+        const m = content.match(pattern);
+        if (!m) return '';
+        // 检查内容中是否包含嵌套 div，如果有可能是提前匹配到了内层 div
+        const inner = m[1].trim();
+        // 简单启发式：如果内容中还有 <div 且没有对应的 </div>，说明匹配有问题
+        const openDivs = (inner.match(/<div\b/gi) || []).length;
+        const closeDivs = (inner.match(/<\/div>/gi) || []).length;
+        if (openDivs > closeDivs) {
+          // 嵌套 div 不匹配，尝试更贪婪的匹配
+          const greedyPattern = new RegExp(`<div\\s+slot="${slotName}">([\\s\\S]*)<\\/div>\\s*(?:<div\\s+slot=|<\\/compare>)`, 'i');
+          const gm = content.match(greedyPattern);
+          if (gm) return gm[1].trim();
         }
+        return inner;
       }
 
-      fixedIssues.push({
-        tag: issue.tag,
-        action: 'appended',
-        count: missingCount
-      });
-    } else if (issue.diff < 0) {
-      // 闭合标签多于开启标签 → 删除多余的闭合标签（保守处理）
-      const extraCount = Math.abs(issue.diff);
-      const closeTagPattern = new RegExp(`</${issue.tag}>`, 'g');
-      let removed = 0;
+      let leftContent = extractSlot('left');
+      let rightContent = extractSlot('right');
+      let centerContent = extractSlot('center');
 
-      result = result.replace(closeTagPattern, (match) => {
-        if (removed < extraCount) {
-          removed++;
-          return ''; // 删除多余的闭合标签
+      // 尝试属性方式
+      if (!leftContent && !rightContent) {
+        const leftItems = [];
+        const rightItems = [];
+        const centerItems = [];
+        const attrLines = attrs.split(/\s+/);
+        for (const line of attrLines) {
+          const lm = line.match(/left-item(\d+)="([^"]*)"/);
+          const rm = line.match(/right-item(\d+)="([^"]*)"/);
+          const cm = line.match(/center-item(\d+)="([^"]*)"/);
+          if (lm) leftItems[parseInt(lm[1]) - 1] = lm[2];
+          if (rm) rightItems[parseInt(rm[1]) - 1] = rm[2];
+          if (cm) centerItems[parseInt(cm[1]) - 1] = cm[2];
         }
-        return match;
-      });
+        leftContent = leftItems.filter(Boolean).map(i => `- ${i}`).join('\n');
+        rightContent = rightItems.filter(Boolean).map(i => `- ${i}`).join('\n');
+        centerContent = centerItems.filter(Boolean).map(i => `- ${i}`).join('\n');
+      }
 
-      fixedIssues.push({
-        tag: issue.tag,
-        action: 'removed',
-        count: removed
-      });
-    }
-  }
+      // 兜底检查：如果解析结果异常（内容为空或太短），降级为普通文本块
+      const totalContent = leftContent + rightContent + centerContent;
+      const originalLength = content.replace(/<[^>]+>/g, '').trim().length;
+      if (totalContent.length < originalLength * 0.3 && originalLength > 50) {
+        // 降级：输出带边框的原始内容块，保留所有内容
+        return `<div class="callout callout-info">\n` +
+          `  <div class="callout-icon">&#x2139;</div>\n` +
+          `  <div class="callout-content">\n` +
+          `    <p><strong>对比：${escapeHtml(leftTitle)} vs ${escapeHtml(rightTitle)}</strong></p>\n` +
+          `    <pre style="white-space:pre-wrap;word-break:break-word;">${escapeHtml(content.trim())}</pre>\n` +
+          `  </div>\n` +
+          `</div>`;
+      }
 
-  return {
-    fixed: fixedIssues.length > 0,
-    html: result,
-    fixedIssues
-  };
+      // 构建左右双栏对比布局
+      let compareHtml = '<div class="compare-block">\n';
+
+      compareHtml += '  <div class="compare-item compare-bad">\n';
+      compareHtml += `    <div class="compare-label">${escapeHtml(leftTitle)}</div>\n`;
+      compareHtml += `    <div class="compare-content">\n${leftContent}\n    </div>\n`;
+      compareHtml += '  </div>\n';
+
+      if (centerTitle) {
+        compareHtml += '  <div class="compare-item compare-center">\n';
+        compareHtml += `    <div class="compare-label">${escapeHtml(centerTitle)}</div>\n`;
+        compareHtml += `    <div class="compare-content">\n${centerContent}\n    </div>\n`;
+        compareHtml += '  </div>\n';
+      }
+
+      compareHtml += '  <div class="compare-item compare-good">\n';
+      compareHtml += `    <div class="compare-label">${escapeHtml(rightTitle)}</div>\n`;
+      compareHtml += `    <div class="compare-content">\n${rightContent}\n    </div>\n`;
+      compareHtml += '  </div>\n';
+
+      compareHtml += '</div>';
+
+      return compareHtml;
+    });
+
+  return html;
 }
 
-/**
- * 将损坏的HTML块降级为安全的文本块
- * 保留文字内容，丢弃标签
- * @param {string} brokenHtml - 损坏的HTML
- * @param {string} reason - 降级原因
- * @returns {string} - 降级后的安全HTML
- */
-function degradeToSafeBlock(brokenHtml, reason) {
-  // 提取纯文本内容
-  const textContent = brokenHtml
-    .replace(/<[^>]+>/g, ' ')  // 移除所有标签
-    .replace(/\s+/g, ' ')       // 合并空白
-    .trim();
-
-  // 如果提取不到内容，返回空提示
-  if (!textContent) {
-    return `<div class="degraded-block" data-degrade-reason="${escapeHtml(reason)}">
-<p><em>[HTML内容损坏，无法提取文本]</em></p>
-</div>`;
-  }
-
-  // 包装为普通段落，添加降级标记
-  return `<div class="degraded-block" data-degrade-reason="${escapeHtml(reason)}">
-<p><em>[内容已降级为文本：${escapeHtml(reason)}]</em></p>
-<p>${escapeHtml(textContent)}</p>
-</div>`;
-}
+// ==================== 阶段2：保护代码块 ====================
 
 /**
- * 验证并修复HTML块
- * @param {string} html - HTML内容
- * @param {string} sourceFile - 源文件名（用于报告）
- * @returns {Object} - { html: string, report: Object }
+ * 保护代码块，避免被后续Markdown转换破坏
+ * 此时自定义标签已转换为标准HTML div，代码块可能在div内部
  */
-function validateAndFixHtmlBlock(html, sourceFile) {
-  const checkResult = checkHtmlTagBalance(html);
-  const report = {
-    sourceFile,
-    originalIssues: checkResult.issues,
-    fixed: false,
-    degraded: false,
-    actions: [],
-    finalHtml: html
-  };
+function protectCodeBlocks(md) {
+  const codeBlocks = [];
+  let result = md;
 
-  if (checkResult.issues.length === 0) {
-    return { html, report };
-  }
-
-  // 尝试自动修复
-  const fixResult = attemptAutoFix(html, checkResult.issues);
-
-  if (fixResult.fixed) {
-    // 修复后再次检查
-    const recheck = checkHtmlTagBalance(fixResult.html);
-
-    if (recheck.issues.length === 0) {
-      // 完全修复
-      report.fixed = true;
-      report.actions = fixResult.fixedIssues;
-      report.finalHtml = fixResult.html;
-      return { html: fixResult.html, report };
-    } else {
-      // 部分修复后仍有未闭合标签，需要降级
-      report.actions = fixResult.fixedIssues;
-      report.actions.push({
-        action: 'partial_fix',
-        remainingIssues: recheck.issues
-      });
-    }
-  }
-
-  // 降级处理：将损坏的HTML转为安全文本块
-  const reason = `标签不平衡: ${checkResult.issues.map(i => `<${i.tag}>开${i.openCount}/闭${i.closeCount}`).join(', ')}`;
-  const degradedHtml = degradeToSafeBlock(html, reason);
-
-  report.degraded = true;
-  report.actions.push({
-    action: 'degraded',
-    reason
+  // 保护 fenced code blocks (```lang\ncode\n```)
+  // 使用 ^\s*``` 匹配行首可能有缩进的代码块标记
+  // [\w-]* 支持带连字符的语言标识符（如 ssh-config）
+  result = result.replace(/^\s*```([\w-]*)\n([\s\S]*?)^\s*```/gm, (match, lang, code) => {
+    const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
+    const langClass = lang ? ` class="language-${escapeHtml(lang)}"` : '';
+    codeBlocks.push(`<pre><code${langClass}>${escapeHtml(code.trimEnd())}</code></pre>`);
+    return placeholder;
   });
-  report.finalHtml = degradedHtml;
 
-  return { html: degradedHtml, report };
+  return { protectedMd: result, codeBlocks };
 }
 
-// 全局修复报告收集器
-const globalFixReports = [];
+// ==================== 阶段3：标准HTML保护 ====================
 
-// ==================== 内嵌HTML保护 ====================
-
-/**
- * 保护Markdown中的内嵌HTML块
- * 将HTML块替换为占位符，转换完MD后再恢复
- * 支持的HTML块类型：div(含callout/step/flow/compare等)、figure、span.tag-core、hr、img、br
- */
-function protectInlineHtml(md, sourceFile = 'unknown') {
+function protectStandardHtml(md) {
   const blocks = [];
   let result = md;
 
-  // 1. 保护自闭合标签（这些不需要恢复，本身就是HTML）
-  //   但需要保护它们不被段落包裹
+  // 1. 保护 hr 标签
   result = result.replace(/^<hr\s*\/?>\s*$/gm, (match) => {
     const idx = blocks.length;
     blocks.push(match.trim());
     return `__HTML_PROTECT_${idx}__`;
   });
 
-  // 2. 保护 span 标签（如 tag-core）
-  // 使用逐字符匹配确保不跨越多行弄乱内容
-  result = result.replace(/<span\b[^>]*>[\s\S]*?<\/span>/gi, (match) => {
-    // 只保护已知组件的span，避免过度匹配
-    if (match.includes('tag-core') || match.includes('step-num') || match.includes('flow-arrow')) {
-      // 验证span标签是否闭合（简单检查）
-      const openCount = (match.match(/<span\b/gi) || []).length;
-      const closeCount = (match.match(/<\/span>/gi) || []).length;
-      if (openCount !== closeCount) {
-        // 标签不平衡，降级为纯文本
-        const textContent = match.replace(/<[^>]+>/g, '');
-        globalFixReports.push({
-          sourceFile,
-          originalIssues: [{ tag: 'span', openCount, closeCount, diff: openCount - closeCount }],
-          fixed: false,
-          degraded: true,
-          actions: [{ action: 'degraded', reason: 'span标签不平衡' }],
-          finalHtml: textContent
-        });
-        return textContent;
-      }
-      const idx = blocks.length;
-      blocks.push(match);
-      return `__HTML_PROTECT_${idx}__`;
-    }
-    return match;
-  });
-
-  // 3. 保护 img 标签
+  // 2. 保护 img 标签
   result = result.replace(/<img\b[^>]*\/?>/gi, (match) => {
     const idx = blocks.length;
     blocks.push(match);
     return `__HTML_PROTECT_${idx}__`;
   });
 
-  // 4. 保护 figure 块（含嵌套figcaption）
+  // 3. 保护 figure 块
   result = result.replace(/<figure\b[\s\S]*?<\/figure>/gi, (match) => {
-    // 验证figure标签是否完整
-    const openCount = (match.match(/<figure\b/gi) || []).length;
-    const closeCount = (match.match(/<\/figure>/gi) || []).length;
-    if (openCount !== closeCount) {
-      // 标签不平衡，降级处理
-      const { html: fixedHtml, report } = validateAndFixHtmlBlock(match, sourceFile);
-      if (report.fixed || report.degraded) {
-        globalFixReports.push(report);
-      }
-      const idx = blocks.length;
-      blocks.push(fixedHtml);
-      return `__HTML_PROTECT_${idx}__`;
-    }
     const idx = blocks.length;
     blocks.push(match);
     return `__HTML_PROTECT_${idx}__`;
   });
 
-  // 5. 保护 div 块（callout、step、file-tree、flow、compare等）
-  //    使用balanced tag匹配
-  result = protectDivBlocks(result, blocks, sourceFile);
+  // 4. 保护 div 块（现在已经是标准HTML了）
+  result = protectDivBlocks(result, blocks);
 
   return { protectedMd: result, htmlBlocks: blocks };
 }
 
-function protectDivBlocks(text, blocks, sourceFile = 'unknown') {
+function protectDivBlocks(text, blocks) {
   let result = '';
   let i = 0;
 
@@ -364,7 +297,17 @@ function protectDivBlocks(text, blocks, sourceFile = 'unknown') {
 
     result += text.slice(i, divStart);
 
-    // 找到闭合的 </div>
+    // 检查 div 的 class 属性
+    const divEnd = text.indexOf('>', divStart);
+    const divTag = divEnd !== -1 ? text.slice(divStart, divEnd + 1) : '';
+
+    // 跳过这些 div，让其内部的 Markdown 能被正常转换
+    // 这些 div 由 convertCustomTagsToHtml 生成，内部包含原始 Markdown
+    const skipClasses = ['callout', 'compare-block'];
+    const shouldSkip = skipClasses.some(cls =>
+      divTag.includes(`class="${cls}`) || divTag.includes(`class='${cls}`)
+    );
+
     let depth = 0;
     let pos = divStart;
     let found = false;
@@ -380,23 +323,29 @@ function protectDivBlocks(text, blocks, sourceFile = 'unknown') {
         pos = nextOpen;
       } else {
         if (depth === 0) {
-          // 找到匹配的闭合标签
-          const block = text.slice(divStart, nextClose + '</div>'.length);
-
-          // 验证并修复HTML块
-          const { html: fixedBlock, report } = validateAndFixHtmlBlock(block, sourceFile);
-
-          // 如果有修复或降级，记录报告
-          if (report.fixed || report.degraded) {
-            globalFixReports.push(report);
+          const blockEnd = nextClose + '</div>'.length;
+          if (shouldSkip) {
+            // 不保护这个 div，但递归处理其内部（可能包含嵌套 div）
+            const block = text.slice(divStart, blockEnd);
+            // 提取开标签和闭标签之间的内容
+            const openTagEnd = block.indexOf('>') + 1;
+            const closeTagStart = block.lastIndexOf('</div>');
+            const innerContent = block.slice(openTagEnd, closeTagStart);
+            // 递归处理内部内容
+            const processedInner = protectDivBlocks(innerContent, blocks);
+            result += block.slice(0, openTagEnd) + processedInner + block.slice(closeTagStart);
+            i = blockEnd;
+            found = true;
+            break;
+          } else {
+            const block = text.slice(divStart, blockEnd);
+            const idx = blocks.length;
+            blocks.push(block);
+            result += `\n__HTML_PROTECT_${idx}__\n`;
+            i = blockEnd;
+            found = true;
+            break;
           }
-
-          const idx = blocks.length;
-          blocks.push(fixedBlock);
-          result += `\n__HTML_PROTECT_${idx}__\n`;
-          i = nextClose + '</div>'.length;
-          found = true;
-          break;
         } else {
           depth--;
           pos = nextClose + '</div>'.length;
@@ -405,25 +354,7 @@ function protectDivBlocks(text, blocks, sourceFile = 'unknown') {
     }
 
     if (!found) {
-      // 未找到闭合标签，这是一个损坏的div块
-      const brokenBlock = text.slice(divStart);
-      const reason = '<div> 标签未找到闭合标签 </div>';
-
-      // 降级为安全文本块
-      const degradedHtml = degradeToSafeBlock(brokenBlock, reason);
-
-      globalFixReports.push({
-        sourceFile,
-        originalIssues: [{ tag: 'div', openCount: 1, closeCount: 0, diff: 1 }],
-        fixed: false,
-        degraded: true,
-        actions: [{ action: 'degraded', reason }],
-        finalHtml: degradedHtml
-      });
-
-      const idx = blocks.length;
-      blocks.push(degradedHtml);
-      result += `\n__HTML_PROTECT_${idx}__\n`;
+      result += text.slice(divStart);
       break;
     }
   }
@@ -431,11 +362,8 @@ function protectDivBlocks(text, blocks, sourceFile = 'unknown') {
   return result;
 }
 
-// ==================== Markdown → HTML 转换 ====================
+// ==================== 阶段4：Markdown → HTML 转换 ====================
 
-/**
- * 将阿拉伯数字转换为中文数字（1-99）
- */
 function toChineseNum(n) {
   const digits = '零一二三四五六七八九';
   if (n <= 10) return digits[n];
@@ -445,29 +373,16 @@ function toChineseNum(n) {
     const ones = n % 10;
     return digits[tens] + '十' + (ones === 0 ? '' : digits[ones]);
   }
-  return String(n); // 超过99用阿拉伯数字
+  return String(n);
 }
 
-/**
- * 修正标题中的章号：用全局h2序号替换"第X章"中的X
- * 解决多Agent并发写作时各文件都写"第X章"导致的标题重复问题
- *
- * 示例：
- *   "第四章 智能客服" + globalNum=5 → "第五章 智能客服"
- *   "第4章 概述" + globalNum=3 → "第三章 概述"
- *   "前言" + globalNum=1 → "前言"（不匹配正则，原样返回）
- */
 function correctChapterNumber(title, globalNum) {
-  // 防御性检查：确保 globalNum 是有效数字
   if (globalNum === undefined || globalNum === null || isNaN(globalNum)) {
     return title.trim();
   }
-  
-  // 匹配 "第X章" 或 "第X章节"，X可以是中文数字或阿拉伯数字
   const chineseDigits = '[零一二三四五六七八九十百]';
   const arabicDigits = '\\d+';
   const chapterPattern = new RegExp(`^第(${chineseDigits}|${arabicDigits})章\\s*`);
-  
   const corrected = title.replace(chapterPattern, `第${toChineseNum(globalNum)}章 `);
   return corrected.trim();
 }
@@ -476,7 +391,7 @@ function mdToHtml(md, h2Offset, h3Offset) {
   let html = md;
   const tocData = [];
 
-  // 0. 预先提取目录数据（跳过代码块和HTML保护块），同时计算正确的全局ID
+  // 0. 预先提取目录数据
   {
     const lines = html.split('\n');
     let inCodeBlock = false;
@@ -489,6 +404,7 @@ function mdToHtml(md, h2Offset, h3Offset) {
       }
       if (inCodeBlock) continue;
       if (/^__HTML_PROTECT_\d+__$/.test(line.trim())) continue;
+      if (/^__CODE_BLOCK_\d+__$/.test(line.trim())) continue;
 
       const h2Match = line.match(/^#{1,2}\s+(.+)$/);
       const h3Match = line.match(/^#{3}\s+(.+)$/);
@@ -496,7 +412,6 @@ function mdToHtml(md, h2Offset, h3Offset) {
         localH2++;
         const globalNum = h2Offset + localH2;
         const globalId = `part${globalNum}`;
-        // 目录也用修正后的标题，与HTML正文保持一致
         const correctedTitle = correctChapterNumber(h2Match[1].trim(), globalNum);
         tocData.push({ title: correctedTitle, level: 2, id: globalId });
       } else if (h3Match) {
@@ -507,16 +422,7 @@ function mdToHtml(md, h2Offset, h3Offset) {
     }
   }
 
-  // 1. 代码块（优先处理，加入language-xxx类名供highlight.js着色）
-  const codeBlocks = [];
-  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
-    const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
-    const langClass = lang ? ` class="language-${escapeHtml(lang)}"` : '';
-    codeBlocks.push(`<pre><code${langClass}>${escapeHtml(code.trimEnd())}</code></pre>`);
-    return placeholder;
-  });
-
-  // 2. 行内代码（在表格之前处理）
+  // 1. 行内代码
   const inlineCodes = [];
   html = html.replace(/`([^`\n]+)`/g, (match, code) => {
     const placeholder = `__INLINE_CODE_${inlineCodes.length}__`;
@@ -524,7 +430,7 @@ function mdToHtml(md, h2Offset, h3Offset) {
     return placeholder;
   });
 
-  // 3. 表格
+  // 2. 表格
   {
     const lines = html.split('\n');
     const result = [];
@@ -547,14 +453,12 @@ function mdToHtml(md, h2Offset, h3Offset) {
           const isSep = sepLine.replace(/\|/g, '').trim().replace(/[-:\s]/g, '') === '';
           if (isSep) {
             let alignments = [];
-            if (isSep) {
-              alignments = sepLine.split('|').filter(c => c.trim()).map(c => {
-                const trimmed = c.trim();
-                if (trimmed.startsWith(':') && trimmed.endsWith(':')) return 'center';
-                if (trimmed.endsWith(':')) return 'right';
-                return 'left';
-              });
-            }
+            alignments = sepLine.split('|').filter(c => c.trim()).map(c => {
+              const trimmed = c.trim();
+              if (trimmed.startsWith(':') && trimmed.endsWith(':')) return 'center';
+              if (trimmed.endsWith(':')) return 'right';
+              return 'left';
+            });
             let tableHtml = '<table>\n<thead>\n<tr>';
             const headers = tableLines[0].split('|').filter(c => c.trim());
             headers.forEach((h, hi) => {
@@ -585,7 +489,7 @@ function mdToHtml(md, h2Offset, h3Offset) {
     html = result.join('\n');
   }
 
-  // 4. 引用块 / Callout检测
+  // 3. 引用块 / Callout检测
   html = html.replace(/^>\s*\*\*(核心建议|要点|提示)\*\*[:：]?\s*\n((?:>\s.*\n?)+)/gm, (match, title, content) => {
     const body = content.replace(/^>\s?/gm, '').trim();
     return `<div class="callout callout-tip"><div class="callout-title">${title}</div><p>${body}</p></div>`;
@@ -598,7 +502,6 @@ function mdToHtml(md, h2Offset, h3Offset) {
     const body = content.replace(/^>\s?/gm, '').trim();
     return `<div class="callout callout-info"><div class="callout-title">${title}</div><p>${body}</p></div>`;
   });
-  // 单行callout
   html = html.replace(/^>\s*\*\*(核心建议|要点|提示|注意|警告|信息|说明)\*\*[:：]?\s*(.+)$/gm, (match, title, content) => {
     const typeMap = {
       '核心建议': 'tip', '要点': 'tip', '提示': 'tip',
@@ -608,16 +511,20 @@ function mdToHtml(md, h2Offset, h3Offset) {
     const calloutType = typeMap[title] || 'info';
     return `<div class="callout callout-${calloutType}"><div class="callout-title">${title}</div><p>${content.trim()}</p></div>`;
   });
-  // 普通引用
+
+  // 4. 嵌套引用块处理
+  html = html.replace(/^(>)(>.*)$/gm, (match, content) => {
+    const nestedContent = content.replace(/^>\s?/gm, '');
+    return `<blockquote><blockquote><p>${nestedContent}</p></blockquote></blockquote>`;
+  });
   html = html.replace(/^>\s*(.*)$/gm, '<blockquote><p>$1</p></blockquote>');
 
-  // 5. 标题处理（h2/h3生成全局唯一id，用于TOC锚点）
+  // 5. 标题处理
   let h2Count = 0;
   let h3Count = 0;
   html = html.replace(/^#{1,2}\s+(.+)$/gm, (match, title) => {
     h2Count++;
     const id = `part${h2Offset + h2Count}`;
-    // 自动修正标题中的章号，避免多Agent并发写作导致的"第X章"重复
     const correctedTitle = correctChapterNumber(title.trim(), h2Offset + h2Count);
     return `<h2 class="section-title page-break" id="${id}">${correctedTitle}</h2>`;
   });
@@ -632,7 +539,7 @@ function mdToHtml(md, h2Offset, h3Offset) {
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
 
-  // 7. 分隔线（已被HTML保护处理过的不管）
+  // 7. 分隔线
   html = html.replace(/^---$/gm, '<hr>');
 
   // 8. 链接
@@ -709,7 +616,8 @@ function mdToHtml(md, h2Offset, h3Offset) {
       if (!trimmed ||
           trimmed.startsWith('<') ||
           trimmed.startsWith('__CODE_BLOCK_') ||
-          trimmed.startsWith('__HTML_PROTECT_')) {
+          trimmed.startsWith('__HTML_PROTECT_') ||
+          trimmed.startsWith('__INLINE_CODE_')) {
         if (paraBuffer.length > 0) {
           result.push(`<p>${paraBuffer.join(' ')}</p>`);
           paraBuffer = [];
@@ -725,20 +633,7 @@ function mdToHtml(md, h2Offset, h3Offset) {
     html = result.join('\n');
   }
 
-  // 11. 恢复代码块
-  codeBlocks.forEach((code, idx) => {
-    html = html.replace(`__CODE_BLOCK_${idx}__`, code);
-  });
-
-  // 12. 恢复行内代码
-  inlineCodes.forEach((code, idx) => {
-    html = html.replace(`__INLINE_CODE_${idx}__`, code);
-  });
-
-  // 13. 恢复内嵌HTML块
-  // 这个在mdToHtml外部的调用方处理，因为需要访问外部blocks数组
-
-  return { html, tocData };
+  return { html, tocData, inlineCodes };
 }
 
 // ==================== 生成HTML片段 ====================
@@ -749,16 +644,10 @@ function generateCoverHtml(frontmatter, bodyMd) {
   const author = frontmatter.author || globalVersionData.author || '';
   const version = frontmatter.version || globalVersionData.version || '1.0.0';
 
-  // 从正文提取badge和副标题描述
   let badge = '参考指南';
   let coverSubtitle = subtitle;
 
-  const h1Match = bodyMd.match(/^#\s+(.+)$/m);
   const blockquoteMatch = bodyMd.match(/^>\s*(.+)$/m);
-
-  if (h1Match) {
-    // 标题已从frontmatter获取
-  }
   if (blockquoteMatch && !subtitle) {
     coverSubtitle = blockquoteMatch[1].trim();
   }
@@ -794,11 +683,9 @@ let coverHtml = null;
 let backpageHtml = null;
 const contentParts = [];
 
-// 全局ID计数器（跨文件保持唯一）
 let globalH2Offset = 0;
 let globalH3Offset = 0;
 
-// 遍历所有MD文件，按类型分派处理
 for (const mdFile of mdFiles) {
   const rawContent = fs.readFileSync(mdFile, 'utf-8');
   const { data: frontmatter, body } = parseFrontmatter(rawContent);
@@ -812,22 +699,50 @@ for (const mdFile of mdFiles) {
     backpageHtml = generateBackpageHtml(frontmatter);
     console.log(`  📔 尾页 (${baseName})`);
   } else {
-    // 正文章节
     partNum++;
 
-    // 保护内嵌HTML（传递源文件名用于报告）
-    const { protectedMd, htmlBlocks } = protectInlineHtml(body, baseName);
+    // 阶段1：自定义标签 → 标准HTML
+    const stage1 = convertCustomTagsToHtml(body);
 
-    // 转换MD为HTML，传入全局偏移确保ID全局唯一
-    const { html: convertedHtml, tocData: partTocData } = mdToHtml(protectedMd, globalH2Offset, globalH3Offset);
+    // 阶段2：保护代码块（此时代码块在div内部也能被正确识别）
+    const { protectedMd: stage2, codeBlocks } = protectCodeBlocks(stage1);
 
-    // 恢复内嵌HTML块
+    // 阶段3：保护标准HTML（包括div块）
+    const { protectedMd: stage3, htmlBlocks } = protectStandardHtml(stage2);
+
+    // 阶段4：Markdown → HTML 转换
+    const { html: convertedHtml, tocData: partTocData, inlineCodes } = mdToHtml(stage3, globalH2Offset, globalH3Offset);
+
+    // 恢复所有占位符
     let finalHtml = convertedHtml;
+
+    // 先恢复HTML块（此时HTML块内部可能包含代码块占位符和行内代码占位符）
     htmlBlocks.forEach((block, idx) => {
-      finalHtml = finalHtml.replace(`__HTML_PROTECT_${idx}__`, block);
+      finalHtml = finalHtml.replace(new RegExp(`__HTML_PROTECT_${idx}__`, 'g'), block);
     });
 
-    // 收集TOC数据 + 更新全局偏移
+    // 再恢复代码块（HTML块恢复后，代码块占位符现在暴露出来了）
+    codeBlocks.forEach((code, idx) => {
+      finalHtml = finalHtml.replace(new RegExp(`__CODE_BLOCK_${idx}__`, 'g'), code);
+    });
+
+    // 最后恢复行内代码
+    inlineCodes.forEach((code, idx) => {
+      finalHtml = finalHtml.replace(new RegExp(`__INLINE_CODE_${idx}__`, 'g'), code);
+    });
+
+    // 处理htmlBlocks中未被替换的行内代码（htmlBlocks中的原始<div>包含反引号）
+    // 使用全局替换确保所有匹配都被替换
+    let remainingInline;
+    do {
+      remainingInline = false;
+      finalHtml = finalHtml.replace(/`([^`\n]+)`/g, (match, code) => {
+        remainingInline = true;
+        return `<code>${escapeHtml(code)}</code>`;
+      });
+    } while (remainingInline);
+
+    // 收集TOC数据
     allTocData.push(...partTocData);
     globalH2Offset += partTocData.filter(t => t.level === 2).length;
     globalH3Offset += partTocData.filter(t => t.level === 3).length;
@@ -836,19 +751,7 @@ for (const mdFile of mdFiles) {
     const partHtml = `<div class="content">\n${finalHtml}\n</div>`;
     fs.writeFileSync(path.join(FRAGMENTS_DIR, `${partName}.html`), partHtml);
 
-    // 检查是否有修复报告需要显示
-    const fileReports = globalFixReports.filter(r => r.sourceFile === baseName);
-    if (fileReports.length > 0) {
-      const fixedCount = fileReports.filter(r => r.fixed).length;
-      const degradedCount = fileReports.filter(r => r.degraded).length;
-      let statusMsg = `  ⚠️  ${partName}.html (${baseName}) → ${partTocData.length} 个标题`;
-      if (fixedCount > 0) statusMsg += `, 自动修复 ${fixedCount} 处HTML问题`;
-      if (degradedCount > 0) statusMsg += `, 降级 ${degradedCount} 处损坏的HTML块`;
-      console.log(statusMsg);
-    } else {
-      console.log(`  ✅ ${partName}.html (${baseName}) → ${partTocData.length} 个标题`);
-    }
-
+    console.log(`  ✅ ${partName}.html (${baseName}) → ${partTocData.length} 个标题`);
     contentParts.push(partName);
   }
 }
@@ -858,13 +761,12 @@ if (coverHtml) {
   fs.writeFileSync(path.join(FRAGMENTS_DIR, '00-cover.html'), coverHtml);
   console.log('📔 生成 00-cover.html');
 } else {
-  // 回退：生成默认封面
   const defaultCover = `<div class="cover">
   <div class="cover-badge">参考指南</div>
   <h1>${escapeHtml(globalVersionData.title)}</h1>
   <p class="cover-subtitle">${escapeHtml(globalVersionData.subtitle || '')}</p>
   <div class="cover-meta">
-    ${globalVersionData.author ? `<span>${escapeHtml(globalVersionData.author)}</span>` : ''}
+    ${globalVersionData.author ? `<span>${escapeHtml(author)}</span>` : ''}
     <span>v${escapeHtml(globalVersionData.version)}</span>
   </div>
 </div>`;
@@ -872,7 +774,7 @@ if (coverHtml) {
   console.log('📔 生成 00-cover.html (默认)');
 }
 
-// 生成目录HTML片段（使用tocData中已存储的全局唯一ID）
+// 生成目录HTML片段
 let tocHtml = `<div class="content">\n<div class="toc">\n<h2>目录</h2>\n<ul>\n`;
 for (const item of allTocData) {
   const id = item.id;
@@ -901,68 +803,3 @@ if (backpageHtml) {
 }
 
 console.log(`\n🎉 共生成 ${partNum + 3} 个HTML片段（封面+目录+正文+尾页）`);
-
-// ==================== 输出修复报告 ====================
-
-if (globalFixReports.length > 0) {
-  const reportData = {
-    timestamp: new Date().toISOString(),
-    totalFiles: mdFiles.length,
-    totalIssues: globalFixReports.length,
-    summary: {
-      fixed: globalFixReports.filter(r => r.fixed).length,
-      degraded: globalFixReports.filter(r => r.degraded).length
-    },
-    reports: globalFixReports
-  };
-
-  // 生成JSON报告
-  const reportPath = path.join(OUTPUT_DIR, 'convert-md-fix-report.json');
-  fs.writeFileSync(reportPath, JSON.stringify(reportData, null, 2), 'utf-8');
-
-  // 生成可读文本报告
-  let textReport = `HTML标签检查与修复报告\n`;
-  textReport += `生成时间: ${new Date().toLocaleString('zh-CN')}\n`;
-  textReport += `========================\n\n`;
-  textReport += `汇总: 共发现 ${reportData.totalIssues} 处问题\n`;
-  textReport += `  - 自动修复: ${reportData.summary.fixed} 处\n`;
-  textReport += `  - 降级处理: ${reportData.summary.degraded} 处\n\n`;
-  textReport += `详细记录:\n`;
-
-  globalFixReports.forEach((report, idx) => {
-    textReport += `\n[${idx + 1}] 文件: ${report.sourceFile}\n`;
-    textReport += `    原始问题:\n`;
-    report.originalIssues.forEach(issue => {
-      textReport += `      - <${issue.tag}> 标签不平衡: 开${issue.openCount}/闭${issue.closeCount}\n`;
-    });
-    textReport += `    处理结果: ${report.fixed ? '✅ 已自动修复' : (report.degraded ? '⚠️ 已降级为文本块' : '❓ 未处理')}\n`;
-    if (report.actions && report.actions.length > 0) {
-      textReport += `    操作记录:\n`;
-      report.actions.forEach(action => {
-        if (action.action === 'appended') {
-          textReport += `      - 补全 ${action.count} 个 </${action.tag}> 闭合标签\n`;
-        } else if (action.action === 'removed') {
-          textReport += `      - 删除 ${action.count} 个多余的 </${action.tag}> 闭合标签\n`;
-        } else if (action.action === 'degraded') {
-          textReport += `      - 降级原因: ${action.reason}\n`;
-        }
-      });
-    }
-  });
-
-  textReport += `\n========================\n`;
-  textReport += `提示: 降级为文本块的内容保留了原始文字，但丢失了HTML样式。\n`;
-  textReport += `建议人工核查并修复原始Markdown文件中的HTML标签。\n`;
-
-  const textReportPath = path.join(OUTPUT_DIR, 'convert-md-fix-report.txt');
-  fs.writeFileSync(textReportPath, textReport, 'utf-8');
-
-  console.log(`\n📋 HTML标签检查报告:`);
-  console.log(`   发现问题: ${reportData.totalIssues} 处`);
-  console.log(`   自动修复: ${reportData.summary.fixed} 处`);
-  console.log(`   降级处理: ${reportData.summary.degraded} 处`);
-  console.log(`   报告文件: ${reportPath}`);
-  console.log(`   文本报告: ${textReportPath}`);
-} else {
-  console.log(`\n📋 HTML标签检查: 未发现标签闭合问题 ✓`);
-}
