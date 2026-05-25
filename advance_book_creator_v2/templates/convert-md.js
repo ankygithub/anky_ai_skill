@@ -1,14 +1,11 @@
 #!/usr/bin/env node
 /**
- * Markdown → HTML 片段转换器（v5.3 组件样式升级版）
+ * Markdown → HTML 片段转换器（v5.2 修复版）
  *
  * 核心修复：
  * - 处理顺序：先转换自定义标签 → 保护代码块 → 保护标准HTML → Markdown转换 → 恢复所有
  * - 自定义标签先转换为标准HTML div，然后代码块保护可以正确识别 div 内部的 ``` 代码块
  * - 引用块支持嵌套解析
- * - Step 组件改为简洁卡片样式
- * - Callout 组件添加图标
- * - Compare 组件改为左右双栏对比，带兜底降级
  */
 
 const fs = require('fs');
@@ -303,7 +300,7 @@ function protectDivBlocks(text, blocks) {
 
     // 跳过这些 div，让其内部的 Markdown 能被正常转换
     // 这些 div 由 convertCustomTagsToHtml 生成，内部包含原始 Markdown
-    const skipClasses = ['callout', 'compare-block'];
+    const skipClasses = ['callout', 'callout-content', 'compare-block', 'compare-item', 'compare-content', 'step-card', 'step-body'];
     const shouldSkip = skipClasses.some(cls =>
       divTag.includes(`class="${cls}`) || divTag.includes(`class='${cls}`)
     );
@@ -385,6 +382,69 @@ function correctChapterNumber(title, globalNum) {
   const chapterPattern = new RegExp(`^第(${chineseDigits}|${arabicDigits})章\\s*`);
   const corrected = title.replace(chapterPattern, `第${toChineseNum(globalNum)}章 `);
   return corrected.trim();
+}
+
+function renderBlockquote(lines) {
+  const content = lines.join('\n');
+  let inner = content;
+  // 处理内部粗体
+  inner = inner.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  // 处理内部行内代码
+  inner = inner.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+  // 处理内部无序列表
+  const listItems = [];
+  const nonListLines = [];
+  const innerLines = inner.split('\n');
+  for (const line of innerLines) {
+    const listMatch = line.match(/^-\s+(.+)$/);
+    if (listMatch) {
+      if (nonListLines.length > 0) {
+        listItems.push({ type: 'text', content: nonListLines.join('\n') });
+        nonListLines.length = 0;
+      }
+      listItems.push({ type: 'li', content: listMatch[1] });
+    } else {
+      nonListLines.push(line);
+    }
+  }
+  if (nonListLines.length > 0) {
+    listItems.push({ type: 'text', content: nonListLines.join('\n') });
+  }
+
+  if (listItems.length > 0 && listItems.some(i => i.type === 'li')) {
+    let result = '<blockquote>\n';
+    let inList = false;
+    for (const item of listItems) {
+      if (item.type === 'li') {
+        if (!inList) {
+          result += '<ul>\n';
+          inList = true;
+        }
+        result += `  <li>${item.content}</li>\n`;
+      } else {
+        if (inList) {
+          result += '</ul>\n';
+          inList = false;
+        }
+        const paragraphs = item.content.split('\n\n').filter(p => p.trim());
+        for (const para of paragraphs) {
+          result += `<p>${para.trim()}</p>\n`;
+        }
+      }
+    }
+    if (inList) {
+      result += '</ul>\n';
+    }
+    result += '</blockquote>';
+    return result;
+  }
+
+  // 没有列表，按段落处理
+  const paragraphs = inner.split('\n\n').filter(p => p.trim());
+  if (paragraphs.length === 1) {
+    return `<blockquote>\n<p>${paragraphs[0].trim()}</p>\n</blockquote>`;
+  }
+  return '<blockquote>\n' + paragraphs.map(p => `<p>${p.trim()}</p>`).join('\n') + '\n</blockquote>';
 }
 
 function mdToHtml(md, h2Offset, h3Offset) {
@@ -489,7 +549,7 @@ function mdToHtml(md, h2Offset, h3Offset) {
     html = result.join('\n');
   }
 
-  // 3. 引用块 / Callout检测
+  // 3. 引用块 / Callout检测（先检测特殊callout格式）
   html = html.replace(/^>\s*\*\*(核心建议|要点|提示)\*\*[:：]?\s*\n((?:>\s.*\n?)+)/gm, (match, title, content) => {
     const body = content.replace(/^>\s?/gm, '').trim();
     return `<div class="callout callout-tip"><div class="callout-title">${title}</div><p>${body}</p></div>`;
@@ -512,12 +572,33 @@ function mdToHtml(md, h2Offset, h3Offset) {
     return `<div class="callout callout-${calloutType}"><div class="callout-title">${title}</div><p>${content.trim()}</p></div>`;
   });
 
-  // 4. 嵌套引用块处理
-  html = html.replace(/^(>)(>.*)$/gm, (match, content) => {
-    const nestedContent = content.replace(/^>\s?/gm, '');
-    return `<blockquote><blockquote><p>${nestedContent}</p></blockquote></blockquote>`;
-  });
-  html = html.replace(/^>\s*(.*)$/gm, '<blockquote><p>$1</p></blockquote>');
+  // 4. 标准引用块处理：连续>行合并为一个blockquote
+  {
+    const lines = html.split('\n');
+    const result = [];
+    let quoteLines = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const match = line.match(/^>\s?(.*)$/);
+
+      if (match) {
+        quoteLines.push(match[1]);
+      } else {
+        if (quoteLines.length > 0) {
+          result.push(renderBlockquote(quoteLines));
+          quoteLines = [];
+        }
+        result.push(line);
+      }
+    }
+
+    if (quoteLines.length > 0) {
+      result.push(renderBlockquote(quoteLines));
+    }
+
+    html = result.join('\n');
+  }
 
   // 5. 标题处理
   let h2Count = 0;
@@ -545,15 +626,31 @@ function mdToHtml(md, h2Offset, h3Offset) {
   // 8. 链接
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 
-  // 9. 列表处理
+  // 9. 列表处理（跳过 blockquote 内部）
   {
     const lines = html.split('\n');
     const result = [];
     let k = 0;
+    let inBlockquote = false;
 
     while (k < lines.length) {
       const line = lines[k];
       const trimmed = line.trim();
+
+      // 跟踪 blockquote 状态
+      if (trimmed.startsWith('<blockquote>')) inBlockquote = true;
+      if (trimmed.startsWith('</blockquote>')) {
+        inBlockquote = false;
+        result.push(line);
+        k++;
+        continue;
+      }
+
+      if (inBlockquote) {
+        result.push(line);
+        k++;
+        continue;
+      }
 
       const olMatch = trimmed.match(/^(\d+)\.\s+(.+)$/);
       const ulMatch = trimmed.match(/^[-*]\s+(.+)$/);
@@ -565,6 +662,11 @@ function mdToHtml(md, h2Offset, h3Offset) {
         while (k < lines.length) {
           const curLine = lines[k];
           const curTrimmed = curLine.trim();
+
+          // 遇到 blockquote 或 HTML 标签开始则停止列表
+          if (curTrimmed.startsWith('<blockquote>')) break;
+          if (curTrimmed.startsWith('<') && !curTrimmed.match(/^<(li|ul|ol)\b/)) break;
+
           const curOl = curTrimmed.match(/^(\d+)\.\s+(.+)$/);
           const curUl = curTrimmed.match(/^[-*]\s+(.+)$/);
 

@@ -848,29 +848,55 @@ p {
 .warning strong:first-child { color: var(--accent-rose); }
 .callout-v2 strong:first-child { color: var(--accent-violet); }
 
-/* ===== 引用块 ===== */
+/* ===== 引用块（方案一：经典左侧竖线 + 引号装饰） ===== */
 blockquote {
-  margin: 24px 0;
-  padding: 20px 28px;
-  background: var(--bg-card);
-  border-radius: 12px;
-  border: 1px solid var(--border-subtle);
+  margin: 20px 0;
+  padding: 20px 24px 20px 28px;
+  background: var(--bg-secondary);
+  border-left: 4px solid var(--accent-primary);
+  border-radius: 0 12px 12px 0;
   position: relative;
-  font-style: italic;
   color: var(--text-secondary);
 }
 blockquote::before {
   content: '"';
   position: absolute;
-  top: 8px; left: 16px;
+  top: 8px;
+  left: 12px;
   font-size: 48px;
-  color: var(--text-muted);
+  color: var(--accent-primary);
+  opacity: 0.15;
   font-family: Georgia, serif;
   line-height: 1;
 }
 blockquote p {
-  padding-left: 28px;
+  color: var(--text-secondary);
+  font-size: calc(10.5pt * var(--font-scale));
+  line-height: 1.8;
+  padding-left: 24px;
+  margin-bottom: 8px;
+}
+blockquote p:last-child {
   margin-bottom: 0;
+}
+blockquote strong {
+  color: var(--accent-rose);
+  font-weight: 600;
+}
+blockquote ul {
+  margin: 10px 0 10px 48px;
+  padding-left: 20px;
+}
+blockquote li {
+  margin-bottom: 5px;
+  color: var(--text-secondary);
+}
+blockquote li::marker {
+  color: var(--accent-primary);
+}
+blockquote code {
+  background: rgba(146, 64, 14, 0.08);
+  color: var(--accent-primary);
 }
 
 /* ===== 表格 ===== */
