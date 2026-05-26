@@ -10,98 +10,10 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-// Windows 沙箱环境 PATH 可能不包含 node，使用完整路径
-const NODE_EXE = process.execPath;
-
 const TEMPLATES_DIR = __dirname;
 const OUTPUT_DIR = path.join(TEMPLATES_DIR, 'output');
 const VERSION_PATH = path.join(TEMPLATES_DIR, 'version.json');
 const FRAGMENTS_DIR = path.join(TEMPLATES_DIR, 'fragments');
-
-// ===== 验证门禁：MD源文件自定义标签检测 =====
-function validateMdFragments() {
-  const mdFiles = fs.readdirSync(FRAGMENTS_DIR)
-    .filter(f => f.endsWith('.md'))
-    .map(f => path.join(FRAGMENTS_DIR, f));
-
-  if (mdFiles.length === 0) return { valid: true, errors: [] };
-
-  // 禁止使用的自定义标签（这些标签名看起来像组件名，但会导致转换失败）
-  const forbiddenPatterns = [
-    { regex: /<callout-tip\b/i, name: '<callout-tip>' },
-    { regex: /<callout-warn\b/i, name: '<callout-warn>' },
-    { regex: /<callout-info\b/i, name: '<callout-info>' },
-    { regex: /<callout\b(?!-)/i, name: '<callout>' },
-    { regex: /<step\b(?!-)/i, name: '<step>' },
-    { regex: /<compare\b(?!-)/i, name: '<compare>' },
-    { regex: /<tag-core\b/i, name: '<tag-core>' },
-    { regex: /<flow\b(?!-)/i, name: '<flow>' }
-  ];
-
-  const errors = [];
-
-  for (const mdFile of mdFiles) {
-    const content = fs.readFileSync(mdFile, 'utf-8');
-    const lines = content.split('\n');
-    const basename = path.basename(mdFile);
-
-    for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
-      const line = lines[lineIndex];
-      for (const pattern of forbiddenPatterns) {
-        if (pattern.regex.test(line)) {
-          errors.push({
-            file: basename,
-            line: lineIndex + 1,
-            tag: pattern.name,
-            content: line.trim().substring(0, 120)
-          });
-        }
-      }
-    }
-  }
-
-  return { valid: errors.length === 0, errors };
-}
-
-function writeErrorLog(errors) {
-  const now = new Date();
-  const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-  const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '');
-  let seq = 1;
-  let logPath;
-
-  do {
-    const seqStr = String(seq).padStart(3, '0');
-    logPath = path.join(OUTPUT_DIR, `error-${dateStr}-${timeStr}-${seqStr}.log`);
-    seq++;
-  } while (fs.existsSync(logPath) && seq < 1000);
-
-  const lines = [
-    `构建验证失败 - ${now.toISOString()}`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    ``,
-    `发现 ${errors.length} 处非法自定义标签：`,
-    ``
-  ];
-
-  for (const err of errors) {
-    lines.push(`[${err.file}:${err.line}] ${err.tag}`);
-    lines.push(`  → ${err.content}`);
-    lines.push(`  → 修复：将 ${err.tag} 替换为 7.3 节对应的标准 <div class="callout ..."> 模板`);
-    lines.push('');
-  }
-
-  lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  lines.push('');
-  lines.push('修复指南：');
-  lines.push('1. 打开上述列出的 MD 文件');
-  lines.push('2. 将非法自定义标签替换为 SKILL.md 7.3 节对应的标准 HTML div 模板');
-  lines.push('3. 例如：<callout-tip> → <div class="callout callout-tip">，闭合标签对应改为 </div>');
-  lines.push('');
-
-  fs.writeFileSync(logPath, lines.join('\n'), 'utf-8');
-  return logPath;
-}
 
 // ===== CLI参数解析 =====
 const args = process.argv.slice(2);
@@ -195,7 +107,7 @@ function preprocessFragments() {
     return false;
   }
 
-  const result = spawnSync(NODE_EXE, [convertPath, FRAGMENTS_DIR], {
+  const result = spawnSync('node', [convertPath, FRAGMENTS_DIR], {
     cwd: TEMPLATES_DIR,
     stdio: 'inherit'
   });
@@ -218,7 +130,7 @@ const buildSteps = {
       buildArgs.push('--source', sourcePath);
       if (sourceType) buildArgs.push('--type', sourceType);
     }
-    const result = spawnSync(NODE_EXE, buildArgs, {
+    const result = spawnSync('node', buildArgs, {
       cwd: TEMPLATES_DIR,
       stdio: 'inherit'
     });
@@ -226,7 +138,7 @@ const buildSteps = {
   },
   reader: () => {
     console.log('\n📖 [2/4] 构建多文件阅读器...');
-    const result = spawnSync(NODE_EXE, ['build-reader.js'], {
+    const result = spawnSync('node', ['build-reader.js'], {
       cwd: TEMPLATES_DIR,
       stdio: 'inherit'
     });
@@ -234,7 +146,7 @@ const buildSteps = {
   },
   pdf: () => {
     console.log('\n📕 [3/4] 构建PDF（精确书签）...');
-    const result = spawnSync(NODE_EXE, ['build-pdf.js'], {
+    const result = spawnSync('node', ['build-pdf.js'], {
       cwd: TEMPLATES_DIR,
       stdio: 'inherit'
     });
@@ -242,7 +154,7 @@ const buildSteps = {
   },
   md: () => {
     console.log('\n📝 [4/4] 构建Markdown...');
-    const result = spawnSync(NODE_EXE, ['build-md.js'], {
+    const result = spawnSync('node', ['build-md.js'], {
       cwd: TEMPLATES_DIR,
       stdio: 'inherit'
     });
@@ -253,36 +165,6 @@ const buildSteps = {
 // ===== 预处理 fragments =====
 if (!sourcePath) {
   // 自动模式：检查fragments目录
-
-  // 先执行 MD 源文件验证门禁
-  console.log('\n🔍 [0a] MD 源文件验证门禁...');
-  const validation = validateMdFragments();
-  if (!validation.valid) {
-    console.error(`\n❌ 验证门禁失败：发现 ${validation.errors.length} 处非法自定义标签`);
-    console.error('   这些标签会导致 HTML 渲染异常，必须先修复才能构建。');
-    console.error('');
-    for (const err of validation.errors.slice(0, 5)) {
-      console.error(`   [${err.file}:${err.line}] ${err.tag}`);
-      console.error(`      → ${err.content.substring(0, 80)}`);
-    }
-    if (validation.errors.length > 5) {
-      console.error(`   ... 还有 ${validation.errors.length - 5} 处错误`);
-    }
-    console.error('');
-    console.error('   修复指南：将非法标签替换为 7.3 节对应的标准 <div class="callout ..."> 模板');
-
-    // 写入错误日志文件
-    if (!fs.existsSync(OUTPUT_DIR)) {
-      fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-    }
-    const logPath = writeErrorLog(validation.errors);
-    console.error(`\n   详细错误日志已保存到: ${path.basename(logPath)}`);
-
-    process.exit(1);
-  }
-  console.log('✅ MD 源文件验证通过');
-
-  // 再执行 fragments 预处理
   if (!preprocessFragments()) {
     console.error('\n❌ 预处理失败，终止构建');
     process.exit(1);

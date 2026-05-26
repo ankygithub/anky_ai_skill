@@ -104,6 +104,25 @@ function convertCustomTagsToHtml(md) {
     return `<div class="callout callout-info">\n  <div class="callout-icon">&#x2139;</div>\n  <div class="callout-content">\n${content.trim()}\n  </div>\n</div>`;
   });
 
+  // ===== 新增：标准 HTML Callout 格式支持（与上方自定义标签输出保持一致） =====
+  // 3a. 标准格式 <div class="callout callout-tip"> → 添加 icon 和 content 包装
+  // 匹配 SKILL.md 【模板-1】的标准格式，确保新旧书籍输出一致
+  html = html.replace(/<div class="callout callout-tip">\s*<div class="callout-title">([^<]*)<\/div>\s*<p>([\s\S]*?)<\/p>\s*<\/div>/gi, (match, title, content) => {
+    return `<div class="callout callout-tip">\n  <div class="callout-icon">&#x1F4A1;</div>\n  <div class="callout-content">\n    <div class="callout-title">${title.trim()}</div>\n    <p>${content.trim()}</p>\n  </div>\n</div>`;
+  });
+
+  // 3b. 标准格式 <div class="callout callout-warn"> → 添加 icon 和 content 包装
+  // 匹配 SKILL.md 【模板-2】的标准格式
+  html = html.replace(/<div class="callout callout-warn">\s*<div class="callout-title">([^<]*)<\/div>\s*<p>([\s\S]*?)<\/p>\s*<\/div>/gi, (match, title, content) => {
+    return `<div class="callout callout-warn">\n  <div class="callout-icon">&#x26A0;</div>\n  <div class="callout-content">\n    <div class="callout-title">${title.trim()}</div>\n    <p>${content.trim()}</p>\n  </div>\n</div>`;
+  });
+
+  // 3c. 标准格式 <div class="callout callout-info"> → 添加 icon 和 content 包装
+  // 匹配 SKILL.md 【模板-3】的标准格式
+  html = html.replace(/<div class="callout callout-info">\s*<div class="callout-title">([^<]*)<\/div>\s*<p>([\s\S]*?)<\/p>\s*<\/div>/gi, (match, title, content) => {
+    return `<div class="callout callout-info">\n  <div class="callout-icon">&#x2139;</div>\n  <div class="callout-content">\n    <div class="callout-title">${title.trim()}</div>\n    <p>${content.trim()}</p>\n  </div>\n</div>`;
+  });
+
   // 4. <step number="N" title="...">...</step> → 简洁步骤卡片
   // 逐个替换，绝不删除中间内容
   html = html.replace(/<step\s+number="(\d+)"\s+title="([^"]*)">\s*([\s\S]*?)<\/step>/gi,
@@ -131,6 +150,23 @@ function convertCustomTagsToHtml(md) {
         `    </div>\n` +
         `  </div>\n` +
         `  <div class="step-body">\n${content.trim()}\n  </div>\n` +
+        `</div>`;
+    });
+
+  // ===== 新增：标准 HTML Step 格式支持（与上方自定义标签输出保持一致） =====
+  // 5a. 标准格式 <div class="step"> + <div class="step-num"> + <div class="step-content">
+  // 匹配 SKILL.md 【模板-4】的标准格式，转换为 step-card 结构
+  html = html.replace(/<div class="step">\s*<div class="step-num">(\d+)<\/div>\s*<div class="step-content">\s*<h4>([^<]*)<\/h4>\s*<p>([\s\S]*?)<\/p>\s*<\/div>\s*<\/div>/gi,
+    (match, num, title, content) => {
+      return `<div class="step-card" data-step="${num}">\n` +
+        `  <div class="step-header">\n` +
+        `    <div class="step-phase">\n` +
+        `      <span class="step-phase-num">${num}</span>\n` +
+        `      <span class="step-phase-label">阶段</span>\n` +
+        `    </div>\n` +
+        `    <div class="step-title">${title.trim()}</div>\n` +
+        `  </div>\n` +
+        `  <div class="step-body">\n    <p>${content.trim()}</p>\n  </div>\n` +
         `</div>`;
     });
 
@@ -221,6 +257,31 @@ function convertCustomTagsToHtml(md) {
 
       return compareHtml;
     });
+
+  // ===== 新增：标准 HTML Compare 格式支持（与上方自定义标签输出保持一致） =====
+  // 6a. 标准格式 <div class="compare"> + 两个 <div> 子元素
+  // 匹配 SKILL.md 【模板-5】的标准格式，转换为 compare-block 结构
+  // 格式：<div class="compare"><div><p><strong>不推荐</strong>...</p>...</div><div><p><strong>推荐</strong>...</p>...</div></div>
+  html = html.replace(/<div class="compare">\s*<div>\s*<p><strong>([^<]*)<\/strong><\/p>\s*<p>([\s\S]*?)<\/p>\s*<\/div>\s*<div>\s*<p><strong>([^<]*)<\/strong><\/p>\s*<p>([\s\S]*?)<\/p>\s*<\/div>\s*<\/div>/gi,
+    (match, leftLabel, leftContent, rightLabel, rightContent) => {
+      return '<div class="compare-block">\n' +
+        '  <div class="compare-item compare-bad">\n' +
+        `    <div class="compare-label">${escapeHtml(leftLabel.trim())}</div>\n` +
+        `    <div class="compare-content">\n      <p>${leftContent.trim()}</p>\n    </div>\n` +
+        '  </div>\n' +
+        '  <div class="compare-item compare-good">\n' +
+        `    <div class="compare-label">${escapeHtml(rightLabel.trim())}</div>\n` +
+        `    <div class="compare-content">\n      <p>${rightContent.trim()}</p>\n    </div>\n` +
+        '  </div>\n' +
+        '</div>';
+    });
+
+  // ===== 新增：<tag-core> 自定义标签支持（容错旧错误写法） =====
+  // 7. <tag-core>内容</tag-core> → <span class="tag-core">内容</span>
+  // 匹配 SKILL.md 【模板-6】的错误写法（旧书籍可能使用），转换为正确格式
+  html = html.replace(/<tag-core>\s*([^<]*)\s*<\/tag-core>/gi, (match, content) => {
+    return `<span class="tag-core">${content.trim()}</span>`;
+  });
 
   return html;
 }
