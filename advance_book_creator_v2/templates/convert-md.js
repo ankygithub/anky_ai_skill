@@ -259,22 +259,177 @@ function convertCustomTagsToHtml(md) {
     });
 
   // ===== 新增：标准 HTML Compare 格式支持（与上方自定义标签输出保持一致） =====
-  // 6a. 标准格式 <div class="compare"> + 两个 <div> 子元素
+  // 6a. 先处理：markdown 表格直接在 <div class="compare"> 内的情况
+  // 格式：<div class="compare">\n| 列1 | 列2 |\n|---|---|\n| 内容 | 内容 |\n</div>
+  // 手动提取并解析表格为 HTML（不用 marked，使用与 mdToHtml 相同的表格解析逻辑）
+  let prevHtml;
+  prevHtml = '';
+  do {
+    prevHtml = html;
+    const m = html.match(/<div class="compare">\s*\n/i);
+    if (!m) break;
+    const blockStart = m.index;
+    const contentStart = blockStart + m[0].length;
+
+    // 从 contentStart 开始手动查找匹配的 </div>
+    let depth = 1;
+    let pos = contentStart;
+    while (depth > 0 && pos < html.length) {
+      const nextOpen = html.indexOf('<div', pos);
+      const nextClose = html.indexOf('</div>', pos);
+      if (nextClose === -1) break;
+      if (nextOpen !== -1 && nextOpen < nextClose) {
+        depth++;
+        pos = nextOpen + 4;
+      } else {
+        depth--;
+        pos = nextClose + 6;
+      }
+    }
+    const blockEnd = pos;
+    const innerContent = html.substring(contentStart, blockEnd - 6).trim();
+
+    // 检查是否是 markdown 表格（以 | 开头，第二行是 |---|---|）
+    const lines = innerContent.split('\n');
+    if (lines.length >= 2 && lines[0].trim().startsWith('|') && lines[1].trim().startsWith('|---')) {
+      // 手动解析 markdown 表格为 HTML
+      const tableLines = lines.filter(l => l.trim().startsWith('|') && l.trim().endsWith('|'));
+      if (tableLines.length >= 2) {
+        const sepLine = tableLines[1];
+        const isSep = sepLine.replace(/\|/g, '').trim().replace(/[-:\s]/g, '') === '';
+        if (isSep) {
+          let alignments = sepLine.split('|').filter(c => c.trim()).map(c => {
+            const t = c.trim();
+            if (t.startsWith(':') && t.endsWith(':')) return 'center';
+            if (t.endsWith(':')) return 'right';
+            return 'left';
+          });
+          let tableHtml = '<table>\n<thead>\n<tr>';
+          const headers = tableLines[0].split('|').filter(c => c.trim());
+          headers.forEach((h, hi) => {
+            const align = alignments[hi] ? ` style="text-align:${alignments[hi]}"` : '';
+            tableHtml += `<th${align}>${h.trim()}</th>`;
+          });
+          tableHtml += '</tr>\n</thead>\n<tbody>\n';
+          for (let k = 2; k < tableLines.length; k++) {
+            const cells = tableLines[k].split('|').filter(c => c.trim());
+            tableHtml += '<tr>';
+            cells.forEach((c, ci) => {
+              const align = alignments[ci] ? ` style="text-align:${alignments[ci]}"` : '';
+              tableHtml += `<td${align}>${c.trim()}</td>`;
+            });
+            tableHtml += '</tr>\n';
+          }
+          tableHtml += '</tbody>\n</table>';
+
+          // 替换整个 compare 块
+          html = html.substring(0, blockStart) +
+            `<div class="compare-block">\n` +
+            `  <div class="compare-content" style="width:100%;">\n${tableHtml}\n  </div>\n` +
+            `</div>` +
+            html.substring(blockEnd);
+        } else {
+          break;
+        }
+      } else {
+        break;
+      }
+    } else {
+      break; // 不是 markdown 表格，交给后面的 handler 处理
+    }
+  } while (html !== prevHtml);
+
+  // 6b. 标准格式 <div class="compare"> + 两个 <div> 子元素（内容格式灵活）
   // 匹配 SKILL.md 【模板-5】的标准格式，转换为 compare-block 结构
-  // 格式：<div class="compare"><div><p><strong>不推荐</strong>...</p>...</div><div><p><strong>推荐</strong>...</p>...</div></div>
-  html = html.replace(/<div class="compare">\s*<div>\s*<p><strong>([^<]*)<\/strong><\/p>\s*<p>([\s\S]*?)<\/p>\s*<\/div>\s*<div>\s*<p><strong>([^<]*)<\/strong><\/p>\s*<p>([\s\S]*?)<\/p>\s*<\/div>\s*<\/div>/gi,
-    (match, leftLabel, leftContent, rightLabel, rightContent) => {
-      return '<div class="compare-block">\n' +
-        '  <div class="compare-item compare-bad">\n' +
-        `    <div class="compare-label">${escapeHtml(leftLabel.trim())}</div>\n` +
-        `    <div class="compare-content">\n      <p>${leftContent.trim()}</p>\n    </div>\n` +
-        '  </div>\n' +
-        '  <div class="compare-item compare-good">\n' +
-        `    <div class="compare-label">${escapeHtml(rightLabel.trim())}</div>\n` +
-        `    <div class="compare-content">\n      <p>${rightContent.trim()}</p>\n    </div>\n` +
-        '  </div>\n' +
-        '</div>';
-    });
+  // 格式：<div class="compare"><div>内容...</div><div>内容...</div></div>
+  // 使用非贪婪匹配以正确处理嵌套 div
+  do {
+    prevHtml = html;
+    // 匹配第一个 <div class="compare"> ... </div>
+    const m = html.match(/<div class="compare">\s*/i);
+    if (!m) break;
+    const blockStart = m.index;
+    const contentStart = blockStart + m[0].length;
+
+    // 从 contentStart 开始手动查找匹配的 </div>
+    let depth = 1;
+    let pos = contentStart;
+    while (depth > 0 && pos < html.length) {
+      const nextOpen = html.indexOf('<div', pos);
+      const nextClose = html.indexOf('</div>', pos);
+      if (nextClose === -1) break;
+      if (nextOpen !== -1 && nextOpen < nextClose) {
+        depth++;
+        pos = nextOpen + 4;
+      } else {
+        depth--;
+        pos = nextClose + 6;
+      }
+    }
+    const blockEnd = pos;
+    const innerContent = html.substring(contentStart, blockEnd - 6); // -6 for </div>
+
+    // 在 innerContent 中查找两个顶级子 div
+    function extractChild(startOffset) {
+      let d = 1;
+      let p = startOffset;
+      const nextOpen = innerContent.indexOf('<div', p);
+      const nextClose = innerContent.indexOf('</div>', p);
+      if (nextOpen !== -1 && nextOpen < nextClose) {
+        d++;
+        p = nextOpen + 4;
+      } else if (nextClose !== -1) {
+        // 检查是否有属性
+        const openMatch = innerContent.match(/<div[^>]*>/i, p);
+        if (openMatch) {
+          const openEnd = p + openMatch[0].length;
+          let dd = 1;
+          let pp = openEnd;
+          while (dd > 0 && pp < innerContent.length) {
+            const no = innerContent.indexOf('<div', pp);
+            const nc = innerContent.indexOf('</div>', pp);
+            if (nc === -1) break;
+            if (no !== -1 && no < nc) { dd++; pp = no + 4; }
+            else { dd--; pp = nc + 6; }
+          }
+          return { content: innerContent.substring(openMatch.index, pp), endPos: pp };
+        }
+        return null;
+      }
+      return null;
+    }
+
+    // 简单方式：直接用正则匹配内部内容（非贪婪）
+    const childMatch = innerContent.match(/^(<div[^>]*>[\s\S]*?<\/div>)\s*(<div[^>]*>[\s\S]*?<\/div>)\s*$/i);
+    if (!childMatch) break; // 如果不是两个子 div，跳过
+
+    const leftHtml = childMatch[1];
+    const rightHtml = childMatch[2];
+
+    // 尝试从 <strong> 标签中提取标题
+    const leftStrong = leftHtml.match(/<strong>([^<]*)<\/strong>/i);
+    const rightStrong = rightHtml.match(/<strong>([^<]*)<\/strong>/i);
+
+    const leftLabel = leftStrong ? leftStrong[1] : '';
+    const rightLabel = rightStrong ? rightStrong[1] : '';
+
+    // 移除 <strong> 标签，保留内容
+    const leftContent = leftHtml.replace(/<strong>[^<]*<\/strong>/gi, '');
+    const rightContent = rightHtml.replace(/<strong>[^<]*<\/strong>/gi, '');
+
+    html = html.substring(0, blockStart) +
+      '<div class="compare-block">\n' +
+      '  <div class="compare-item compare-bad">\n' +
+      (leftLabel ? `    <div class="compare-label">${escapeHtml(leftLabel.trim())}</div>\n` : '') +
+      `    <div class="compare-content">\n${leftContent.trim()}\n    </div>\n` +
+      '  </div>\n' +
+      '  <div class="compare-item compare-good">\n' +
+      (rightLabel ? `    <div class="compare-label">${escapeHtml(rightLabel.trim())}</div>\n` : '') +
+      `    <div class="compare-content">\n${rightContent.trim()}\n    </div>\n` +
+      '  </div>\n' +
+      '</div>' +
+      html.substring(blockEnd);
+  } while (html !== prevHtml);
 
   // ===== 新增：<tag-core> 自定义标签支持（容错旧错误写法） =====
   // 7. <tag-core>内容</tag-core> → <span class="tag-core">内容</span>
@@ -929,7 +1084,7 @@ if (coverHtml) {
   <h1>${escapeHtml(globalVersionData.title)}</h1>
   <p class="cover-subtitle">${escapeHtml(globalVersionData.subtitle || '')}</p>
   <div class="cover-meta">
-    ${globalVersionData.author ? `<span>${escapeHtml(author)}</span>` : ''}
+    ${globalVersionData.author ? `<span>${escapeHtml(globalVersionData.author)}</span>` : ''}
     <span>v${escapeHtml(globalVersionData.version)}</span>
   </div>
 </div>`;

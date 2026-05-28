@@ -44,12 +44,16 @@ cp "$TEMPLATES_DIR/convert-html.js" "$PROJECT_DIR/convert-html.js"
 cp "$TEMPLATES_DIR/update.sh" "$PROJECT_DIR/update.sh"
 chmod +x "$PROJECT_DIR/update.sh"
 
-# 复制MD片段模板（只复制 cover + backpage 骨架，不含示例章节）
+# 复制 MD片段模板（只复制 cover + backpage 骨架，不含示例章节）
 if [ -f "$SKILL_DIR/references/md-templates/00-cover.md" ]; then
   cp "$SKILL_DIR/references/md-templates/00-cover.md" "$PROJECT_DIR/fragments/00-cover.md"
 fi
 if [ -f "$SKILL_DIR/references/md-templates/99-backpage.md" ]; then
   cp "$SKILL_DIR/references/md-templates/99-backpage.md" "$PROJECT_DIR/fragments/99-backpage.md"
+fi
+# 复制组件速查表到 research/ 供 AI 写作时参考（不参与构建）
+if [ -f "$SKILL_DIR/references/components-quickref.md" ]; then
+  cp "$SKILL_DIR/references/components-quickref.md" "$PROJECT_DIR/research/components-quickref.md"
 fi
 # 复制 MD 模板到 research/ 供 AI 写作时参考（不参与构建）
 cp "$SKILL_DIR/references/md-templates/"*.md "$PROJECT_DIR/research/" 2>/dev/null || true
@@ -183,7 +187,8 @@ echo "   │   └── rebuild.sh      # 产物重建脚本（MD就绪后使�
 echo "   ├── fragments/          # Markdown片段（AI写作输出）"
 echo "   │   ├── 00-cover.md     # 封面"
 echo "   │   └── 99-backpage.md  # 尾页"
-echo "   ├── research/           # 调研资料 + MD模板参考"
+echo "   ├── research/           # 调研资料 + 组件速查表 + MD模板参考"
+echo "   │   ├── components-quickref.md # ★ 组件速查表（写作必读）"
 echo "   │   └── source-grade-simple.md # 信源分级规范"
 echo "   ├── output/             # 构建输出"
 echo "   └── versions/           # 历史PDF存档"

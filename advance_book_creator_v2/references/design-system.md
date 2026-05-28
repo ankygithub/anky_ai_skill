@@ -131,11 +131,12 @@
 ### 步骤流程（保留v2）
 ```html
 <div class="step">
-  <div class="step-num">1</div>
-  <div class="step-content">
-    <h4>步骤标题</h4>
-    <p>步骤说明</p>
-  </div>
+<div class="step-num">1</div>
+<div class="step-content"><h4>步骤标题</h4><p>步骤说明</p></div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div class="step-content"><h4>步骤标题</h4><p>步骤说明</p></div>
 </div>
 ```
 
@@ -161,11 +162,11 @@
 <div class="compare">
   <div>
     <p><strong>不推荐 ❌</strong></p>
-    <p>不好的做法</p>
+    <p>不好做法及原因</p>
   </div>
   <div>
     <p><strong>推荐 ✅</strong></p>
-    <p>好的做法</p>
+    <p>好做法及原因</p>
   </div>
 </div>
 ```
@@ -306,8 +307,8 @@ title: 第一章 章节标题
 **对比块：**
 ```html
 <div class="compare">
-<div><p><strong>不推荐 ❌</strong></p><p>不好的做法</p></div>
-<div><p><strong>推荐 ✅</strong></p><p>好的做法</p></div>
+<div><p><strong>不推荐 ❌</strong></p><p>不好做法及原因</p></div>
+<div><p><strong>推荐 ✅</strong></p><p>好做法及原因</p></div>
 </div>
 ```
 

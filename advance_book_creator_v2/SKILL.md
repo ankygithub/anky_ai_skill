@@ -108,6 +108,8 @@ triggers:
 
 **4. 写作（★ 核心变化）**
 
+**【写作前强制要求】**：每个写作 Agent 在开始写作前，**必须先读取 `references/components-quickref.md` 或 `research/components-quickref.md` 组件速查表**，严格复制其中的 HTML 模板结构。**禁止自行发明组件结构、禁止自定义 CSS 类名**（如 `step-card`、`compare-title`、`flow-card` 等均为非法类名）。
+
 每个写作 agent 输出 **纯 Markdown 文件**（.md），必须遵循以下规范：
 
 ```markdown
@@ -251,12 +253,69 @@ title: 第一章 章节标题
 
 ---
 
+**场景 7：紫色强调、要点突出、重要概念**
+
+| 属性 | 值 |
+|------|-----|
+| 视觉样式 | 紫色提示块 |
+| 触发条件 | 出现"要点/重要/核心概念"等关键词时建议使用 |
+
+**【模板-7】Callout 紫色强调块 —— 直接复制以下内容：**
+```markdown
+<div class="callout callout-violet">
+<div class="callout-title">要点</div>
+<p>重要概念/要点突出：...</p>
+</div>
+```
+
+---
+
+**场景 8：数据流程图、处理链路、步骤串联**
+
+| 属性 | 值 |
+|------|-----|
+| 视觉样式 | 横向步骤串联（带箭头） |
+| 强制要求 | 有数据流/处理链路**必须使用**，禁止用普通 Markdown 箭头文本替代 |
+
+**【模板-8】流程图组件 —— 直接复制以下内容：**
+```markdown
+<div class="flow">
+<div class="flow-step">步骤1</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">步骤2</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">步骤3</div>
+</div>
+```
+
+---
+
+**场景 9：目录结构、文件层级、项目骨架展示**
+
+| 属性 | 值 |
+|------|-----|
+| 视觉样式 | 缩进文件树 |
+| 使用建议 | 展示目录结构/文件层级**建议使用** |
+
+**【模板-9】文件树组件 —— 直接复制以下内容：**
+```markdown
+<div class="file-tree">
+<div class="folder">📁 文件夹</div>
+<div class="indent file">📄 文件1</div>
+<div class="indent file">📄 文件2</div>
+</div>
+```
+
+---
+
 #### 7.2 每个Part的最低用量底线
 
 每个 `partNN-xxx.md` 文件**必须满足**：
-- ✅ 至少 **1个** callout 组件（从【模板-1/2/3】任选其一）
+- ✅ 至少 **1个** callout 组件（从【模板-1/2/3/7】任选其一）
 - ✅ 如果包含操作步骤 → **必须**用【模板-4】
 - ✅ 如果包含对比内容 → **必须**用【模板-5】
+- ✅ 如果包含数据流/处理链路 → **必须**用【模板-8】
+- ✅ 如果包含目录结构 → **建议**用【模板-9】
 - ❌ 禁止整个 Part 零组件（纯文本输出）
 
 ---
@@ -268,9 +327,12 @@ title: 第一章 章节标题
 | `<callout-tip>...` | `<div class="callout callout-tip">...` | 标签无法识别，内容竖排显示 |
 | `<callout-warn>...` | `<div class="callout callout-warn">...` | 标签无法识别，内容竖排显示 |
 | `<callout-info>...` | `<div class="callout callout-info">...` | 标签无法识别，内容竖排显示 |
+| `<callout-violet>...` | `<div class="callout callout-violet">...` | 标签无法识别，内容竖排显示 |
 | `<tag-core>...` | `<span class="tag-core">...` | 样式不生效 |
 | `<step>...` | `<div class="step">...` | 标签无法识别 |
 | `<compare>...` | `<div class="compare">...` | 标签无法识别 |
+| `<flow>...` | `<div class="flow">...` | 标签无法识别 |
+| `<file-tree>...` | `<div class="file-tree">...` | 标签无法识别 |
 
 > **记忆口诀**：所有组件都是 `<div>` 或 `<span>` 标准标签，**没有**自定义标签名！
 
