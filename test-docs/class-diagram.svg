@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700">
+  <defs>
+    <marker id="inherit-arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto">
+      <path d="M6,0 L12,12 L0,12 Z" fill="white" stroke="#666" stroke-width="1"/>
+    </marker>
+    <marker id="assoc-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#666" />
+    </marker>
+  </defs>
+  
+  <!-- 背景 -->
+  <rect width="1000" height="700" fill="#fafafa"/>
+  
+  <!-- 标题 -->
+  <text x="500" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">电商系统类图</text>
+  
+  <!-- User 类 -->
+  <g transform="translate(100, 80)">
+    <rect x="0" y="0" width="200" height="180" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5"/>
+    <rect x="0" y="0" width="200" height="35" fill="#1565c0" opacity="0.1"/>
+    <text x="100" y="23" text-anchor="middle" font-size="14" font-weight="bold" fill="#1565c0">User</text>
+    <line x1="0" y1="35" x2="200" y2="35" stroke="#1565c0" stroke-width="1"/>
+    
+    <text x="10" y="55" font-size="11" fill="#333">- id: Long</text>
+    <text x="10" y="72" font-size="11" fill="#333">- username: String</text>
+    <text x="10" y="89" font-size="11" fill="#333">- email: String</text>
+    <text x="10" y="106" font-size="11" fill="#333">- password: String</text>
+    <text x="10" y="123" font-size="11" fill="#333">- createdAt: Date</text>
+    <line x1="0" y1="135" x2="200" y2="135" stroke="#1565c0" stroke-width="1"/>
+    
+    <text x="10" y="153" font-size="11" fill="#333">+ login(): boolean</text>
+    <text x="10" y="170" font-size="11" fill="#333">+ register(): boolean</text>
+  </g>
+  
+  <!-- Customer 类 (继承User) -->
+  <g transform="translate(100, 350)">
+    <rect x="0" y="0" width="200" height="140" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5"/>
+    <rect x="0" y="0" width="200" height="35" fill="#2e7d32" opacity="0.1"/>
+    <text x="100" y="23" text-anchor="middle" font-size="14" font-weight="bold" fill="#2e7d32">Customer</text>
+    <line x1="0" y1="35" x2="200" y2="35" stroke="#2e7d32" stroke-width="1"/>
+    
+    <text x="10" y="55" font-size="11" fill="#333">- phone: String</text>
+    <text x="10" y="72" font-size="11" fill="#333">- address: String</text>
+    <text x="10" y="89" font-size="11" fill="#333">- vipLevel: int</text>
+    <line x1="0" y1="100" x2="200" y2="100" stroke="#2e7d32" stroke-width="1"/>
+    
+    <text x="10" y="118" font-size="11" fill="#333">+ placeOrder(): Order</text>
+    <text x="10" y="135" font-size="11" fill="#333">+ getOrders(): List</text>
+  </g>
+  
+  <!-- Admin 类 (继承User) -->
+  <g transform="translate(400, 350)">
+    <rect x="0" y="0" width="200" height="120" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/>
+    <rect x="0" y="0" width="200" height="35" fill="#e65100" opacity="0.1"/>
+    <text x="100" y="23" text-anchor="middle" font-size="14" font-weight="bold" fill="#e65100">Admin</text>
+    <line x1="0" y1="35" x2="200" y2="35" stroke="#e65100" stroke-width="1"/>
+    
+    <text x="10" y="55" font-size="11" fill="#333">- role: String</text>
+    <text x="10" y="72" font-size="11" fill="#333">- permissions: List</text>
+    <line x1="0" y1="85" x2="200" y2="85" stroke="#e65100" stroke-width="1"/>
+    
+    <text x="10" y="103" font-size="11" fill="#333">+ manageProducts()</text>
+    <text x="10" y="120" font-size="11" fill="#333">+ viewReports()</text>
+  </g>
+  
+  <!-- Order 类 -->
+  <g transform="translate(700, 80)">
+    <rect x="0" y="0" width="200" height="200" fill="#fce4ec" stroke="#c2185b" stroke-width="1.5"/>
+    <rect x="0" y="0" width="200" height="35" fill="#c2185b" opacity="0.1"/>
+    <text x="100" y="23" text-anchor="middle" font-size="14" font-weight="bold" fill="#c2185b">Order</text>
+    <line x1="0" y1="35" x2="200" y2="35" stroke="#c2185b" stroke-width="1"/>
+    
+    <text x="10" y="55" font-size="11" fill="#333">- id: Long</text>
+    <text x="10" y="72" font-size="11" fill="#333">- orderNo: String</text>
+    <text x="10" y="89" font-size="11" fill="#333">- customerId: Long</text>
+    <text x="10" y="106" font-size="11" fill="#333">- totalAmount: BigDecimal</text>
+    <text x="10" y="123" font-size="11" fill="#333">- status: OrderStatus</text>
+    <text x="10" y="140" font-size="11" fill="#333">- createdAt: Date</text>
+    <line x1="0" y1="150" x2="200" y2="150" stroke="#c2185b" stroke-width="1"/>
+    
+    <text x="10" y="168" font-size="11" fill="#333">+ pay(): boolean</text>
+    <text x="10" y="185" font-size="11" fill="#333">+ cancel(): boolean</text>
+  </g>
+  
+  <!-- Product 类 -->
+  <g transform="translate(400, 80)">
+    <rect x="0" y="0" width="200" height="160" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="1.5"/>
+    <rect x="0" y="0" width="200" height="35" fill="#6a1b9a" opacity="0.1"/>
+    <text x="100" y="23" text-anchor="middle" font-size="14" font-weight="bold" fill="#6a1b9a">Product</text>
+    <line x1="0" y1="35" x2="200" y2="35" stroke="#6a1b9a" stroke-width="1"/>
+    
+    <text x="10" y="55" font-size="11" fill="#333">- id: Long</text>
+    <text x="10" y="72" font-size="11" fill="#333">- name: String</text>
+    <text x="10" y="89" font-size="11" fill="#333">- price: BigDecimal</text>
+    <text x="10" y="106" font-size="11" fill="#333">- stock: int</text>
+    <line x1="0" y1="115" x2="200" y2="115" stroke="#6a1b9a" stroke-width="1"/>
+    
+    <text x="10" y="133" font-size="11" fill="#333">+ reduceStock(): boolean</text>
+    <text x="10" y="150" font-size="11" fill="#333">+ addStock(): void</text>
+  </g>
+  
+  <!-- OrderItem 类 -->
+  <g transform="translate(700, 400)">
+    <rect x="0" y="0" width="200" height="140" fill="#e0f2f1" stroke="#00695c" stroke-width="1.5"/>
+    <rect x="0" y="0" width="200" height="35" fill="#00695c" opacity="0.1"/>
+    <text x="100" y="23" text-anchor="middle" font-size="14" font-weight="bold" fill="#00695c">OrderItem</text>
+    <line x1="0" y1="35" x2="200" y2="35" stroke="#00695c" stroke-width="1"/>
+    
+    <text x="10" y="55" font-size="11" fill="#333">- id: Long</text>
+    <text x="10" y="72" font-size="11" fill="#333">- orderId: Long</text>
+    <text x="10" y="89" font-size="11" fill="#333">- productId: Long</text>
+    <text x="10" y="106" font-size="11" fill="#333">- quantity: int</text>
+    <line x1="0" y1="115" x2="200" y2="115" stroke="#00695c" stroke-width="1"/>
+    
+    <text x="10" y="133" font-size="11" fill="#333">+ getSubtotal(): BigDecimal</text>
+  </g>
+  
+  <!-- 继承连线 -->
+  <g stroke="#666" stroke-width="1.5" marker-end="url(#inherit-arrow)">
+    <line x1="200" y1="350" x2="200" y2="260" />
+    <line x1="500" y1="350" x2="250" y2="260" />
+  </g>
+  
+  <!-- 关联连线 -->
+  <g stroke="#666" stroke-width="1.5" marker-end="url(#assoc-arrow)">
+    <!-- Customer -> Order -->
+    <line x1="300" y1="420" x2="700" y2="200" />
+    <text x="480" y="300" font-size="10" fill="#666">1 : N</text>
+    
+    <!-- Order -> OrderItem -->
+    <line x1="800" y1="280" x2="800" y2="400" />
+    <text x="810" y="340" font-size="10" fill="#666">1 : N</text>
+    
+    <!-- OrderItem -> Product -->
+    <line x1="700" y1="470" x2="600" y2="240" />
+    <text x="640" y="360" font-size="10" fill="#666">N : 1</text>
+  </g>
+  
+  <!-- 图例 -->
+  <g transform="translate(40, 620)">
+    <line x1="0" y1="8" x2="30" y2="8" stroke="#666" stroke-width="1.5" marker-end="url(#inherit-arrow)"/>
+    <text x="40" y="12" font-size="10" fill="#666">继承</text>
+    
+    <line x1="100" y1="8" x2="130" y2="8" stroke="#666" stroke-width="1.5" marker-end="url(#assoc-arrow)"/>
+    <text x="140" y="12" font-size="10" fill="#666">关联</text>
+  </g>
+</svg>

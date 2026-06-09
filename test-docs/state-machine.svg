@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#666" />
+    </marker>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="1200" height="600" fill="#fafafa"/>
+
+  <!-- 标题 -->
+  <text x="600" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">订单状态机</text>
+
+  <!-- 初始状态点 -->
+  <circle cx="100" cy="300" r="10" fill="#333"/>
+
+  <!-- 待支付 -->
+  <rect x="180" y="250" width="160" height="100" rx="10" fill="#e3f2fd" stroke="#1565c0" stroke-width="2.5"/>
+  <text x="260" y="290" text-anchor="middle" font-size="15" font-weight="bold" fill="#1565c0">待支付</text>
+  <text x="260" y="315" text-anchor="middle" font-size="12" fill="#666">PENDING</text>
+
+  <!-- 已支付 -->
+  <rect x="440" y="250" width="160" height="100" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2.5"/>
+  <text x="520" y="290" text-anchor="middle" font-size="15" font-weight="bold" fill="#2e7d32">已支付</text>
+  <text x="520" y="315" text-anchor="middle" font-size="12" fill="#666">PAID</text>
+
+  <!-- 已发货 -->
+  <rect x="700" y="250" width="160" height="100" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="2.5"/>
+  <text x="780" y="290" text-anchor="middle" font-size="15" font-weight="bold" fill="#e65100">已发货</text>
+  <text x="780" y="315" text-anchor="middle" font-size="12" fill="#666">SHIPPED</text>
+
+  <!-- 已完成 -->
+  <rect x="960" y="250" width="160" height="100" rx="10" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2.5"/>
+  <text x="1040" y="290" text-anchor="middle" font-size="15" font-weight="bold" fill="#6a1b9a">已完成</text>
+  <text x="1040" y="315" text-anchor="middle" font-size="12" fill="#666">COMPLETED</text>
+
+  <!-- 已取消 -->
+  <rect x="440" y="450" width="160" height="100" rx="10" fill="#ffebee" stroke="#c62828" stroke-width="2.5"/>
+  <text x="520" y="490" text-anchor="middle" font-size="15" font-weight="bold" fill="#c62828">已取消</text>
+  <text x="520" y="515" text-anchor="middle" font-size="12" fill="#666">CANCELLED</text>
+
+  <!-- 连线层 -->
+  <g stroke="#666" stroke-width="2" fill="none">
+    <!-- 初始到待支付 -->
+    <line x1="110" y1="300" x2="180" y2="300" marker-end="url(#arrow)"/>
+
+    <!-- 待支付到已支付 -->
+    <line x1="340" y1="300" x2="440" y2="300" marker-end="url(#arrow)"/>
+
+    <!-- 已支付到已发货 -->
+    <line x1="600" y1="300" x2="700" y2="300" marker-end="url(#arrow)"/>
+
+    <!-- 已发货到已完成 -->
+    <line x1="860" y1="300" x2="960" y2="300" marker-end="url(#arrow)"/>
+
+    <!-- 待支付到已取消 -->
+    <path d="M 260 350 Q 260 400 440 450" marker-end="url(#arrow)"/>
+
+    <!-- 已支付到已取消 -->
+    <line x1="520" y1="350" x2="520" y2="450" marker-end="url(#arrow)"/>
+
+    <!-- 待支付自环 -->
+    <path d="M 180 270 C 100 270, 100 130, 260 130 C 420 130, 420 270, 340 270" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- 标签层（带白色背景遮罩） -->
+  <g font-size="12" fill="#333">
+    <!-- 支付成功 -->
+    <rect x="365" y="278" width="60" height="20" fill="white" opacity="0.95" rx="2"/>
+    <text x="395" y="292" text-anchor="middle" font-size="12" fill="#333">支付成功</text>
+
+    <!-- 商家发货 -->
+    <rect x="625" y="278" width="60" height="20" fill="white" opacity="0.95" rx="2"/>
+    <text x="655" y="292" text-anchor="middle" font-size="12" fill="#333">商家发货</text>
+
+    <!-- 确认收货 -->
+    <rect x="885" y="278" width="60" height="20" fill="white" opacity="0.95" rx="2"/>
+    <text x="915" y="292" text-anchor="middle" font-size="12" fill="#333">确认收货</text>
+
+    <!-- 超时取消 -->
+    <rect x="320" y="390" width="60" height="20" fill="white" opacity="0.95" rx="2"/>
+    <text x="350" y="404" text-anchor="middle" font-size="12" fill="#333">超时取消</text>
+
+    <!-- 申请退款 -->
+    <rect x="530" y="390" width="60" height="20" fill="white" opacity="0.95" rx="2"/>
+    <text x="560" y="404" text-anchor="middle" font-size="12" fill="#333">申请退款</text>
+
+    <!-- 创建订单 -->
+    <rect x="220" y="105" width="60" height="20" fill="white" opacity="0.95" rx="2"/>
+    <text x="250" y="119" text-anchor="middle" font-size="12" fill="#333">创建订单</text>
+  </g>
+
+  <!-- 图例 -->
+  <g transform="translate(50, 530)">
+    <line x1="0" y1="10" x2="40" y2="10" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="55" y="15" font-size="12" fill="#666">状态转移</text>
+
+    <rect x="180" y="0" width="20" height="20" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5" rx="3"/>
+    <text x="210" y="15" font-size="12" fill="#666">初始</text>
+
+    <rect x="280" y="0" width="20" height="20" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5" rx="3"/>
+    <text x="310" y="15" font-size="12" fill="#666">成功</text>
+
+    <rect x="380" y="0" width="20" height="20" fill="#ffebee" stroke="#c62828" stroke-width="1.5" rx="3"/>
+    <text x="410" y="15" font-size="12" fill="#666">异常</text>
+  </g>
+</svg>

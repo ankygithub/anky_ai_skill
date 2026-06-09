@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 500">
+  <!-- 背景 -->
+  <rect width="1100" height="500" fill="#fafafa"/>
+  
+  <!-- 标题 -->
+  <text x="550" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">项目开发进度甘特图</text>
+  
+  <!-- 时间轴刻度线 -->
+  <g stroke="#ddd" stroke-width="1">
+    <line x1="200" y1="60" x2="200" y2="420" />
+    <line x1="350" y1="60" x2="350" y2="420" />
+    <line x1="500" y1="60" x2="500" y2="420" />
+    <line x1="650" y1="60" x2="650" y2="420" />
+    <line x1="800" y1="60" x2="800" y2="420" />
+    <line x1="950" y1="60" x2="950" y2="420" />
+    <line x1="1050" y1="60" x2="1050" y2="420" />
+  </g>
+  
+  <!-- 时间轴标签 -->
+  <g font-size="11" fill="#666" text-anchor="middle">
+    <text x="200" y="55">第1周</text>
+    <text x="350" y="55">第2周</text>
+    <text x="500" y="55">第3周</text>
+    <text x="650" y="55">第4周</text>
+    <text x="800" y="55">第5周</text>
+    <text x="950" y="55">第6周</text>
+    <text x="1050" y="55">第7周</text>
+  </g>
+  
+  <!-- 时间轴底线 -->
+  <line x1="200" y1="60" x2="1050" y2="60" stroke="#333" stroke-width="1.5"/>
+  
+  <!-- 任务列表 -->
+  <g font-size="12" fill="#333">
+    <text x="10" y="95">需求分析</text>
+    <text x="10" y="135">系统设计</text>
+    <text x="10" y="175">数据库设计</text>
+    <text x="10" y="215">后端开发</text>
+    <text x="10" y="255">前端开发</text>
+    <text x="10" y="295">接口联调</text>
+    <text x="10" y="335">测试阶段</text>
+    <text x="10" y="375">部署上线</text>
+  </g>
+  
+  <!-- 任务条形 -->
+  <g>
+    <!-- 需求分析: 第1周 -->
+    <rect x="200" y="75" width="150" height="28" rx="4" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+    <text x="275" y="93" text-anchor="middle" font-size="10" fill="#1565c0">需求分析</text>
+    
+    <!-- 系统设计: 第1-2周 -->
+    <rect x="200" y="115" width="300" height="28" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+    <text x="350" y="133" text-anchor="middle" font-size="10" fill="#2e7d32">系统设计</text>
+    
+    <!-- 数据库设计: 第2周 -->
+    <rect x="350" y="155" width="150" height="28" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+    <text x="425" y="173" text-anchor="middle" font-size="10" fill="#e65100">数据库设计</text>
+    
+    <!-- 后端开发: 第2-5周 -->
+    <rect x="350" y="195" width="600" height="28" rx="4" fill="#fce4ec" stroke="#c2185b" stroke-width="1"/>
+    <text x="650" y="213" text-anchor="middle" font-size="10" fill="#c2185b">后端开发</text>
+    
+    <!-- 前端开发: 第3-5周 -->
+    <rect x="500" y="235" width="450" height="28" rx="4" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="1"/>
+    <text x="725" y="253" text-anchor="middle" font-size="10" fill="#6a1b9a">前端开发</text>
+    
+    <!-- 接口联调: 第5-6周 -->
+    <rect x="800" y="275" width="300" height="28" rx="4" fill="#e0f2f1" stroke="#00695c" stroke-width="1"/>
+    <text x="950" y="293" text-anchor="middle" font-size="10" fill="#00695c">接口联调</text>
+    
+    <!-- 测试阶段: 第6周 -->
+    <rect x="950" y="315" width="150" height="28" rx="4" fill="#ffebee" stroke="#c62828" stroke-width="1"/>
+    <text x="1025" y="333" text-anchor="middle" font-size="10" fill="#c62828">测试阶段</text>
+    
+    <!-- 部署上线: 第7周（里程碑） -->
+    <polygon points="1050,355 1065,369 1050,383 1035,369" fill="#1565c0" stroke="#0d47a1" stroke-width="1.5"/>
+    <text x="1050" y="400" text-anchor="middle" font-size="10" fill="#1565c0">上线</text>
+  </g>
+  
+  <!-- 依赖连线 -->
+  <g stroke="#999" stroke-width="1" stroke-dasharray="3,3" fill="none">
+    <!-- 需求分析 -> 系统设计 -->
+    <polyline points="350,89 370,89 370,129 350,129" />
+    
+    <!-- 系统设计 -> 数据库设计 -->
+    <polyline points="500,129 520,129 520,169 500,169" />
+    
+    <!-- 数据库设计 -> 后端开发 -->
+    <polyline points="500,169 520,169 520,209 500,209" />
+    
+    <!-- 后端开发 -> 接口联调 -->
+    <polyline points="950,209 970,209 970,289 950,289" />
+    
+    <!-- 前端开发 -> 接口联调 -->
+    <polyline points="950,249 970,249 970,289" />
+    
+    <!-- 接口联调 -> 测试 -->
+    <polyline points="1100,289 1120,289 1120,329 1100,329" />
+    
+    <!-- 测试 -> 上线 -->
+    <polyline points="1100,329 1120,329 1120,369 1065,369" />
+  </g>
+  
+  <!-- 图例 -->
+  <g transform="translate(200, 440)">
+    <rect x="0" y="0" width="20" height="12" rx="2" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+    <text x="28" y="10" font-size="10" fill="#666">任务</text>
+    
+    <polygon points="100,6 110,12 100,18 90,12" fill="#1565c0" stroke="#0d47a1" stroke-width="1"/>
+    <text x="118" y="12" font-size="10" fill="#666">里程碑</text>
+    
+    <line x1="180" y1="6" x2="210" y2="6" stroke="#999" stroke-width="1" stroke-dasharray="3,3"/>
+    <text x="218" y="10" font-size="10" fill="#666">依赖关系</text>
+  </g>
+</svg>

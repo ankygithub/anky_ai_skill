@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600">
+  <!-- 背景 -->
+  <rect width="1000" height="600" fill="#fafafa"/>
+  
+  <!-- 标题 -->
+  <text x="500" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">微服务架构设计思维导图</text>
+  
+  <!-- 中心主题 -->
+  <rect x="420" y="260" width="160" height="80" rx="10" fill="#1565c0" stroke="#0d47a1" stroke-width="2"/>
+  <text x="500" y="295" text-anchor="middle" font-size="14" font-weight="bold" fill="white">微服务</text>
+  <text x="500" y="315" text-anchor="middle" font-size="12" fill="white">架构设计</text>
+  
+  <!-- 一级分支1: 服务拆分 -->
+  <path d="M 580 300 Q 650 300 700 200" fill="none" stroke="#1565c0" stroke-width="2"/>
+  <rect x="700" y="160" width="140" height="50" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="770" y="190" text-anchor="middle" font-size="12" font-weight="bold" fill="#1565c0">服务拆分</text>
+  
+  <!-- 二级分支1.1 -->
+  <path d="M 840 185 Q 880 185 900 140" fill="none" stroke="#1565c0" stroke-width="1.5"/>
+  <rect x="900" y="115" width="80" height="35" rx="4" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="940" y="137" text-anchor="middle" font-size="10" fill="#1565c0">按业务域</text>
+  
+  <!-- 二级分支1.2 -->
+  <path d="M 840 185 Q 880 185 900 210" fill="none" stroke="#1565c0" stroke-width="1.5"/>
+  <rect x="900" y="185" width="80" height="35" rx="4" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="940" y="207" text-anchor="middle" font-size="10" fill="#1565c0">DDD限界</text>
+  
+  <!-- 一级分支2: 通信机制 -->
+  <path d="M 580 300 Q 650 300 700 300" fill="none" stroke="#2e7d32" stroke-width="2"/>
+  <rect x="700" y="275" width="140" height="50" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5"/>
+  <text x="770" y="305" text-anchor="middle" font-size="12" font-weight="bold" fill="#2e7d32">通信机制</text>
+  
+  <!-- 二级分支2.1 -->
+  <path d="M 840 300 Q 880 300 900 270" fill="none" stroke="#2e7d32" stroke-width="1.5"/>
+  <rect x="900" y="245" width="80" height="35" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+  <text x="940" y="267" text-anchor="middle" font-size="10" fill="#2e7d32">同步REST</text>
+  
+  <!-- 二级分支2.2 -->
+  <path d="M 840 300 Q 880 300 900 330" fill="none" stroke="#2e7d32" stroke-width="1.5"/>
+  <rect x="900" y="305" width="80" height="35" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+  <text x="940" y="327" text-anchor="middle" font-size="10" fill="#2e7d32">异步MQ</text>
+  
+  <!-- 一级分支3: 数据管理 -->
+  <path d="M 580 300 Q 650 300 700 400" fill="none" stroke="#e65100" stroke-width="2"/>
+  <rect x="700" y="375" width="140" height="50" rx="6" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/>
+  <text x="770" y="405" text-anchor="middle" font-size="12" font-weight="bold" fill="#e65100">数据管理</text>
+  
+  <!-- 二级分支3.1 -->
+  <path d="M 840 400 Q 880 400 900 370" fill="none" stroke="#e65100" stroke-width="1.5"/>
+  <rect x="900" y="345" width="80" height="35" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+  <text x="940" y="367" text-anchor="middle" font-size="10" fill="#e65100">独立数据库</text>
+  
+  <!-- 二级分支3.2 -->
+  <path d="M 840 400 Q 880 400 900 430" fill="none" stroke="#e65100" stroke-width="1.5"/>
+  <rect x="900" y="405" width="80" height="35" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+  <text x="940" y="427" text-anchor="middle" font-size="10" fill="#e65100">最终一致性</text>
+  
+  <!-- 左侧分支1: 服务治理 -->
+  <path d="M 420 300 Q 350 300 300 200" fill="none" stroke="#6a1b9a" stroke-width="2"/>
+  <rect x="160" y="160" width="140" height="50" rx="6" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="1.5"/>
+  <text x="230" y="190" text-anchor="middle" font-size="12" font-weight="bold" fill="#6a1b9a">服务治理</text>
+  
+  <!-- 二级分支左1.1 -->
+  <path d="M 160 185 Q 120 185 100 140" fill="none" stroke="#6a1b9a" stroke-width="1.5"/>
+  <rect x="20" y="115" width="80" height="35" rx="4" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="1"/>
+  <text x="60" y="137" text-anchor="middle" font-size="10" fill="#6a1b9a">注册发现</text>
+  
+  <!-- 二级分支左1.2 -->
+  <path d="M 160 185 Q 120 185 100 230" fill="none" stroke="#6a1b9a" stroke-width="1.5"/>
+  <rect x="20" y="205" width="80" height="35" rx="4" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="1"/>
+  <text x="60" y="227" text-anchor="middle" font-size="10" fill="#6a1b9a">负载均衡</text>
+  
+  <!-- 左侧分支2: 运维监控 -->
+  <path d="M 420 300 Q 350 300 300 300" fill="none" stroke="#c2185b" stroke-width="2"/>
+  <rect x="160" y="275" width="140" height="50" rx="6" fill="#fce4ec" stroke="#c2185b" stroke-width="1.5"/>
+  <text x="230" y="305" text-anchor="middle" font-size="12" font-weight="bold" fill="#c2185b">运维监控</text>
+  
+  <!-- 二级分支左2.1 -->
+  <path d="M 160 300 Q 120 300 100 280" fill="none" stroke="#c2185b" stroke-width="1.5"/>
+  <rect x="20" y="255" width="80" height="35" rx="4" fill="#fce4ec" stroke="#c2185b" stroke-width="1"/>
+  <text x="60" y="277" text-anchor="middle" font-size="10" fill="#c2185b">日志聚合</text>
+  
+  <!-- 二级分支左2.2 -->
+  <path d="M 160 300 Q 120 300 100 330" fill="none" stroke="#c2185b" stroke-width="1.5"/>
+  <rect x="20" y="305" width="80" height="35" rx="4" fill="#fce4ec" stroke="#c2185b" stroke-width="1"/>
+  <text x="60" y="327" text-anchor="middle" font-size="10" fill="#c2185b">链路追踪</text>
+  
+  <!-- 左侧分支3: 安全 -->
+  <path d="M 420 300 Q 350 300 300 400" fill="none" stroke="#00695c" stroke-width="2"/>
+  <rect x="160" y="375" width="140" height="50" rx="6" fill="#e0f2f1" stroke="#00695c" stroke-width="1.5"/>
+  <text x="230" y="405" text-anchor="middle" font-size="12" font-weight="bold" fill="#00695c">安全认证</text>
+  
+  <!-- 二级分支左3.1 -->
+  <path d="M 160 400 Q 120 400 100 370" fill="none" stroke="#00695c" stroke-width="1.5"/>
+  <rect x="20" y="345" width="80" height="35" rx="4" fill="#e0f2f1" stroke="#00695c" stroke-width="1"/>
+  <text x="60" y="367" text-anchor="middle" font-size="10" fill="#00695c">JWT/OAuth2</text>
+  
+  <!-- 二级分支左3.2 -->
+  <path d="M 160 400 Q 120 400 100 430" fill="none" stroke="#00695c" stroke-width="1.5"/>
+  <rect x="20" y="405" width="80" height="35" rx="4" fill="#e0f2f1" stroke="#00695c" stroke-width="1"/>
+  <text x="60" y="427" text-anchor="middle" font-size="10" fill="#00695c">API网关鉴权</text>
+</svg>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 750">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#666" />
+    </marker>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="900" height="750" fill="#fafafa"/>
+
+  <!-- 标题 -->
+  <text x="450" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">用户登录流程图</text>
+
+  <!-- 开始 -->
+  <ellipse cx="450" cy="80" rx="70" ry="30" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="450" y="86" text-anchor="middle" font-size="14" fill="#2e7d32">开始</text>
+
+  <!-- 输入用户名密码 -->
+  <rect x="325" y="140" width="250" height="55" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="450" y="172" text-anchor="middle" font-size="14" fill="#1565c0">输入用户名和密码</text>
+
+  <!-- 验证账号是否存在 -->
+  <polygon points="450,240 530,285 450,330 370,285" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="450" y="280" text-anchor="middle" font-size="13" fill="#e65100">账号存在?</text>
+  <text x="450" y="298" text-anchor="middle" font-size="12" fill="#e65100">且密码正确?</text>
+
+  <!-- 登录成功 -->
+  <rect x="80" y="260" width="180" height="55" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="170" y="285" text-anchor="middle" font-size="14" fill="#2e7d32">生成Token</text>
+  <text x="170" y="303" text-anchor="middle" font-size="12" fill="#2e7d32">登录成功</text>
+
+  <!-- 登录失败 -->
+  <rect x="640" y="260" width="180" height="55" rx="6" fill="#ffebee" stroke="#c62828" stroke-width="2"/>
+  <text x="730" y="285" text-anchor="middle" font-size="14" fill="#c62828">提示错误信息</text>
+  <text x="730" y="303" text-anchor="middle" font-size="12" fill="#c62828">登录失败</text>
+
+  <!-- 跳转首页 -->
+  <rect x="80" y="370" width="180" height="55" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="170" y="402" text-anchor="middle" font-size="14" fill="#1565c0">跳转首页</text>
+
+  <!-- 记录登录日志 -->
+  <rect x="80" y="470" width="180" height="55" rx="6" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+  <text x="170" y="502" text-anchor="middle" font-size="14" fill="#6a1b9a">记录登录日志</text>
+
+  <!-- 结束 -->
+  <ellipse cx="170" cy="590" rx="70" ry="30" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="170" y="596" text-anchor="middle" font-size="14" fill="#2e7d32">结束</text>
+
+  <!-- 失败次数+1 -->
+  <rect x="640" y="370" width="180" height="55" rx="6" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="730" y="402" text-anchor="middle" font-size="14" fill="#e65100">失败次数+1</text>
+
+  <!-- 失败次数判断 -->
+  <polygon points="730,470 810,515 730,560 650,515" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="730" y="510" text-anchor="middle" font-size="13" fill="#e65100">失败次数</text>
+  <text x="730" y="528" text-anchor="middle" font-size="12" fill="#e65100">>= 5次?</text>
+
+  <!-- 锁定账号 -->
+  <rect x="640" y="610" width="180" height="55" rx="6" fill="#ffebee" stroke="#c62828" stroke-width="2"/>
+  <text x="730" y="642" text-anchor="middle" font-size="14" fill="#c62828">锁定账号30分钟</text>
+
+  <!-- 返回登录页 -->
+  <rect x="325" y="610" width="180" height="55" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="415" y="642" text-anchor="middle" font-size="14" fill="#1565c0">返回登录页</text>
+
+  <!-- 连线层 -->
+  <g stroke="#666" stroke-width="2" fill="none">
+    <!-- 开始到输入 -->
+    <line x1="450" y1="110" x2="450" y2="140" marker-end="url(#arrow)"/>
+
+    <!-- 输入到判断 -->
+    <line x1="450" y1="195" x2="450" y2="240" marker-end="url(#arrow)"/>
+
+    <!-- 判断到成功（是） -->
+    <line x1="370" y1="285" x2="260" y2="285" marker-end="url(#arrow)"/>
+
+    <!-- 判断到失败（否） -->
+    <line x1="530" y1="285" x2="640" y2="285" marker-end="url(#arrow)"/>
+
+    <!-- 成功到跳转 -->
+    <line x1="170" y1="315" x2="170" y2="370" marker-end="url(#arrow)"/>
+
+    <!-- 跳转到记录日志 -->
+    <line x1="170" y1="425" x2="170" y2="470" marker-end="url(#arrow)"/>
+
+    <!-- 记录日志到结束 -->
+    <line x1="170" y1="525" x2="170" y2="560" marker-end="url(#arrow)"/>
+
+    <!-- 失败到失败次数+1 -->
+    <line x1="730" y1="315" x2="730" y2="370" marker-end="url(#arrow)"/>
+
+    <!-- 失败次数+1到判断 -->
+    <line x1="730" y1="425" x2="730" y2="470" marker-end="url(#arrow)"/>
+
+    <!-- 判断锁定到锁定账号（是） -->
+    <line x1="730" y1="560" x2="730" y2="610" marker-end="url(#arrow)"/>
+
+    <!-- 判断锁定到返回登录页（否） -->
+    <line x1="650" y1="515" x2="505" y2="515" marker-end="url(#arrow)"/>
+
+    <!-- 锁定账号到返回登录页 -->
+    <line x1="640" y1="637" x2="505" y2="637" marker-end="url(#arrow)"/>
+
+    <!-- 返回登录页到输入（回环） -->
+    <path d="M 325 637 C 200 637, 200 170, 325 170" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- 标签层（带白色背景遮罩） -->
+  <g font-size="12" fill="#333">
+    <!-- 是 -->
+    <rect x="300" y="268" width="24" height="20" fill="white" opacity="0.95" rx="2"/>
+    <text x="312" y="282" text-anchor="middle" font-size="12" fill="#333">是</text>
+
+    <!-- 否 -->
+    <rect x="570" y="268" width="24" height="20" fill="white" opacity="0.95" rx="2"/>
+    <text x="582" y="282" text-anchor="middle" font-size="12" fill="#333">否</text>
+
+    <!-- 是（锁定判断） -->
+    <rect x="740" y="578" width="24" height="20" fill="white" opacity="0.95" rx="2"/>
+    <text x="752" y="592" text-anchor="middle" font-size="12" fill="#333">是</text>
+
+    <!-- 否（锁定判断） -->
+    <rect x="565" y="498" width="24" height="20" fill="white" opacity="0.95" rx="2"/>
+    <text x="577" y="512" text-anchor="middle" font-size="12" fill="#333">否</text>
+
+    <!-- 重新输入 -->
+    <rect x="220" y="140" width="60" height="20" fill="white" opacity="0.95" rx="2"/>
+    <text x="250" y="154" text-anchor="middle" font-size="12" fill="#333">重新输入</text>
+  </g>
+</svg>
