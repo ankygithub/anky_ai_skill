@@ -30,7 +30,7 @@ echo "   目录: $PROJECT_DIR"
 echo ""
 
 # 创建目录结构
-mkdir -p "$PROJECT_DIR"/{fragments,output,versions,research}
+mkdir -p "$PROJECT_DIR"/{fragments,output,versions,research,materials,assets}
 
 # 复制模板文件
 cp "$TEMPLATES_DIR/styles.css" "$PROJECT_DIR/styles.css"
@@ -109,9 +109,9 @@ cat > "$PROJECT_DIR/PROJECT.md" << EOF
 
 ## 章节大纲
 
-| Part | 节 | 标题 | 核心内容 | 信息来源 |
-|------|----|------|---------|---------|
-| 1 | 01 | | | |
+| Part | 节 | 标题 | 核心内容 | 需要采集 | 采集方向 | 信息来源 |
+|------|----|------|---------|---------|---------|---------|
+| 1 | 01 | | | ❌ 无需 | - | |
 
 ---
 
@@ -190,13 +190,16 @@ echo "   │   └── 99-backpage.md  # 尾页"
 echo "   ├── research/           # 调研资料 + 组件速查表 + MD模板参考"
 echo "   │   ├── components-quickref.md # ★ 组件速查表（写作必读）"
 echo "   │   └── source-grade-simple.md # 信源分级规范"
+echo "   ├── materials/          # 素材库（采集阶段生成）"
+echo "   ├── assets/             # 图片资源"
 echo "   ├── output/             # 构建输出"
 echo "   └── versions/           # 历史PDF存档"
 echo ""
 echo "   下一步:"
-echo "   1. 编辑 PROJECT.md 填写大纲"
-echo "   2. 在 fragments/ 下写Markdown片段（参考 research/ 下的模板）"
-echo "   3. 运行 node build-all.js --products all 构建所有产物"
+echo "   1. 编辑 PROJECT.md 填写大纲（标注哪些章节需要素材采集）"
+echo "   2. 对需要采集的章节执行素材采集（搜索→WebFetch→深度提炼→保存到 materials/）"
+echo "   3. 在 fragments/ 下写Markdown片段（读取 materials/ 下的素材 + research/ 下的组件规范）"
+echo "   4. 运行 node build-all.js --products all 构建所有产物"
 echo ""
 echo "   快捷命令:"
 echo "   bash scripts/rebuild.sh              # MD就绪后重建全部产物"
