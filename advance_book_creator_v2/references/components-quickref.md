@@ -162,3 +162,47 @@
 构建时的自动处理：
 - 简单缺失闭合标签 → 自动补全
 - 复杂结构损坏 → 降级为纯文本块（保留文字内容，丢失样式）
+
+---
+
+## 10. 内嵌 SVG 图形
+
+**场景**：架构图、流程图、示意图。技术书籍中最常用的图形方式。
+
+**正确写法**（直接写 SVG 标签，不要用代码块包裹）：
+
+```html
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" font-family="sans-serif">
+  <rect width="960" height="520" fill="#faf8f5"/>
+  <!-- 图形内容 -->
+</svg>
+```
+
+**错误写法**（会导致显示为代码文本）：
+
+```markdown
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" ...>
+  ...
+</svg>
+```
+```
+
+**生成方式**：
+1. 调用 `diagram-generator` skill 生成 SVG 代码
+2. 将生成的代码直接粘贴到 Markdown 中
+3. 确保删除代码块标记（```svg 和 ```）
+
+**注意事项**：
+- SVG 代码会被 `convert-md.js` 自动识别为 HTML 保护
+- 不需要额外包裹 `<div>`，除非需要特殊样式
+- 如需图注，使用 `<figure>` 包裹：
+
+```html
+<figure class="content-figure">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520">
+    <!-- SVG 内容 -->
+  </svg>
+  <figcaption>图 1-1 架构总览</figcaption>
+</figure>
+```

@@ -451,10 +451,26 @@ function protectCodeBlocks(md) {
   const codeBlocks = [];
   let result = md;
 
+  // 智能检测：```svg 包裹的内容如果是完整 SVG 标签，则保留为原始 HTML
+  // 这样即使用户错误地用 ```svg 包裹了图形，也能正确渲染
+  result = result.replace(/^\s*```svg\s*\n([\s\S]*?)^\s*```/gm, (match, svgContent) => {
+    const trimmed = svgContent.trim();
+    // 如果内容是完整 SVG（以 <svg 开头，以 </svg> 结尾），保留原始标签
+    if (trimmed.startsWith('<svg') && trimmed.endsWith('</svg>')) {
+      return trimmed; // 直接返回原始 SVG，不放入代码块
+    }
+    // 否则当作普通 SVG 代码示例处理
+    const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
+    codeBlocks.push(`<pre><code class="language-svg">${escapeHtml(svgContent.trimEnd())}</code></pre>`);
+    return placeholder;
+  });
+
   // 保护 fenced code blocks (```lang\ncode\n```)
   // 使用 ^\s*``` 匹配行首可能有缩进的代码块标记
   // [\w-]* 支持带连字符的语言标识符（如 ssh-config）
   result = result.replace(/^\s*```([\w-]*)\n([\s\S]*?)^\s*```/gm, (match, lang, code) => {
+    // 跳过已经处理的 svg（lang 为空表示已处理过）
+    if (lang === 'svg') return match;
     const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
     const langClass = lang ? ` class="language-${escapeHtml(lang)}"` : '';
     codeBlocks.push(`<pre><code${langClass}>${escapeHtml(code.trimEnd())}</code></pre>`);

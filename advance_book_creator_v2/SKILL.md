@@ -271,19 +271,43 @@ type: backpage
 
 ### 图形与图表生成
 
-| 图形类型 | 触发场景 | 方式 | 格式 |
-|---------|---------|------|------|
-| 架构图/流程图 | 技术书籍 | diagram-generator skill | SVG（嵌入HTML） |
+| 图形类型 | 触发场景 | 推荐方式 | 格式 |
+|---------|---------|---------|------|
+| 架构图/流程图/示意图 | 技术书籍 | **大模型直接生成 SVG** | 内嵌 SVG |
 | 数据图表 | 数据对比 | chart-image skill | PNG |
-| 封面装饰图 | 需要视觉冲击 | canvas-design 或 byted-seedream-image-generate skill | PNG |
+| 封面装饰图 | 需要视觉冲击 | canvas-design 或 byted-seedream-image-generate skill | PNG（assets/） |
 
-图片保存到 `assets/`，引用方式：
+**内嵌 SVG（推荐，默认方式）：**
+
+直接在 Markdown 中写原始 SVG 代码，**不要用代码块包裹**：
+
+```html
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520">
+  <!-- SVG 内容 -->
+</svg>
+```
+
+**生成方式：**
+1. **首选：在写作对话中直接让大模型生成**
+   - 描述需要的图形，模型直接输出 SVG 代码
+   - 复制粘贴到 Markdown 中（删除代码块标记）
+   - 优势：写作流畅、迭代快、上下文匹配
+
+**ASCII 图（允许但不推荐）**
+
+**外部文件引用（特定场景）：**
+
+仅用于封面、装饰图、数据图表。保存到 `assets/`，引用方式：
 ```html
 <figure class="content-figure">
-  <img src="../assets/arch-overview.svg" alt="架构图">
+  <img src="../assets/chapter-01-diagram.svg" alt="架构图">
   <figcaption>图 1-1 架构总览</figcaption>
 </figure>
 ```
+
+⚠️ **重要约定**：
+- 内嵌 SVG 不要用 ` ```svg ` 代码块包裹，否则会被当作代码显示
+- 如果确实需要展示 SVG 代码（如教程），确保内容不是完整的 `<svg>...</svg>` 结构
 
 **5. 构建**
 
