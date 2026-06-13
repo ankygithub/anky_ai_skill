@@ -66,9 +66,16 @@ if [ -f "$SCRIPT_DIR/rebuild.sh" ]; then
   cp "$SCRIPT_DIR/rebuild.sh" "$PROJECT_DIR/scripts/rebuild.sh"
   chmod +x "$PROJECT_DIR/scripts/rebuild.sh"
 fi
+if [ -f "$SCRIPT_DIR/build-epub.sh" ]; then
+  cp "$SCRIPT_DIR/build-epub.sh" "$PROJECT_DIR/scripts/build-epub.sh"
+  chmod +x "$PROJECT_DIR/scripts/build-epub.sh"
+fi
 if [ -f "$SKILL_DIR/DESIGN.md" ]; then
   cp "$SKILL_DIR/DESIGN.md" "$PROJECT_DIR/DESIGN.md"
 fi
+
+# 复制 EPUB 生成器（可选功能）
+cp "$TEMPLATES_DIR/build-epub.js" "$PROJECT_DIR/build-epub.js"
 
 # 创建 version.json
 cat > "$PROJECT_DIR/version.json" << EOF
@@ -176,6 +183,7 @@ echo "   ├── build-reader.js     # 多文件阅读器构建"
 echo "   ├── build-pdf.js        # PDF生成（带书签）"
 echo "   ├── build-md.js         # Markdown导出"
 echo "   ├── build-all.js        # 统一构建入口+门禁"
+echo "   ├── build-epub.js       # EPUB生成器（可选）"
 echo "   ├── convert-md.js       # Markdown转片段"
 echo "   ├── convert-html.js     # HTML转片段"
 echo "   ├── update.sh           # 一键版本更新"
@@ -183,7 +191,8 @@ echo "   ├── version.json        # 版本信息"
 echo "   ├── CHANGELOG.md        # 更新日志"
 echo "   ├── DESIGN.md           # 设计文档（含 rebuild 使用说明）"
 echo "   ├── scripts/            # 辅助脚本"
-echo "   │   └── rebuild.sh      # 产物重建脚本（MD就绪后使用）"
+echo "   │   ├── rebuild.sh      # 产物重建脚本（MD就绪后使用）"
+echo "   │   └── build-epub.sh   # EPUB生成脚本（可选）"
 echo "   ├── fragments/          # Markdown片段（AI写作输出）"
 echo "   │   ├── 00-cover.md     # 封面"
 echo "   │   └── 99-backpage.md  # 尾页"
@@ -205,6 +214,7 @@ echo "   快捷命令:"
 echo "   bash scripts/rebuild.sh              # MD就绪后重建全部产物"
 echo "   bash scripts/rebuild.sh html,pdf      # 只构建 HTML + PDF"
 echo "   bash scripts/rebuild.sh all --clean   # 强制清理后全量重建"
+echo "   bash scripts/build-epub.sh           # 生成 EPUB 格式电子书"
 echo ""
 echo "   独立数据源模式:"
 echo "   node build-all.js --source ./input.md --type md --products all"

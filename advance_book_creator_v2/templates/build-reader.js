@@ -593,7 +593,31 @@ console.log('✅ 生成 shared/reader.js');
 // ===== 生成内容页 =====
 contentPartNum = 0;
 
+// 首先建立页面列表（用于导航）
+const pageList = [];
 for (const file of fragmentFiles) {
+  let pageName;
+  let pageType;
+  if (file === '00-cover.html') {
+    pageName = 'cover.html';
+    pageType = 'cover';
+  } else if (file === '01-toc.html') {
+    pageName = 'toc.html';
+    pageType = 'toc';
+  } else if (file === '99-backpage.html') {
+    pageName = 'backpage.html';
+    pageType = 'backpage';
+  } else {
+    contentPartNum++;
+    pageName = `part${String(contentPartNum).padStart(2, '0')}.html`;
+    pageType = 'content';
+  }
+  pageList.push({ file, pageName, pageType });
+}
+
+// 生成每个内容页
+for (let i = 0; i < pageList.length; i++) {
+  const { file, pageName, pageType } = pageList[i];
   const content = fs.readFileSync(path.join(FRAGMENTS_DIR, file), 'utf-8');
   const processedContent = content
     .replace(/\{\{TITLE\}\}/g, title)
@@ -601,16 +625,35 @@ for (const file of fragmentFiles) {
     .replace(/\{\{AUTHOR\}\}/g, author)
     .replace(/\{\{VERSION\}\}/g, version);
 
-  let pageName;
-  if (file === '00-cover.html') {
-    pageName = 'cover.html';
-  } else if (file === '01-toc.html') {
-    pageName = 'toc.html';
-  } else if (file === '99-backpage.html') {
-    pageName = 'backpage.html';
-  } else {
-    contentPartNum++;
-    pageName = `part${String(contentPartNum).padStart(2, '0')}.html`;
+  // 生成导航按钮
+  let navButtons = '';
+  if (pageType !== 'cover') {
+    const prevPage = pageList[i - 1];
+    const nextPage = pageList[i + 1];
+    
+    let prevButton = '';
+    let nextButton = '';
+    
+    if (prevPage) {
+      prevButton = `<a href="${prevPage.pageName}" class="nav-btn nav-prev" onclick="return parent.loadPage('${prevPage.pageName}');">上一页</a>`;
+    } else {
+      prevButton = `<span class="nav-btn nav-disabled">上一页</span>`;
+    }
+    if (nextPage) {
+      nextButton = `<a href="${nextPage.pageName}" class="nav-btn nav-next" onclick="return parent.loadPage('${nextPage.pageName}');">下一页</a>`;
+    } else {
+      nextButton = `<span class="nav-btn nav-disabled">下一页</span>`;
+    }
+    
+    if (prevButton || nextButton) {
+      navButtons = `
+    <div class="page-nav">
+      <div class="nav-container">
+        ${prevButton}
+        ${nextButton}
+      </div>
+    </div>`;
+    }
   }
 
   const pageHtml = `<!DOCTYPE html>
@@ -625,10 +668,64 @@ for (const file of fragmentFiles) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
   <link rel="stylesheet" href="../shared/theme.css">
   <link rel="stylesheet" href="../shared/content.css">
+  <style>
+    .page-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .nav-container {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border: 2px solid var(--border-subtle);
+      border-radius: 10px;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .nav-btn:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      background: var(--toc-active-bg);
+      box-shadow: 0 4px 12px rgba(146, 64, 14, 0.12);
+      transform: translateY(-1px);
+    }
+    .nav-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .nav-prev::before {
+      content: "←";
+      font-size: 16px;
+    }
+    .nav-next::after {
+      content: "→";
+      font-size: 16px;
+    }
+    .nav-disabled {
+      visibility: hidden;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
 ${processedContent}
+${navButtons}
   </div>
   <script>
     (function() {
@@ -680,7 +777,7 @@ ${processedContent}
   fs.writeFileSync(path.join(READER_DIR, 'content', pageName), pageHtml);
 }
 
-console.log(`✅ 生成 ${fragmentFiles.length} 个内容页`);
+console.log(`✅ 生成 ${pageList.length} 个内容页`);
 
 // ===== 生成框架页 index.html =====
 const tocHtml = tocData.map(item => {

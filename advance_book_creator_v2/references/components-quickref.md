@@ -86,10 +86,33 @@
 
 **场景**：好坏对比、方案选型、优缺点比较。有对比内容**必须使用**。
 
+### 6.1 简单对比（左右两栏）
+
 ```html
 <div class="compare">
 <div><p><strong>不推荐 ❌</strong></p><p>不好做法及原因</p></div>
 <div><p><strong>推荐 ✅</strong></p><p>好做法及原因</p></div>
+</div>
+```
+
+### 6.2 复杂对比（带标签和详细内容）
+
+```html
+<div class="compare-block">
+<div class="compare-item compare-bad">
+<div class="compare-label">左侧标题</div>
+<div class="compare-content">
+<p>说明文字</p>
+<p><strong>关键点：</strong>重点内容</p>
+</div>
+</div>
+<div class="compare-item compare-good">
+<div class="compare-label">右侧标题</div>
+<div class="compare-content">
+<p>说明文字</p>
+<p><strong>关键点：</strong>重点内容</p>
+</div>
+</div>
 </div>
 ```
 

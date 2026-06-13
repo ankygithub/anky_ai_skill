@@ -51,6 +51,39 @@ if (stat.isDirectory()) {
 
 console.log(`📄 发现 ${mdFiles.length} 个 Markdown 片段文件`);
 
+// ==================== 门禁检查 ====================
+function checkChapterHeadingFormat(files) {
+  const issues = [];
+  // 支持格式：第1章、第01章、第一章、第12章、第壹章 等
+  const h1ChapterPattern = /^#\s*(?:第[一二三四五六七八九十百千万零壹贰叁肆伍陆柒捌玖拾\d]+章|第\d{1,3}章)\s+/m;
+
+  for (const file of files) {
+    const content = fs.readFileSync(file, 'utf-8');
+    const frontmatterMatch = content.match(/^---\s*\n([\s\S]*?)\n---\s*\n?/);
+    const body = frontmatterMatch ? content.slice(frontmatterMatch[0].length) : content;
+
+    if (h1ChapterPattern.test(body)) {
+      const basename = path.basename(file);
+      issues.push(basename);
+    }
+  }
+
+  if (issues.length > 0) {
+    console.error('\n❌ 门禁检查失败：发现以下文件使用 H1 (#) 作为章节标题');
+    console.error('   规范要求：章节标题必须使用 H2 (##)');
+    console.error('\n   问题文件：');
+    issues.forEach(f => console.error(`   - ${f}`));
+    console.error('\n   修复方法：将 `# 第X章` 改为 `## 第X章`');
+    console.error('   示例：');
+    console.error('     ❌ # 第1章 标题');
+    console.error('     ✅ ## 第1章 标题\n');
+    process.exit(1);
+  }
+}
+
+checkChapterHeadingFormat(mdFiles);
+console.log('✅ 门禁检查通过：章节标题格式正确\n');
+
 // ==================== 工具函数 ====================
 
 function parseFrontmatter(content) {
