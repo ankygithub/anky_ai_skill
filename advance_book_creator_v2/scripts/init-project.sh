@@ -30,7 +30,7 @@ echo "   目录: $PROJECT_DIR"
 echo ""
 
 # 创建目录结构
-mkdir -p "$PROJECT_DIR"/{fragments,output,versions,research,materials,assets}
+mkdir -p "$PROJECT_DIR"/{fragments,output,versions,research,materials,assets,cover-images}
 
 # 复制模板文件
 cp "$TEMPLATES_DIR/styles.css" "$PROJECT_DIR/styles.css"
@@ -74,8 +74,10 @@ if [ -f "$SKILL_DIR/DESIGN.md" ]; then
   cp "$SKILL_DIR/DESIGN.md" "$PROJECT_DIR/DESIGN.md"
 fi
 
-# 复制 EPUB 生成器（可选功能）
+# 复制 EPUB 生成器（新版精排生成器 + 旧版保留）
+cp "$TEMPLATES_DIR/build-epub-pro.js" "$PROJECT_DIR/build-epub-pro.js"
 cp "$TEMPLATES_DIR/build-epub.js" "$PROJECT_DIR/build-epub.js"
+cp "$TEMPLATES_DIR/epub-styles.css" "$PROJECT_DIR/epub-styles.css"
 
 # 创建 version.json
 cat > "$PROJECT_DIR/version.json" << EOF
@@ -183,7 +185,9 @@ echo "   ├── build-reader.js     # 多文件阅读器构建"
 echo "   ├── build-pdf.js        # PDF生成（带书签）"
 echo "   ├── build-md.js         # Markdown导出"
 echo "   ├── build-all.js        # 统一构建入口+门禁"
-echo "   ├── build-epub.js       # EPUB生成器（可选）"
+echo "   ├── build-epub-pro.js   # EPUB精排生成器（推荐）"
+echo "   ├── build-epub.js       # EPUB生成器（旧版，保留兼容）"
+echo "   ├── epub-styles.css     # EPUB专用样式"
 echo "   ├── convert-md.js       # Markdown转片段"
 echo "   ├── convert-html.js     # HTML转片段"
 echo "   ├── update.sh           # 一键版本更新"
@@ -196,6 +200,7 @@ echo "   │   └── build-epub.sh   # EPUB生成脚本（可选）"
 echo "   ├── fragments/          # Markdown片段（AI写作输出）"
 echo "   │   ├── 00-cover.md     # 封面"
 echo "   │   └── 99-backpage.md  # 尾页"
+echo "   ├── cover-images/       # EPUB封面图片（放入封面图片后自动生成封面）"
 echo "   ├── research/           # 调研资料 + 组件速查表 + MD模板参考"
 echo "   │   ├── components-quickref.md # ★ 组件速查表（写作必读）"
 echo "   │   └── source-grade-simple.md # 信源分级规范"

@@ -137,8 +137,14 @@ title: 第一章 章节标题
 
 1. **YAML frontmatter 必填**：`type`（cover/chapter/backpage）、`title`
 2. **`##` = 大章节标题**（对应原HTML的 `<h2 class="section-title">`）
+   - 格式：`## 第X章 章节标题`
+   - 必须使用 `第X章` 前缀，方便构建系统识别
 3. **`###` = 小节标题**（对应原HTML的 `<h3>`）
+   - 格式：`### X.Y 小节标题`（如 `### 1.1 小节标题`）
+   - 必须使用 `X.Y` 编号前缀
 4. **`####` = 子小节**（对应原HTML的 `<h4>`）
+   - 格式：`#### X.Y.Z 子小节标题`（如 `#### 1.1.1 子小节标题`）
+   - 必须使用 `X.Y.Z` 编号前缀
 5. **绝大多数内容用 Markdown 原生语法**：粗体 `**文字**`、表格、列表、代码块、引用 `>`
 6. **素材使用规则（写作阶段必须遵守）**：
    - ✅ 【素材优先】如果对应章节有素材文件（materials/chapter-{NN}/），案例和数据类内容应优先基于素材创作
@@ -362,6 +368,35 @@ node build-all.js --products html,pdf   # 只生成指定产物
 node build-all.js --products html --no-gate  # 跳过门禁
 ```
 
+### MD 源文件验证门禁
+
+构建前会自动检查 Markdown 片段的规范性：
+
+| 检查项 | 说明 | 自动修复 |
+|--------|------|---------|
+| YAML frontmatter | 必须包含 `type` 和 `title` | ❌ |
+| 章标题层级 | `第X章` 必须是 `##` (h2) | ✅ `fix-md.js` |
+| 节标题层级 | `X.Y` 必须是 `###` (h3) | ✅ `fix-md.js` |
+| 子节标题层级 | `X.Y.Z` 必须是 `####` (h4) | ✅ `fix-md.js` |
+| 标题跳级 | 禁止从 h2 直接跳到 h4 | ❌ |
+| 非法自定义标签 | `<callout>` 等必须改为 `<div class="...">` | ❌ |
+
+**门禁失败时的处理：**
+
+```bash
+# 1. 查看详细错误日志
+ls output/error-*.log
+
+# 2. 如果有标题层级错误，自动修复
+node fix-md.js fragments --write
+
+# 3. 修复后重新验证
+node check-md.js fragments
+
+# 4. 验证通过后重新构建
+node build-all.js --products all
+```
+
 ## 精确书签生成（v4新特性）
 
 `build-pdf.js` 使用两遍渲染法：
@@ -380,7 +415,10 @@ node build-all.js --products html --no-gate  # 跳过门禁
 | `build.js` | 单文件HTML构建 |
 | `build-reader.js` | 多文件阅读器构建 |
 | `build-pdf.js` | PDF生成（两遍渲染精确书签） |
+| `build-epub-pro.js` | EPUB精排生成器（含代码高亮、图片打包） |
 | `build-md.js` | Markdown导出 |
+| `check-md.js` | ★ MD片段门禁检查（标题层级、YAML、非法标签） |
+| `fix-md.js` | ★ MD片段自动修复（标题层级规范化） |
 | `convert-md.js` | ★ MD→HTML片段（支持内嵌HTML保护） |
 | `convert-html.js` | HTML→HTML片段（兼容） |
 | `update.sh` | 版本更新+构建 |

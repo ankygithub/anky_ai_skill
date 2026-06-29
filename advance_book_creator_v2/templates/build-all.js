@@ -18,25 +18,13 @@ const OUTPUT_DIR = path.join(TEMPLATES_DIR, 'output');
 const VERSION_PATH = path.join(TEMPLATES_DIR, 'version.json');
 const FRAGMENTS_DIR = path.join(TEMPLATES_DIR, 'fragments');
 
-// ===== 验证门禁：MD源文件自定义标签检测 =====
+// ===== 验证门禁：MD源文件综合检测 =====
 function validateMdFragments() {
   const mdFiles = fs.readdirSync(FRAGMENTS_DIR)
     .filter(f => f.endsWith('.md'))
     .map(f => path.join(FRAGMENTS_DIR, f));
 
-  if (mdFiles.length === 0) return { valid: true, errors: [] };
-
-  // 禁止使用的自定义标签（这些标签名看起来像组件名，但会导致转换失败）
-  const forbiddenPatterns = [
-    { regex: /<callout-tip\b/i, name: '<callout-tip>' },
-    { regex: /<callout-warn\b/i, name: '<callout-warn>' },
-    { regex: /<callout-info\b/i, name: '<callout-info>' },
-    { regex: /<callout\b(?!-)/i, name: '<callout>' },
-    { regex: /<step\b(?!-)/i, name: '<step>' },
-    { regex: /<compare\b(?!-)/i, name: '<compare>' },
-    { regex: /<tag-core\b/i, name: '<tag-core>' },
-    { regex: /<flow\b(?!-)/i, name: '<flow>' }
-  ];
+  if (mdFiles.length === 0) return { valid: true, errors: [], fixable: false };
 
   const errors = [];
 
@@ -44,26 +32,180 @@ function validateMdFragments() {
     const content = fs.readFileSync(mdFile, 'utf-8');
     const lines = content.split('\n');
     const basename = path.basename(mdFile);
+    const chapterNum = parseInt(basename.match(/chapter-(\d+)/)?.[1] || '0', 10);
 
-    for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
-      const line = lines[lineIndex];
+    // 1. YAML frontmatter 检查
+    const hasFrontmatter = content.startsWith('---');
+    if (!hasFrontmatter) {
+      errors.push({
+        file: basename,
+        line: 1,
+        type: 'yaml',
+        severity: 'error',
+        message: '缺少 YAML frontmatter（文件开头必须是 ---）',
+        fixable: false
+      });
+    } else {
+      const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+      if (!fmMatch) {
+        errors.push({
+          file: basename,
+          line: 1,
+          type: 'yaml',
+          severity: 'error',
+          message: 'YAML frontmatter 格式错误（缺少闭合的 ---）',
+          fixable: false
+        });
+      } else {
+        const fm = fmMatch[1];
+        if (!fm.includes('type:')) {
+          errors.push({
+            file: basename,
+            line: 2,
+            type: 'yaml',
+            severity: 'error',
+            message: '缺少 type 字段（应为 type: chapter/cover/backpage）',
+            fixable: false
+          });
+        }
+        if (!fm.includes('title:')) {
+          errors.push({
+            file: basename,
+            line: 2,
+            type: 'yaml',
+            severity: 'error',
+            message: '缺少 title 字段',
+            fixable: false
+          });
+        }
+      }
+    }
+
+    // 2. 标题层级检查
+    let lastLevel = 0;
+    let hasChapterHeading = false;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+      if (!headingMatch) continue;
+
+      const level = headingMatch[1].length;
+      const title = headingMatch[2].trim();
+
+      // 跳过 frontmatter
+      if (line.trim() === '---') continue;
+
+      // 章标题检查
+      if (/^第\d+章/.test(title)) {
+        hasChapterHeading = true;
+        if (level !== 2) {
+          errors.push({
+            file: basename,
+            line: i + 1,
+            type: 'heading',
+            severity: 'error',
+            message: `章标题 "${title}" 必须是 ## (h2)，当前是 ${'#'.repeat(level)} (h${level})`,
+            fixable: true
+          });
+        }
+        lastLevel = level;
+        continue;
+      }
+
+      // 节标题检查：X.Y 必须是 h3
+      if (/^\d+\.\d+(?!\.)/.test(title)) {
+        if (level !== 3) {
+          errors.push({
+            file: basename,
+            line: i + 1,
+            type: 'heading',
+            severity: 'error',
+            message: `节标题 "${title}" 必须是 ### (h3)，当前是 ${'#'.repeat(level)} (h${level})`,
+            fixable: true
+          });
+        }
+        lastLevel = level;
+        continue;
+      }
+
+      // 子节标题检查：X.Y.Z 必须是 h4
+      if (/^\d+\.\d+\.\d+/.test(title)) {
+        if (level !== 4) {
+          errors.push({
+            file: basename,
+            line: i + 1,
+            type: 'heading',
+            severity: 'error',
+            message: `子节标题 "${title}" 必须是 #### (h4)，当前是 ${'#'.repeat(level)} (h${level})`,
+            fixable: true
+          });
+        }
+        lastLevel = level;
+        continue;
+      }
+
+      // 标题跳级检查
+      if (lastLevel > 0 && level > lastLevel + 1) {
+        errors.push({
+          file: basename,
+          line: i + 1,
+          type: 'heading',
+          severity: 'warning',
+          message: `标题跳级：从 h${lastLevel} 直接跳到 h${level}（"${title}"），中间缺少 h${lastLevel + 1}`,
+          fixable: false
+        });
+      }
+
+      lastLevel = level;
+    }
+
+    // 章标题缺失检查
+    if (chapterNum > 0 && !hasChapterHeading) {
+      errors.push({
+        file: basename,
+        line: 1,
+        type: 'heading',
+        severity: 'error',
+        message: `缺少章标题（应包含 "第${chapterNum}章 ..."）`,
+        fixable: false
+      });
+    }
+
+    // 3. 非法自定义标签检查
+    const forbiddenPatterns = [
+      { regex: /<callout-tip\b/i, name: '<callout-tip>' },
+      { regex: /<callout-warn\b/i, name: '<callout-warn>' },
+      { regex: /<callout-info\b/i, name: '<callout-info>' },
+      { regex: /<callout\b(?!-)/i, name: '<callout>' },
+      { regex: /<step\b(?!-)/i, name: '<step>' },
+      { regex: /<compare\b(?!-)/i, name: '<compare>' },
+      { regex: /<tag-core\b/i, name: '<tag-core>' },
+      { regex: /<flow\b(?!-)/i, name: '<flow>' }
+    ];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
       for (const pattern of forbiddenPatterns) {
         if (pattern.regex.test(line)) {
           errors.push({
             file: basename,
-            line: lineIndex + 1,
-            tag: pattern.name,
-            content: line.trim().substring(0, 120)
+            line: i + 1,
+            type: 'tag',
+            severity: 'error',
+            message: `非法自定义标签 ${pattern.name}，应使用 <div class="..."> 形式`,
+            fixable: false
           });
         }
       }
     }
   }
 
-  return { valid: errors.length === 0, errors };
+  const fixable = errors.some(e => e.fixable);
+  return { valid: errors.length === 0, errors, fixable };
 }
 
-function writeErrorLog(errors) {
+function writeErrorLog(errors, fixable) {
   const now = new Date();
   const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
   const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '');
@@ -76,27 +218,69 @@ function writeErrorLog(errors) {
     seq++;
   } while (fs.existsSync(logPath) && seq < 1000);
 
+  const headingErrors = errors.filter(e => e.type === 'heading');
+  const tagErrors = errors.filter(e => e.type === 'tag');
+  const yamlErrors = errors.filter(e => e.type === 'yaml');
+
   const lines = [
     `构建验证失败 - ${now.toISOString()}`,
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
     ``,
-    `发现 ${errors.length} 处非法自定义标签：`,
+    `错误统计:`,
+    `   标题层级错误: ${headingErrors.length}`,
+    `   非法标签错误: ${tagErrors.length}`,
+    `   YAML 错误: ${yamlErrors.length}`,
     ``
   ];
 
-  for (const err of errors) {
-    lines.push(`[${err.file}:${err.line}] ${err.tag}`);
-    lines.push(`  → ${err.content}`);
-    lines.push(`  → 修复：将 ${err.tag} 替换为 7.3 节对应的标准 <div class="callout ..."> 模板`);
+  if (headingErrors.length > 0) {
+    lines.push('【标题层级错误】');
+    lines.push('');
+    for (const err of headingErrors) {
+      lines.push(`[${err.file}:${err.line}] ${err.message}`);
+    }
+    lines.push('');
+  }
+
+  if (tagErrors.length > 0) {
+    lines.push('【非法自定义标签】');
+    lines.push('');
+    for (const err of tagErrors) {
+      lines.push(`[${err.file}:${err.line}] ${err.message}`);
+    }
+    lines.push('');
+  }
+
+  if (yamlErrors.length > 0) {
+    lines.push('【YAML frontmatter 错误】');
+    lines.push('');
+    for (const err of yamlErrors) {
+      lines.push(`[${err.file}:${err.line}] ${err.message}`);
+    }
     lines.push('');
   }
 
   lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   lines.push('');
-  lines.push('修复指南：');
-  lines.push('1. 打开上述列出的 MD 文件');
-  lines.push('2. 将非法自定义标签替换为 SKILL.md 7.3 节对应的标准 HTML div 模板');
-  lines.push('3. 例如：<callout-tip> → <div class="callout callout-tip">，闭合标签对应改为 </div>');
+
+  if (fixable) {
+    lines.push('修复指引：');
+    lines.push('1. 自动修复（推荐）：node fix-md.js fragments --write');
+    lines.push('   该命令会自动修复标题层级问题（章→h2，节→h3，子节→h4）');
+    lines.push('');
+    lines.push('2. 手动修复：参考 SKILL.md 第 7.3 节组件模板规范');
+    lines.push('');
+    lines.push('标题层级规范：');
+    lines.push('   ## 第X章 标题      → h2（章标题）');
+    lines.push('   ### X.Y 标题      → h3（节标题）');
+    lines.push('   #### X.Y.Z 标题   → h4（子节标题）');
+  } else {
+    lines.push('修复指南：');
+    lines.push('1. 打开上述列出的 MD 文件');
+    lines.push('2. 将非法自定义标签替换为 SKILL.md 7.3 节对应的标准 HTML div 模板');
+    lines.push('3. 例如：<callout-tip> → <div class="callout callout-tip">，闭合标签对应改为 </div>');
+  }
+
   lines.push('');
 
   fs.writeFileSync(logPath, lines.join('\n'), 'utf-8');
@@ -258,25 +442,39 @@ if (!sourcePath) {
   console.log('\n🔍 [0a] MD 源文件验证门禁...');
   const validation = validateMdFragments();
   if (!validation.valid) {
-    console.error(`\n❌ 验证门禁失败：发现 ${validation.errors.length} 处非法自定义标签`);
-    console.error('   这些标签会导致 HTML 渲染异常，必须先修复才能构建。');
+    const headingErrors = validation.errors.filter(e => e.type === 'heading');
+    const tagErrors = validation.errors.filter(e => e.type === 'tag');
+    const yamlErrors = validation.errors.filter(e => e.type === 'yaml');
+
+    console.error(`\n❌ 验证门禁失败：`);
+    console.error(`   标题层级错误: ${headingErrors.length}`);
+    console.error(`   非法标签错误: ${tagErrors.length}`);
+    console.error(`   YAML 错误: ${yamlErrors.length}`);
     console.error('');
+
+    // 显示前5个错误
     for (const err of validation.errors.slice(0, 5)) {
-      console.error(`   [${err.file}:${err.line}] ${err.tag}`);
-      console.error(`      → ${err.content.substring(0, 80)}`);
+      const icon = err.severity === 'error' ? '❌' : '⚠️';
+      console.error(`   ${icon} [${err.file}:${err.line}] ${err.message}`);
     }
     if (validation.errors.length > 5) {
       console.error(`   ... 还有 ${validation.errors.length - 5} 处错误`);
     }
     console.error('');
-    console.error('   修复指南：将非法标签替换为 7.3 节对应的标准 <div class="callout ..."> 模板');
 
     // 写入错误日志文件
     if (!fs.existsSync(OUTPUT_DIR)) {
       fs.mkdirSync(OUTPUT_DIR, { recursive: true });
     }
-    const logPath = writeErrorLog(validation.errors);
-    console.error(`\n   详细错误日志已保存到: ${path.basename(logPath)}`);
+    const logPath = writeErrorLog(validation.errors, validation.fixable);
+    console.error(`   详细错误日志已保存到: ${path.basename(logPath)}`);
+
+    if (validation.fixable) {
+      console.error('');
+      console.error('💡 检测到可自动修复的标题层级问题');
+      console.error('   请运行: node fix-md.js fragments --write');
+      console.error('   修复后重新执行构建');
+    }
 
     process.exit(1);
   }
