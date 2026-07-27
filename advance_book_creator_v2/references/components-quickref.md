@@ -80,6 +80,37 @@
 </div>
 ```
 
+### 5.1 含表格/列表的复杂步骤
+
+当步骤内需要表格或列表时，**必须使用HTML语法**（禁止混用Markdown表格/列表）：
+
+```html
+<div class="step">
+<div class="step-num">1</div>
+<div class="step-content">
+<h4>配置数据源</h4>
+<p>按以下顺序配置：</p>
+<ul>
+  <li><strong>Kafka连接</strong>：配置broker地址</li>
+  <li><strong>Flink CDC</strong>：配置数据库连接</li>
+</ul>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div class="step-content">
+<h4>参数对照表</h4>
+<table>
+<thead><tr><th>参数</th><th>默认值</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>batch.size</td><td>16384</td><td>批次大小</td></tr>
+<tr><td>linger.ms</td><td>0</td><td>延迟发送</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+```
+
 ---
 
 ## 6. 对比块组件
@@ -172,6 +203,7 @@
 | `<flow>...` | `<div class="flow">...` | 标签无法识别 |
 | `<file-tree>...` | `<div class="file-tree">...` | 标签无法识别 |
 | 自定义类名如 `step-card` | 必须使用上表中的标准类名 | CSS 无对应样式，渲染为纯文本 |
+| HTML组件内使用Markdown语法如 `**加粗**`、`- 列表`、`\|表格\|` | 使用 `<strong>`、`<ul><li>`、`<table>` | 渲染为原始文本，格式不生效 |
 
 ---
 

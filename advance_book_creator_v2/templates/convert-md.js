@@ -628,7 +628,7 @@ function protectDivBlocks(text, blocks) {
 
 function toChineseNum(n) {
   const digits = '零一二三四五六七八九';
-  if (n <= 10) return digits[n];
+  if (n < 10) return digits[n];
   if (n < 20) return '十' + (n % 10 === 0 ? '' : digits[n % 10]);
   if (n < 100) {
     const tens = Math.floor(n / 10);
