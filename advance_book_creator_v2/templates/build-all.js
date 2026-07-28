@@ -84,9 +84,27 @@ function validateMdFragments() {
     // 2. 标题层级检查
     let lastLevel = 0;
     let hasChapterHeading = false;
+    let inFence = false;   // 代码围栏状态（``` 或 ~~~）
+    let inPre = false;     // HTML <pre> 块状态
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
+      const trimmedLine = line.trim();
+
+      // 跟踪代码围栏：围栏内的 # 注释（如 shell 命令注释）不可误判为标题
+      if (/^```/.test(trimmedLine) || /^~~~/.test(trimmedLine)) {
+        inFence = !inFence;
+        continue;
+      }
+      if (inFence) continue;
+
+      // 跟踪 HTML <pre> 块：块内 # 同样不可误判为标题
+      if (/<pre\b/i.test(line)) inPre = true;
+      if (inPre) {
+        if (/<\/pre>/i.test(line)) inPre = false;
+        continue;
+      }
+
       const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
       if (!headingMatch) continue;
 
@@ -113,8 +131,8 @@ function validateMdFragments() {
         continue;
       }
 
-      // 节标题检查：X.Y 必须是 h3
-      if (/^\d+\.\d+(?!\.)/.test(title)) {
+      // 节标题检查：X.Y 必须是 h3（用 (\s|$) 锚定，避免把 X.Y.Z 误判为 X.Y）
+      if (/^\d+\.\d+(\s|$)/.test(title)) {
         if (level !== 3) {
           errors.push({
             file: basename,
@@ -129,8 +147,8 @@ function validateMdFragments() {
         continue;
       }
 
-      // 子节标题检查：X.Y.Z 必须是 h4
-      if (/^\d+\.\d+\.\d+/.test(title)) {
+      // 子节标题检查：X.Y.Z 必须是 h4（用 (\s|$) 锚定）
+      if (/^\d+\.\d+\.\d+(\s|$)/.test(title)) {
         if (level !== 4) {
           errors.push({
             file: basename,
@@ -479,6 +497,24 @@ if (!sourcePath) {
     process.exit(1);
   }
   console.log('✅ MD 源文件验证通过');
+
+  // [0b] 组件结构门禁（check-md.js）：拦截 step/compare 内部混写 Markdown、组件未闭合、callout 缺基类
+  console.log('\n🔍 [0b] 组件结构门禁（check-md.js）...');
+  const checkMdPath = path.join(TEMPLATES_DIR, 'check-md.js');
+  if (fs.existsSync(checkMdPath)) {
+    const checkResult = spawnSync(NODE_EXE, [checkMdPath, FRAGMENTS_DIR], {
+      cwd: TEMPLATES_DIR,
+      stdio: 'inherit'
+    });
+    if (checkResult.status !== 0) {
+      console.error('\n❌ 组件结构门禁失败：存在组件混写或结构错误');
+      console.error('   请参考 research/components-quickref.md 修正对应片段后重新构建');
+      process.exit(1);
+    }
+    console.log('✅ 组件结构检查通过');
+  } else {
+    console.log('⏭️  未找到 check-md.js，跳过组件门禁');
+  }
 
   // 再执行 fragments 预处理
   if (!preprocessFragments()) {

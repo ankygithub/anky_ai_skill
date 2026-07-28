@@ -20,6 +20,55 @@ const path = require('path');
 const FRAGMENTS_DIR = process.argv[2] || './fragments';
 const OUTPUT_JSON = process.argv.includes('--json');
 
+// ===== 组件块解析辅助 =====
+// 识别片段中的 HTML 组件容器（callout/step/compare/flow/file-tree），
+// 返回每个容器的起始行、闭合行、class、类型。
+// 注意：仅匹配“独占一行、以 > 结尾”的组件开标签（如 <div class="step">），
+// 排除自闭合在同一行的 <div class="step-num">1</div> 等，避免误判。
+function findComponentBlocks(lines) {
+  const blocks = [];
+  const compOpen = /^\s*<div\b[^>]*class="[^"]*(callout|step|compare|flow|file-tree)[^"]*"[^>]*>\s*$/;
+  const clsRe = /class="([^"]*)"/;
+
+  for (let i = 0; i < lines.length; i++) {
+    const openLine = lines[i];
+    if (!compOpen.test(openLine)) continue;
+
+    const clsMatch = openLine.match(clsRe);
+    const cls = clsMatch ? clsMatch[1] : '';
+    let type = 'other';
+    if (/callout-(tip|warn|info|violet)/.test(cls)) type = 'callout';
+    else if (/\bstep\b/.test(cls) && !/step-num|step-content/.test(cls)) type = 'step';
+    else if (/\bcompare\b/.test(cls)) type = 'compare';
+    else if (/\bflow\b/.test(cls)) type = 'flow';
+    else if (/\bfile-tree\b/.test(cls)) type = 'file-tree';
+
+    // 找匹配的 </div>（按 <div 开 / </div> 闭 计数）
+    // 关键：<pre>/<code> 代码块内的 <div 字样（如示例代码）不计入深度，避免误判未闭合
+    let depth = 1, j = i + 1, closeLine = -1;
+    let inPre = false, inCode = false;
+    while (j < lines.length) {
+      const l = lines[j];
+      if (/<pre\b/i.test(l)) inPre = true;
+      if (/<code\b/i.test(l)) inCode = true;
+      if (inPre || inCode) {
+        if (/<\/pre>/i.test(l)) inPre = false;
+        if (/<\/code>/i.test(l)) inCode = false;
+        j++;
+        continue;
+      }
+      const opens = (l.match(/<div\b/g) || []).length;
+      const closes = (l.match(/<\/div>/g) || []).length;
+      depth += opens - closes;
+      if (depth <= 0) { closeLine = j; break; }
+      j++;
+    }
+
+    blocks.push({ start: i, close: closeLine, cls, type });
+  }
+  return blocks;
+}
+
 // ===== 检查规则 =====
 
 const RULES = {
@@ -46,8 +95,12 @@ const RULES = {
       if (!fm.includes('type:')) {
         errors.push({ line: 2, message: '缺少 type 字段（应为 type: chapter/cover/backpage）' });
       }
-      if (!fm.includes('title:')) {
-        errors.push({ line: 2, message: '缺少 title 字段' });
+      // 仅 chapter/part 片段强制要求 title；cover/backpage 允许无 title
+      const typeMatch = fm.match(/type:\s*(\w+)/);
+      const typeVal = (typeMatch && typeMatch[1]) || '';
+      const skipTitle = typeVal === 'cover' || typeVal === 'backpage';
+      if (!fm.includes('title:') && !skipTitle) {
+        errors.push({ line: 2, message: '缺少 title 字段（cover/backpage 除外）' });
       }
 
       return errors;
@@ -63,8 +116,21 @@ const RULES = {
       const errors = [];
       const chapterNum = parseInt(file.match(/chapter-(\d+)/)?.[1] || '0', 10);
 
+      let inFence = false, inPre = false, inCode = false;
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
+        const trimmed = line.trim();
+        // 跳过代码围栏：围栏内的 # 注释（如 shell 命令注释）不可误判为标题
+        if (/^```/.test(trimmed) || /^~~~/.test(trimmed)) { inFence = !inFence; continue; }
+        if (inFence) continue;
+        // 跳过 <pre>/<code> 块：块内 # 注释同样不可误判为标题
+        if (/<pre\b/i.test(line)) inPre = true;
+        if (/<code\b/i.test(line)) inCode = true;
+        if (inPre || inCode) {
+          if (/<\/pre>/i.test(line)) inPre = false;
+          if (/<\/code>/i.test(line)) inCode = false;
+          continue;
+        }
         const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
         if (!headingMatch) continue;
 
@@ -121,8 +187,21 @@ const RULES = {
       const errors = [];
       let lastLevel = 0;
 
+      let inFence = false, inPre = false, inCode = false;
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
+        const trimmed = line.trim();
+        // 跳过代码围栏：围栏内的 # 注释不可误判为标题
+        if (/^```/.test(trimmed) || /^~~~/.test(trimmed)) { inFence = !inFence; continue; }
+        if (inFence) continue;
+        // 跳过 <pre>/<code> 块：块内 # 注释同样不可误判为标题
+        if (/<pre\b/i.test(line)) inPre = true;
+        if (/<code\b/i.test(line)) inCode = true;
+        if (inPre || inCode) {
+          if (/<\/pre>/i.test(line)) inPre = false;
+          if (/<\/code>/i.test(line)) inCode = false;
+          continue;
+        }
         const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
         if (!headingMatch) continue;
 
@@ -206,6 +285,70 @@ const RULES = {
 
       return errors;
     }
+  },
+
+  // 6. 组件结构正确性检查（硬门禁）
+  componentStructure: {
+    id: 'CMP001',
+    name: '组件结构/混写检查',
+    severity: 'error',
+    check(file, content, lines) {
+      const errors = [];
+      const mdList = /^\s*\d+\.\s+/;
+      const mdUl = /^\s*[-*]\s+/;
+      const mdTable = /^\s*\|.*\|\s*$/;
+      const mdHead = /^#{1,6}\s/;
+
+      const blocks = findComponentBlocks(lines);
+      for (const b of blocks) {
+        // 6.1 callout 缺基类 class="callout"
+        if (b.type === 'callout' && !/\bcallout\b/.test(b.cls)) {
+          errors.push({
+            line: b.start + 1,
+            message: 'callout 组件缺少基类 class="callout"（应为 <div class="callout callout-tip">）'
+          });
+        }
+
+        // 6.2 组件 div 未闭合
+        if (b.close === -1) {
+          errors.push({
+            line: b.start + 1,
+            message: '组件 div 未闭合（找不到匹配的 </div>）'
+          });
+          continue;
+        }
+
+        // 6.3 step / compare 内部混写 Markdown（这是导致渲染挤压/样式丢失的元凶）
+        //     注意：<pre>/<code> 代码块内的内容是字面量，不可误判为 Markdown
+        if (b.type === 'step' || b.type === 'compare') {
+          let inPre = false, inCode = false;
+          for (let k = b.start + 1; k < b.close; k++) {
+            const lk = lines[k];
+            if (/<pre\b/i.test(lk)) inPre = true;
+            if (/<code\b/i.test(lk)) inCode = true;
+            if (inPre || inCode) {
+              if (/<\/pre>/i.test(lk)) inPre = false;
+              if (/<\/code>/i.test(lk)) inCode = false;
+              continue;
+            }
+            const t = lk.trim();
+            if (t === '' || t.startsWith('<')) continue;
+            let label = 'Markdown 裸文本';
+            if (mdList.test(lk)) label = 'Markdown 有序列表';
+            else if (mdUl.test(lk)) label = 'Markdown 无序列表';
+            else if (mdTable.test(lk)) label = 'Markdown 表格';
+            else if (mdHead.test(lk)) label = 'Markdown 标题';
+            errors.push({
+              line: k + 1,
+              message: `${label}出现在 ${b.type} 组件内部，组件内必须用纯 HTML 语法（step 用 <div class="step-num">+<div class="step-content">；表格用 <table>）`
+            });
+            break; // 每个组件只报一次混写，避免刷屏
+          }
+        }
+      }
+
+      return errors;
+    }
   }
 };
 
@@ -264,19 +407,19 @@ function main() {
 
   if (OUTPUT_JSON) {
     console.log(JSON.stringify({
-      valid: allErrors.length === 0,
+      valid: errorCount === 0,
       errorCount,
       warningCount,
       errors: allErrors
     }, null, 2));
-    process.exit(allErrors.length > 0 ? 1 : 0);
+    process.exit(errorCount > 0 ? 1 : 0);
   }
 
-  // 文本输出
-  if (allErrors.length === 0) {
-    console.log('✅ Markdown 片段检查通过');
+  // 文本输出（仅 error 才判定失败，warning 不阻断构建）
+  if (errorCount === 0) {
+    console.log('✅ Markdown 片段检查通过' + (warningCount > 0 ? `（含 ${warningCount} 条警告，不影响构建）` : ''));
     console.log(`   检查文件: ${mdFiles.length} 个`);
-    console.log(`   错误: 0 | 警告: 0`);
+    console.log(`   错误: 0 | 警告: ${warningCount}`);
     process.exit(0);
   }
 

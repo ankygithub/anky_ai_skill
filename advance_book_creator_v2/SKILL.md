@@ -289,6 +289,26 @@ HTML组件（callout/step/compare）内部**必须使用纯HTML语法**，禁止
 | 链接 | `[文本](url)` | `<a href="url">文本</a>` |
 | 行内代码 | `` `code` `` | `<code>code</code>` |
 
+**⚠️ step 组件最常见的错误（必看）**
+
+❌ 错误：`<div class="step">` 后直接写 Markdown 有序/无序列表——这是导致渲染挤压、样式丢失的第一诱因：
+
+```html
+<div class="step">
+1. **先看覆盖**
+2. **再看 TCO**
+</div>
+```
+
+✅ 正确：必须用 `step-num` + `step-content` 子结构，内部用纯 HTML（完整结构见 7.3）：
+
+```html
+<div class="step">
+<div class="step-num">1</div>
+<div class="step-content"><h4>先看覆盖</h4><p>说明…</p></div>
+</div>
+```
+
 **原因**：HTML组件在转换流程中被整体保护，内部的Markdown语法不会被转换，导致渲染为原始文本。
 
 **兜底机制**：step组件内的Markdown语法（表格、列表等）可被转换脚本兜底处理，但建议仍使用HTML语法保持一致性。
