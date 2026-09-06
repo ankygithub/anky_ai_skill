@@ -1,0 +1,14 @@
+# 测试/验证素材目录（不进版本库）
+/test/
+
+# 本地记忆与自我改进记录（个人上下文，不入库）
+/.trae/
+/.learnings/
+
+# 依赖与构建缓存
+node_modules/
+
+# 系统与编辑器杂项
+.DS_Store
+Thumbs.db
+*.log
