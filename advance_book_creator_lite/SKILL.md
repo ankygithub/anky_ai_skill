@@ -1,8 +1,8 @@
 ***
 
 name: advance\_book\_creator\_lite
-description: "Generate book-level PDF manuals from a topic. Invoke when user asks to write a book, create a PDF manual, or build a complete technical guide. MD-first: Markdown → HTML → PDF with precise bookmarks."
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+description: "Generate book-level PDF manuals from a topic. Invoke when user asks to write a book, create a PDF manual, or build a technical guide. MD-first: Markdown to HTML to PDF with precise bookmarks."
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # advance\_book\_creator\_lite
 
@@ -87,13 +87,25 @@ description: "Generate book-level PDF manuals from a topic. Invoke when user ask
 
 **2. 规划**
 
-- 生成大纲，编辑 `PROJECT.md`，包含：章节大纲表、Agent并行分工方案、进度追踪表
+- 生成大纲，编辑 `PROJECT.md`。lite 的"轻量"仅指组件系统（Markdown 原生化、不易出错），**写书流程不轻量**——PROJECT.md 是按 book-planner 详细度设计的完整蓝图，逐模块填写：
 
-- **大纲中必须标注每章是否需要素材采集**（判断原则：包含"案例"/"数据"/"行业"/"实践"/"事故"→需要采集；纯理论/方法论→无需采集）
+  | 模块                                                | 作用                |
+  | ------------------------------------------------- | ----------------- |
+  | 一、书籍定位（是什么/不是什么/读完后的变化）                           | 全书防漂移             |
+  | 二、读者画像（8 维）                                       | 写作 Agent 校准语气     |
+  | 三、章节大纲（核心内容3-5句/读者收益/类型标签/前置依赖/需要采集/采集方向/信息来源摘要）  | 每章价值 + 依赖 + 采集标注  |
+  | 四、单章 Mini-Plan（核心论点/读完能做什么/必须包含/禁止重复/衔接/风险点/采集提示） | 每章给写作 Agent 的直接指令 |
+  | 五、知识递进路线                                          | 结构防漏              |
+  | 六、图表与组件规划                                         | 视觉元素制度化           |
+  | 七、风险清单                                            | 预案                |
+  | 八、进度追踪                                            | 状态                |
+  | 九、用户确认区                                           | 进入写作的门槛           |
+
+- **采集判断**：按大纲表内的"类型标签 + 自检三问"（案例/实操/练习/对比→采；概念/反思→不采；故事/拓展→看情况），每章标注 `需要采集`
 
 - **编辑** **`fragments/00-cover.md`**：把 frontmatter 中的 `title/subtitle/author/version` 占位文字改为真实信息（封面渲染只读这5个字段，且优先级高于 version.json）
 
-- 与用户确认大纲后进入素材采集
+- 与用户确认（勾选用户确认区）后进入素材采集
 
 **3. 素材采集（替代原调研阶段）**
 
@@ -127,11 +139,18 @@ description: "Generate book-level PDF manuals from a topic. Invoke when user ask
 
 **4. 写作**
 
-> **【写作前必做】** 每个写作Agent在开始写作前，**必须先完成以下三步**：
+> **【写作前必做】** 每个写作Agent在开始写作前，**必须先完成以下四步**：
 >
 > **【编辑纪律】** 对**已存在文件**的多处修改必须**逐处串行执行**（改一处确认一处）——
 > 并行提交同文件多处编辑会基于旧快照互相覆盖、静默丢内容（两次写作实测事故）。
 > 不同文件之间的编辑可以并行。
+>
+> **第零步：读取本组章节指令（PROJECT.md）**
+>
+> - 打开 `PROJECT.md`，读取"书籍定位""读者画像"（校准语气），
+>   以及**本组负责章节的大纲行 + 单章 Mini-Plan**（核心论点/读完能做什么/必须包含/禁止重复/衔接/风险点/采集提示）
+>
+> - 严格按 Mini-Plan 的"必须包含 / 禁止重复"执行，章节边界与承接以大纲"前置依赖"为准
 >
 > **第一步：读取组件规范**
 >
