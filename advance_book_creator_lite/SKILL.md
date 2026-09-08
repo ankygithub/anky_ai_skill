@@ -1,8 +1,7 @@
-***
-
-name: advance\_book\_creator\_lite
+---
+name: advance_book_creator_lite
 description: "Generate book-level PDF manuals from a topic. Invoke when user asks to write a book, create a PDF manual, or build a technical guide. MD-first: Markdown to HTML to PDF with precise bookmarks."
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---
 
 # advance\_book\_creator\_lite
 
@@ -34,7 +33,7 @@ description: "Generate book-level PDF manuals from a topic. Invoke when user ask
 ├── styles.css              # 共享CSS（7套主题，默认锐利审稿print-proof；组件样式唯一来源，从templates/复制）
 ├── build.js                # HTML合并脚本（从templates/复制）
 ├── build-pdf.js            # PDF渲染+精确书签（从templates/复制）
-├── build-md.js             # HTML → Markdown导出（从templates/复制）
+├── build-md.js             # Markdown导出（源头聚合式，从templates/复制）
 ├── build-reader.js         # 多文件阅读器（从templates/复制）
 ├── build-all.js            # 统一构建入口 + 产物门禁（从templates/复制）
 ├── convert-md.js           # Markdown → HTML片段（★组件原生化渲染，从templates/复制）
@@ -477,7 +476,7 @@ node build-all.js --products all
 | `build-reader.js`    | 多文件阅读器构建                                             |
 | `build-pdf.js`       | PDF生成（两遍渲染精确书签）                                      |
 | `build-epub-pro.js`  | EPUB精排生成器（含代码高亮、图片打包）                                |
-| `build-md.js`        | Markdown导出                                           |
+| `build-md.js`        | Markdown导出（源头聚合，含围栏降级/SVG降级/产物自检）    |
 | `check-md.js`        | ★ MD片段门禁检查（标题层级、YAML、禁用HTML标签）                       |
 | `fix-md.js`          | ★ MD片段自动修复（标题层级规范化）                                  |
 | `convert-md.js`      | ★ MD→HTML片段（组件Markdown原生化渲染）                         |

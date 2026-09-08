@@ -141,6 +141,30 @@ if (fs.existsSync(singleHtml)) {
   assert(sh.includes('step-card'), '单文件含 step-card 样式');
 }
 
+// ===== 5b. build-md.js Markdown 源头聚合 =====
+console.log('🔍 [5b] build-md.js Markdown 聚合');
+r = spawnSync(NODE_EXE, [path.join(WORK, 'build-md.js')], { cwd: WORK, encoding: 'utf-8' });
+assert(r.status === 0, 'build-md.js 退出码 0', r.stdout + r.stderr);
+const mdOutPath = path.join(WORK, 'output', '回归测试手册-v1.0.0.md');
+assert(fs.existsSync(mdOutPath), 'Markdown 产物生成');
+if (fs.existsSync(mdOutPath)) {
+  const md = fs.readFileSync(mdOutPath, 'utf-8');
+  assert(!md.includes('选择主题') && !md.includes('内容宽度'), 'MD 无导航/设置面板残渣');
+  assert(!/^:::/m.test(md), 'MD 无残留围栏标识符（降级完成）');
+  assert((md.match(/^## 目录$/gm) || []).length === 1, 'MD 目录唯一');
+  // div 数量与源一致（聚合不增不减；源中的行内代码 <div> 示例属合法保留）
+  let srcDiv = 0;
+  for (const f of fs.readdirSync(path.join(WORK, 'fragments')).filter(f => f.endsWith('.md'))) {
+    srcDiv += (fs.readFileSync(path.join(WORK, 'fragments', f), 'utf-8').match(/<div/g) || []).length;
+  }
+  assert((md.match(/<div/g) || []).length === srcDiv, 'MD 的 div 数量与源一致', '产物 ' + (md.match(/<div/g) || []).length + ' vs 源 ' + srcDiv);
+  // SVG 只允许出现在源码框内（复用被测仓库的 fence-scan 判定）
+  const { scanFenceMask: maskOf } = require(path.join(WORK, 'lib', 'fence-scan.js'));
+  const mdLines = md.split('\n');
+  const mdMask = maskOf(mdLines);
+  assert(!mdLines.some((l, i) => !mdMask[i] && /<svg[\s>]/i.test(l)), 'MD 无裸 SVG（在源码框内）');
+}
+
 // ===== 6. v3 设计系统回归（主题/表头/字体/锚点提取） =====
 console.log('🔍 [6] v3 设计系统');
 const buildSrc = fs.readFileSync(path.join(TEMPLATES, 'build.js'), 'utf-8');

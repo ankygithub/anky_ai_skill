@@ -265,7 +265,7 @@ reader/
      ├─ [1] build.js: HTML片段 → 单文件HTML
      ├─ [2] build-reader.js: HTML片段 → 多文件阅读器
      ├─ [3] build-pdf.js: HTML → PDF（两遍渲染精确书签）
-     ├─ [4] build-md.js: HTML → Markdown
+     ├─ [4] build-md.js: Markdown 源头聚合导出
      └─ [5] 门禁检查
 
 阶段6: 版本更新
@@ -486,7 +486,7 @@ rebuild.js 执行流程：
    ├─ [1] build.js:       合并 *.html → 单文件 HTML
    ├─ [2] build-reader.js: 生成多文件阅读器
    ├─ [3] build-pdf.js:   Playwright 渲染 PDF + 模拟分页书签
-   ├─ [4] build-md.js:    HTML 反导出为 Markdown
+   ├─ [4] build-md.js:    Markdown 源头聚合导出
    └─ [5] 门禁检查：确认产物完整性
 
 4. 输出结果摘要

@@ -27,7 +27,7 @@
 | `build.js`          | 合并 HTML 片段 → 单文件 HTML（6 套主题 + 导航 + 目录面板），生成 bookmarks.json（含内容指纹）                                       |
 | `build-pdf.js`      | PDF 生成：Playwright 测量 + 模拟分页 + pdf-lib 书签。**优先读取 bookmarks.json 缓存，指纹不一致自动重算**                           |
 | `build-reader.js`   | 多文件阅读器。**组件样式从 styles.css 按锚点提取**（见维护须知 #2）                                                             |
-| `build-md.js`       | HTML 反向导出 Markdown                                                                                      |
+| `build-md.js`       | Markdown 导出（源头聚合：组件保真/围栏降级/SVG转文字说明+源码框）                     |
 | `build-all.js`      | 统一构建入口：门禁（\[0a]\[0b]）→ 转换 → 按序产出 → 产物完整性检查                                                              |
 | `styles.css`        | 全部样式。**组件样式的唯一来源**（高亮块/对比块/步骤卡片/图片组件四段，build-reader 构建期提取）                                              |
 | `epub-styles.css`   | EPUB 专用样式，**独立维护**（阅读设备兼容差异大，不参与组件样式单一来源）                                                               |
