@@ -10,6 +10,7 @@
  *  5. build.js：单文件 HTML 生成 + bookmarks.json 指纹字段存在
  *  6. v3 设计系统：7套主题/默认print-proof/表头token/无网络字体/
  *     reader 锚点提取四段齐全（改 styles.css 注释弄断提取的事故回归）
+ *  7. EPUB：零依赖打包（archiver 移除）/封面风格注册表与关键词识别/icon 库文件齐备
  *
  * 用法：node tests/run-tests.js
  * （不依赖 playwright，PDF/阅读器不在本测试范围）
@@ -225,6 +226,55 @@ assert(epubSrc.includes('background: #1F2126') && epubSrc.includes('color: #FFFF
 assert(epubSrc.includes('border-bottom: 2px solid #B42318'), 'EPUB 表头朱砂规则线');
 assert(epubJs.includes('th{background:#1F2126'), 'EPUB fallback 内联样式同步墨底表头');
 assert(!epubSrc.includes('background: #f5f5f5;\n  font-weight: 600;\n  color: #444;'), 'EPUB 旧淡灰表头已移除');
+
+// ===== 7. EPUB 打包与封面风格 =====
+console.log('🔍 [7] EPUB 打包与封面风格');
+const coverSelect = require(path.join(TEMPLATES, 'lib', 'cover-select.js'));
+
+// 7a. 零依赖打包：移除 archiver 隐性依赖（依赖目录树里恰好有 node_modules/archiver 才能跑，干净环境必挂的事故回归）
+assert(!/require\('archiver'\)/.test(epubJs), 'EPUB 打包不再依赖 archiver');
+assert(epubJs.includes('deflateRawSync'), 'EPUB 打包使用内置 zlib deflate');
+assert(epubJs.includes("name: 'mimetype'"), 'EPUB mimetype 首条目写入');
+
+// 7a-2. 内置迷你高亮兜底（highlight.js 缺席时全书写作语言仍有着色）+ 标题对齐压制阅读器默认样式
+assert(epubJs.includes('miniHighlightCode') && epubJs.includes('MINI_HL'), 'EPUB 内置迷你高亮器存在');
+assert(/python[\s\S]*shell[\s\S]*json[\s\S]*javascript/.test(epubJs.slice(epubJs.indexOf('MINI_HL'), epubJs.indexOf('MINI_LANG_MAP'))), '迷你高亮覆盖 python/shell/json/js');
+assert(epubSrc.includes('text-align: left !important'), 'EPUB h3-h6 左对齐带 !important');
+assert(epubJs.includes('.step-phase{display:inline-block'), 'EPUB fallback 含 step 徽标非 flex 样式');
+// 代码缩进保护：pre/pre code 显式 pre-wrap（阅读器默认样式不保证，缺失时缩进塌缩错位）
+assert(epubSrc.includes('white-space: pre-wrap !important'), 'EPUB pre 显式 pre-wrap 防缩进塌缩');
+assert(epubJs.includes('white-space:pre-wrap!important'), 'EPUB fallback 同步 pre-wrap');
+assert(!epubSrc.includes('.hljs-comment { color: #6a737d; font-style: italic; }'), 'EPUB 注释去斜体（中文斜体回退衬线导致混排错乱）');
+// 强制塌缩型阅读器（Reeden 等）CSS 压不住，缩进改由 NBSP 承载
+assert(epubJs.includes('protectCodeWhitespace') && epubJs.includes('\\u00A0'), 'EPUB 代码缩进 NBSP 保护');
+
+// 7a-3. highlight.js 内嵌精简版随技能分发（EPUB 高亮零安装、跨机器一致）
+assert(fs.existsSync(path.join(TEMPLATES, 'lib', 'hljs-bundle.js')), 'hljs-bundle.js 存在');
+assert(fs.existsSync(path.join(TEMPLATES, 'lib', 'hljs', 'core.js')), 'hljs core.js 存在');
+assert(fs.existsSync(path.join(TEMPLATES, 'lib', 'hljs', 'languages', 'python.js')), 'hljs 语言包存在（python）');
+assert(epubJs.includes("path.join(__dirname, 'lib', 'hljs-bundle.js')"), 'build-epub-pro 优先加载内嵌 hljs');
+
+// 7b. 风格注册表：6 风格齐全
+const styleNames = Object.keys(coverSelect.STYLES);
+assert(styleNames.length === 6, '封面风格 = 6', '实际: ' + styleNames.join('/'));
+
+// 7c. 关键词自动识别（真实书名回归：Python 书 → 科技）
+assert(coverSelect.detectStyle('Python 生态全景：一次看懂 Python 世界') === '科技', 'Python 书名自动识别为科技');
+assert(coverSelect.detectStyle('中国哲学史') === '复古', '哲学书名自动识别为复古');
+assert(coverSelect.detectStyle('儿童科普启蒙读物') === '清新', '科普书名自动识别为清新');
+assert(coverSelect.detectStyle('无关键词书名') === null, '无命中返回 null（走兜底）');
+
+// 7d. 风格库文件存在（icon/ 素材与注册表一致，防改名断链）
+const iconDir = path.join(ROOT, 'icon');
+for (const [name, cfg] of Object.entries(coverSelect.STYLES)) {
+  assert(fs.existsSync(path.join(iconDir, cfg.portrait)), `icon 库含 ${cfg.portrait}`);
+  assert(fs.existsSync(path.join(iconDir, cfg.square)), `icon 库含 ${cfg.square}`);
+}
+
+// 7e. init 部署形态：init-project.js 需复制风格库与 cover-select
+const initSrc = fs.readFileSync(path.join(ROOT, 'scripts', 'init-project.js'), 'utf-8');
+assert(initSrc.includes("path.join(SKILL_DIR, 'icon')"), 'init 复制 icon 风格库');
+assert(initSrc.includes('cover-select.js'), 'init 复制 cover-select.js');
 
 // ===== 清理 =====
 fs.rmSync(WORK, { recursive: true, force: true });

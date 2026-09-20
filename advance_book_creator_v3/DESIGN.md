@@ -544,6 +544,22 @@ const CUSTOM_BOOKMARKS = [
 ];
 ```
 
+### 6.4 EPUB 产物与封面风格
+
+EPUB 由 `build-epub-pro.js` 生成（build-all 的第 5 个产物，`--products epub` 可单独构建）：
+
+**打包**：零依赖纯 Node ZIP 写入器（内置 zlib deflate + 手写 ZIP 结构）。EPUB OCF 规范要求 `mimetype` 为 ZIP 第一条目且不压缩。旧实现依赖 archiver v8 的 ESM 导出（`new archiver.ZipArchive`），该依赖是隐性的：只有当运行目录向上能找到装了 archiver 的 node_modules 时才能工作（Node 目录解析机制），干净环境必报 `Cannot find module 'archiver'`，故重写为零依赖实现。内容图片统一重命名 `img-NNN.ext`（规避中文文件名在部分阅读器的兼容问题）并跨片段去重。
+
+**代码高亮**：三级降级——① 技能内嵌精简版 `lib/hljs-bundle.js`（highlight.js v11 core + 19 种常用语言随技能分发，`init-project.js` 复制到项目，零安装、跨机器输出一致）；② 环境中已安装的 highlight.js（语言更全时兜底）；③ 内置迷你高亮器（正则近似，最终兜底）。三级输出统一的 `hljs-*` 类名，颜色统一由 `epub-styles.css` 提供。
+
+**封面管线**（`lib/cover-select.js` 与 build.js/build-reader.js 共用选择逻辑）：
+
+1. 风格解析：显式文件 `cover-images/cover.*`/`icon.*` > CLI `--cover-style` > `version.json.coverStyle` > 书名关键词自动识别 > 默认素雅
+2. 图文排版：Playwright 将「风格背景图 + 书名/副标题/作者/版本」渲染为 1600×2400 PNG（`cover-images/generated-cover.png`），排版参数按风格内置在 `COVER_PRESETS`
+3. 降级链：Playwright 缺失/启动失败 → 原图封面 → 都没有 → 纯排版文字封面（00-cover 内容）
+
+**方形图标**：`build.js` 复制到 `output/`（favicon + 导航栏 logo），`build-reader.js` 复制到 `reader/shared/`（框架页/内容页 favicon + 导航 logo）。风格库缺失时全部静默跳过，不影响构建。
+
 ---
 
 ## 七、性能考虑

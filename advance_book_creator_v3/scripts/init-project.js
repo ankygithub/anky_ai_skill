@@ -52,8 +52,34 @@ for (const f of copyFromTemplates) {
 }
 // 共享围栏状态机（convert-md/check-md/build-all 的公共依赖，必须同目录结构）
 fs.copyFileSync(path.join(TEMPLATES_DIR, 'lib', 'fence-scan.js'), path.join(PROJECT_DIR, 'lib', 'fence-scan.js'));
+// 封面/图标风格解析（build-epub-pro/build/build-reader 的公共依赖）
+fs.copyFileSync(path.join(TEMPLATES_DIR, 'lib', 'cover-select.js'), path.join(PROJECT_DIR, 'lib', 'cover-select.js'));
+// highlight.js 内嵌精简版（EPUB 代码高亮零安装）
+const hljsLibSrc = path.join(TEMPLATES_DIR, 'lib', 'hljs');
+const hljsLibDst = path.join(PROJECT_DIR, 'lib', 'hljs');
+fs.mkdirSync(path.join(hljsLibDst, 'languages'), { recursive: true });
+fs.copyFileSync(path.join(TEMPLATES_DIR, 'lib', 'hljs-bundle.js'), path.join(PROJECT_DIR, 'lib', 'hljs-bundle.js'));
+fs.copyFileSync(path.join(hljsLibSrc, 'core.js'), path.join(hljsLibDst, 'core.js'));
+for (const f of fs.readdirSync(path.join(hljsLibSrc, 'languages'))) {
+  fs.copyFileSync(path.join(hljsLibSrc, 'languages', f), path.join(hljsLibDst, 'languages', f));
+}
 // 辅助脚本
 fs.copyFileSync(path.join(__dirname, 'rebuild.js'), path.join(PROJECT_DIR, 'scripts', 'rebuild.js'));
+
+// ===== 封面/图标风格库（EPUB 封面与 HTML/reader 图标共用，构建时按风格选取） =====
+const ICON_SOURCE = path.join(SKILL_DIR, 'icon');
+if (fs.existsSync(ICON_SOURCE)) {
+  const iconLibDir = path.join(PROJECT_DIR, 'cover-images', 'library');
+  fs.mkdirSync(iconLibDir, { recursive: true });
+  let iconCount = 0;
+  for (const f of fs.readdirSync(ICON_SOURCE)) {
+    if (/\.(jpg|jpeg|png|webp)$/i.test(f)) {
+      fs.copyFileSync(path.join(ICON_SOURCE, f), path.join(iconLibDir, f));
+      iconCount++;
+    }
+  }
+  console.log(`🖼️  封面风格库: 已复制 ${iconCount} 张到 cover-images/library/`);
+}
 
 // ===== 复制参考资料到 research/（不参与构建，供写作时阅读） =====
 const refs = [
@@ -79,13 +105,15 @@ if (fs.existsSync(path.join(SKILL_DIR, 'references', 'md-templates', '99-backpag
 }
 
 // ===== version.json =====
+// coverStyle：显式指定封面风格（科技/书券/复古/素雅/日系/清新），留空则按书名关键词自动识别
 fs.writeFileSync(path.join(PROJECT_DIR, 'version.json'), JSON.stringify({
   version: '1.0.0',
   build: 0,
   lastUpdate: TODAY,
   title: TITLE,
   subtitle: '',
-  author: ''
+  author: '',
+  coverStyle: ''
 }, null, 2), 'utf-8');
 
 // ===== CHANGELOG.md =====
@@ -233,6 +261,7 @@ fs.writeFileSync(path.join(PROJECT_DIR, 'PROJECT.md'), `# ${TITLE} — 项目计
 - [ ] 目标读者是否准确
 - [ ] 章节大纲是否符合预期
 - [ ] 是否需要增加或删除章节
+- [ ] EPUB 封面风格：________（AI 推荐风格 + 理由填写在此；可选：科技/素雅/复古/书券/清新/日系。如需自定义封面，提供图片放到 cover-images/cover.jpg，图标放 icon.jpg）
 - [ ] 是否确认进入写作阶段
 `, 'utf-8');
 
@@ -256,11 +285,15 @@ console.log(`
    1. 编辑 fragments/00-cover.md —— 把 frontmatter 的 title/subtitle/author 改为真实信息（封面只读这5个字段）
    2. 编辑 PROJECT.md 填写大纲（标注哪些章节需要素材采集）
    3. 在 fragments/ 下写 Markdown 片段（组件语法见 research/components-quickref.md）
-   4. 构建: node build-all.js --products all
+   4. 构建: node build-all.js --products all（含 EPUB；PDF/EPUB 封面排版需 Playwright）
 
    快捷命令:
    node scripts/rebuild.js              # MD 就绪后重建全部产物
    node scripts/rebuild.js html,pdf     # 只构建 HTML + PDF
    node scripts/rebuild.js all --clean  # 强制清理后全量重建
+
+   封面风格（--cover-style 或 version.json.coverStyle，留空自动识别）:
+   科技（编程技术） / 素雅（学术教材，默认） / 复古（历史国学）
+   书券（典藏文集） / 清新（科普教育） / 日系（小说散文）
 `);
 process.exit(depsOk ? 0 : 0);

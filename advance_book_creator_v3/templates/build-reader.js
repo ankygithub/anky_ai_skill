@@ -24,6 +24,30 @@ try {
 }
 const { title, subtitle, author, version } = versionData;
 
+// ===== CLI参数（build-all 透传 --cover-style，保证图标/封面风格一致） =====
+const coverStyle = (() => {
+  const argv = process.argv.slice(2);
+  const i = argv.indexOf('--cover-style');
+  return i !== -1 && argv[i + 1] ? argv[i + 1] : '';
+})();
+
+// ===== 方形图标解析（显式 icon.* 优先，其次按风格取 cover-images/library） =====
+let bookIconPath = '';
+try {
+  const { resolveCover } = require(path.join(__dirname, 'lib', 'cover-select.js'));
+  const cover = resolveCover({
+    projectDir: __dirname,
+    title, subtitle,
+    styleHint: coverStyle,
+    coverStyle: versionData.coverStyle,
+  });
+  if (cover.squarePath) bookIconPath = cover.squarePath;
+} catch (e) {
+  // 老项目无 lib/cover-select.js：跳过图标，不影响构建
+}
+const bookIconExt = bookIconPath ? path.extname(bookIconPath).toLowerCase() : '';
+const bookIconMime = bookIconExt === '.png' ? 'image/png' : 'image/jpeg';
+
 // ===== 读取CSS =====
 const stylesContent = fs.readFileSync(STYLES_PATH, 'utf-8');
 
@@ -160,6 +184,11 @@ if (tocData.length === 0) {
 if (!fs.existsSync(READER_DIR)) fs.mkdirSync(READER_DIR, { recursive: true });
 fs.mkdirSync(path.join(READER_DIR, 'shared'), { recursive: true });
 fs.mkdirSync(path.join(READER_DIR, 'content'), { recursive: true });
+
+// ===== 复制方形图标到 shared/（框架页与内容页 favicon 共用） =====
+if (bookIconPath && fs.existsSync(bookIconPath)) {
+  fs.copyFileSync(bookIconPath, path.join(READER_DIR, 'shared', `book-icon${bookIconExt}`));
+}
 
 // ===== 生成 shared/theme.css =====
 fs.writeFileSync(path.join(READER_DIR, 'shared', 'theme.css'), stylesContent);
@@ -645,7 +674,7 @@ for (let i = 0; i < pageList.length; i++) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title}</title>
+  <title>${title}</title>${bookIconPath ? `\n  <link rel="icon" type="${bookIconMime}" href="../shared/book-icon${bookIconExt}">` : ''}
   <!-- 字体走本地原生栈（theme.css/content.css 内声明），无网络字体 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
   <link rel="stylesheet" href="../shared/theme.css">
@@ -784,12 +813,16 @@ const themeGrid = themes.map(t =>
       </div>`
 ).join('\n      ');
 
+const navLogoHtml = bookIconPath
+  ? `<img src="shared/book-icon${bookIconExt}" alt="" style="width:24px;height:24px;border-radius:7px;object-fit:cover;vertical-align:-6px;margin-right:10px;">`
+  : '';
+
 const indexHtml = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title} v${version}</title>
+  <title>${title} v${version}</title>${bookIconPath ? `\n  <link rel="icon" type="${bookIconMime}" href="shared/book-icon${bookIconExt}">` : ''}
   <!-- 字体走本地原生栈，无网络字体、无 FOUT -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
   <link rel="stylesheet" href="shared/theme.css">
@@ -955,7 +988,7 @@ const indexHtml = `<!DOCTYPE html>
 </head>
 <body>
   <nav class="nav-bar">
-    <span class="nav-title">${title}</span>
+    <span class="nav-title">${navLogoHtml}${title}</span>
     <div class="nav-btns">
       <button onclick="toggleThemePanel()">主题</button>
       <button onclick="toggleSettingsPanel()">显示</button>

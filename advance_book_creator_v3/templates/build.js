@@ -11,10 +11,12 @@ const path = require('path');
 const args = process.argv.slice(2);
 let sourcePath = null;
 let sourceType = null;
+let coverStyle = '';
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--source' && args[i + 1]) sourcePath = args[i + 1];
   if (args[i] === '--type' && args[i + 1]) sourceType = args[i + 1];
+  if (args[i] === '--cover-style' && args[i + 1]) coverStyle = args[i + 1];
 }
 
 // ===== 路径配置 =====
@@ -62,6 +64,21 @@ try {
 }
 
 const { title, subtitle, author, version } = versionData;
+
+// ===== 方形图标解析（显式 icon.* 优先，其次按风格取 cover-images/library） =====
+let bookIconPath = '';
+try {
+  const { resolveCover } = require(path.join(__dirname, 'lib', 'cover-select.js'));
+  const cover = resolveCover({
+    projectDir: __dirname,
+    title, subtitle,
+    styleHint: coverStyle,
+    coverStyle: versionData.coverStyle,
+  });
+  if (cover.squarePath) bookIconPath = cover.squarePath;
+} catch (e) {
+  // 老项目无 lib/cover-select.js：跳过图标，不影响构建
+}
 
 // ===== 读取CSS =====
 let stylesContent;
@@ -149,9 +166,13 @@ if (tocData.length === 0) {
 }
 
 // ===== 构建导航栏 =====
+const bookIconExt = bookIconPath ? path.extname(bookIconPath).toLowerCase() : '';
+const navLogoHtml = bookIconPath
+  ? `<img src="book-icon${bookIconExt}" alt="" style="width:24px;height:24px;border-radius:7px;object-fit:cover;vertical-align:-6px;margin-right:10px;">`
+  : '';
 const navBar = `
 <nav class="nav-bar">
-  <span class="nav-title">${title}</span>
+  <span class="nav-title">${navLogoHtml}${title}</span>
   <div class="nav-btns">
     <button onclick="toggleThemePanel()">主题</button>
     <button onclick="toggleSettingsPanel()">显示</button>
@@ -336,11 +357,19 @@ const interactionScript = `
 `;
 
 // ===== 组装最终HTML =====
+// 图标资源与 HTML 同级输出（favicon 引用相对路径，随 HTML 一起分发）
+let faviconHtml = '';
+if (bookIconPath && fs.existsSync(bookIconPath)) {
+  fs.copyFileSync(bookIconPath, path.join(OUTPUT_DIR, `book-icon${bookIconExt}`));
+  const mime = bookIconExt === '.png' ? 'image/png' : 'image/jpeg';
+  faviconHtml = `\n  <link rel="icon" type="${mime}" href="book-icon${bookIconExt}">`;
+}
+
 const html = `<!DOCTYPE html>
 <html lang="zh-CN" data-theme="print-proof">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">${faviconHtml}
   <title>${title} v${version}</title>
   <!-- 字体走本地原生栈（Segoe UI/微软雅黑 UI/Consolas），无网络字体、无 FOUT -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">

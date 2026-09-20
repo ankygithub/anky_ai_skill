@@ -315,25 +315,28 @@ function writeErrorLog(errors, fixable) {
 const args = process.argv.slice(2);
 let sourcePath = null;
 let sourceType = null;
-let products = ['html', 'reader', 'pdf', 'md'];
+let products = ['html', 'reader', 'pdf', 'md', 'epub'];
 let noGate = false;
 let versionBump = null;
+let coverStyle = '';
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--source' && args[i + 1]) sourcePath = args[i + 1];
   if (args[i] === '--type' && args[i + 1]) sourceType = args[i + 1];
   if (args[i] === '--products' && args[i + 1]) {
     const p = args[i + 1];
-    products = p === 'all' ? ['html', 'reader', 'pdf', 'md'] : p.split(',').map(s => s.trim());
+    products = p === 'all' ? ['html', 'reader', 'pdf', 'md', 'epub'] : p.split(',').map(s => s.trim());
   }
   if (args[i] === '--no-gate') noGate = true;
   if (args[i] === '--version' && args[i + 1]) versionBump = args[i + 1];
+  if (args[i] === '--cover-style' && args[i + 1]) coverStyle = args[i + 1];
 }
 
 console.log('🔨 lite 构建系统 (MD-first)');
 console.log(`   产物: ${products.join(', ')}`);
 if (sourcePath) console.log(`   数据源: ${sourcePath} (${sourceType || 'auto'})`);
 if (versionBump) console.log(`   版本更新: ${versionBump}`);
+if (coverStyle) console.log(`   封面风格: ${coverStyle}`);
 console.log('');
 
 // ===== 版本更新 =====
@@ -418,10 +421,15 @@ function preprocessFragments() {
 }
 
 // ===== 构建步骤 =====
+// 各构建器共享 lib/cover-select.js 风格解析；--cover-style 透传保证图标/封面风格一致
+function coverStyleArgs() {
+  return coverStyle ? ['--cover-style', coverStyle] : [];
+}
+
 const buildSteps = {
   html: () => {
-    console.log('\n📄 [1/4] 构建单文件HTML...');
-    const buildArgs = ['build.js'];
+    console.log('\n📄 [1/5] 构建单文件HTML...');
+    const buildArgs = ['build.js', ...coverStyleArgs()];
     if (sourcePath) {
       buildArgs.push('--source', sourcePath);
       if (sourceType) buildArgs.push('--type', sourceType);
@@ -433,15 +441,15 @@ const buildSteps = {
     return result.status === 0;
   },
   reader: () => {
-    console.log('\n📖 [2/4] 构建多文件阅读器...');
-    const result = spawnSync(NODE_EXE, ['build-reader.js'], {
+    console.log('\n📖 [2/5] 构建多文件阅读器...');
+    const result = spawnSync(NODE_EXE, ['build-reader.js', ...coverStyleArgs()], {
       cwd: TEMPLATES_DIR,
       stdio: 'inherit'
     });
     return result.status === 0;
   },
   pdf: () => {
-    console.log('\n📕 [3/4] 构建PDF（精确书签）...');
+    console.log('\n📕 [3/5] 构建PDF（精确书签）...');
     const result = spawnSync(NODE_EXE, ['build-pdf.js'], {
       cwd: TEMPLATES_DIR,
       stdio: 'inherit'
@@ -449,8 +457,16 @@ const buildSteps = {
     return result.status === 0;
   },
   md: () => {
-    console.log('\n📝 [4/4] 构建Markdown...');
+    console.log('\n📝 [4/5] 构建Markdown...');
     const result = spawnSync(NODE_EXE, ['build-md.js'], {
+      cwd: TEMPLATES_DIR,
+      stdio: 'inherit'
+    });
+    return result.status === 0;
+  },
+  epub: () => {
+    console.log('\n📚 [5/5] 构建EPUB电子书...');
+    const result = spawnSync(NODE_EXE, ['build-epub-pro.js', ...coverStyleArgs()], {
       cwd: TEMPLATES_DIR,
       stdio: 'inherit'
     });
@@ -554,7 +570,8 @@ if (!noGate) {
     html: path.join(OUTPUT_DIR, `${title}-v${version}.html`),
     reader: path.join(OUTPUT_DIR, 'reader', 'index.html'),
     pdf: path.join(OUTPUT_DIR, `${title}-v${version}.pdf`),
-    md: path.join(OUTPUT_DIR, `${title}-v${version}.md`)
+    md: path.join(OUTPUT_DIR, `${title}-v${version}.md`),
+    epub: path.join(OUTPUT_DIR, `${title}-v${version}.epub`)
   };
 
   const missing = products.filter(p => {
@@ -582,7 +599,8 @@ const productLabels = {
   html: 'HTML单文件',
   reader: 'HTML多文件阅读器',
   pdf: 'PDF（带精确书签）',
-  md: 'Markdown'
+  md: 'Markdown',
+  epub: 'EPUB电子书'
 };
 
 for (const product of products) {
@@ -590,7 +608,8 @@ for (const product of products) {
     html: path.join(OUTPUT_DIR, `${title}-v${version}.html`),
     reader: path.join(OUTPUT_DIR, 'reader', 'index.html'),
     pdf: path.join(OUTPUT_DIR, `${title}-v${version}.pdf`),
-    md: path.join(OUTPUT_DIR, `${title}-v${version}.md`)
+    md: path.join(OUTPUT_DIR, `${title}-v${version}.md`),
+    epub: path.join(OUTPUT_DIR, `${title}-v${version}.epub`)
   }[product];
 
   if (fs.existsSync(filePath)) {

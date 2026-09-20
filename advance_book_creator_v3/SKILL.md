@@ -1,13 +1,13 @@
 ---
-name: advance_book_creatorV3
+name: adv_book_creatorV3.1
 description: "Generate book-level PDF manuals from a topic. Invoke when user asks to write a book, create a PDF manual, or build a technical guide. MD-first: Markdown to HTML to PDF with precise bookmarks."
 ---
 
-# advance\_book\_creator\_lite
+# adv_book_creatorV3.1
 
 深度调研一个主题，生成书籍级PDF手册。**MD-first架构**：Markdown片段写作，自动转换为HTML片段，生成所有产物。
 
-## lite 版组件改进（相比 v2.2）
+## V3 版组件改进（相比 v2.2）
 
 | 特性     | v2.2                                 | lite                                         |
 | ------ | ------------------------------------ | -------------------------------------------- |
@@ -19,7 +19,9 @@ description: "Generate book-level PDF manuals from a topic. Invoke when user ask
 
 - Node.js >= 16
 
-- Playwright（仅 PDF 产物需要）：`npm install -g playwright pdf-lib && npx playwright install chromium`
+- Playwright（PDF 产物与 EPUB 图文封面排版需要）：`npm install -g playwright pdf-lib && npx playwright install chromium`
+
+- highlight.js：**无需安装**——EPUB 高亮使用技能内置精简版 `templates/lib/hljs-bundle.js`（19 种常用语言，随 init 复制到项目 `lib/`）；环境中装了 `npm install highlight.js` 时自动优先用安装版（语言更全），两者都缺席时退化为内置迷你高亮
 
 - 全局安装的 playwright 构建时需让 Node 找到模块：PowerShell 中先执行 `$env:NODE_PATH = (npm root -g)`
 
@@ -43,7 +45,8 @@ description: "Generate book-level PDF manuals from a topic. Invoke when user ask
 ├── epub-styles.css         # EPUB专用样式（从templates/复制）
 ├── version.json            # {"title":"","subtitle":"","author":"","version":"1.0.0"}
 ├── lib/
-│   └── fence-scan.js       # ★ 共享围栏状态机（convert-md/check-md/build-all 公共依赖）
+│   ├── fence-scan.js       # ★ 共享围栏状态机（convert-md/check-md/build-all 公共依赖）
+│   └── cover-select.js     # ★ 封面/图标风格解析（build-epub-pro/build/build-reader 公共依赖）
 ├── scripts/
 │   └── rebuild.js          # 产物重建脚本（node scripts/rebuild.js [products] [--clean]）
 ├── fragments/              # ★ Markdown片段（纯.md）
@@ -54,7 +57,7 @@ description: "Generate book-level PDF manuals from a topic. Invoke when user ask
 ├── assets/                 # 图片资源
 ├── materials/              # 素材库（采集阶段生成，chapter-{NN}/s{MM}.md）
 ├── research/               # 调研资料 + 组件速查表 + MD模板参考
-├── cover-images/           # EPUB封面图片
+├── cover-images/           # 封面资源（library/ 风格库由 init 自动复制；cover.* 自定义封面；icon.* 自定义图标）
 ├── output/                 # 产物输出
 └── versions/               # 历史产物存档
 ```
@@ -67,6 +70,7 @@ description: "Generate book-level PDF manuals from a topic. Invoke when user ask
 | 带精确书签PDF | `.pdf`    | 打印/阅读，两遍渲染精确页码     | `node build-pdf.js`    |
 | Markdown | `.md`     | 文档编辑/版本控制          | `node build-md.js`     |
 | 多文件阅读器   | `reader/` | 交互式网页阅读            | `node build-reader.js` |
+| EPUB电子书  | `.epub`   | 阅读器/手机阅读，嵌套目录+风格封面 | `node build-epub-pro.js` |
 
 ## 两种工作模式
 
@@ -101,6 +105,8 @@ description: "Generate book-level PDF manuals from a topic. Invoke when user ask
   | 九、用户确认区                                           | 进入写作的门槛           |
 
 - **采集判断**：按大纲表内的"类型标签 + 自检三问"（案例/实操/练习/对比→采；概念/反思→不采；故事/拓展→看情况），每章标注 `需要采集`
+
+- **EPUB 封面确认（规划阶段必做）**：完成大纲后，根据图书类型预判 EPUB 封面风格——科技（编程技术）/ 素雅（学术教材，默认兜底）/ 复古（历史国学）/ 书券（典藏文集）/ 清新（科普教育）/ 日系（小说散文），详见「封面与图标风格」；**主动向用户反馈推荐风格及理由**。用户可指定其他风格（构建时 `--cover-style` 或 `version.json` 的 `coverStyle`），也可提供自定义图片（放 `cover-images/cover.*` 作封面、`icon.*` 作图标）。确认结论记入 PROJECT.md 用户确认区
 
 - **编辑** **`fragments/00-cover.md`**：把 frontmatter 中的 `title/subtitle/author/version` 占位文字改为真实信息（封面渲染只读这5个字段，且优先级高于 version.json）
 
@@ -375,11 +381,14 @@ type: backpage
 **5. 构建**
 
 ```bash
-# 一键构建所有产物
+# 一键构建所有产物（html + reader + pdf + md + epub）
 node build-all.js --products all
 
 # 分步构建
 node build-all.js --products html,pdf
+
+# 指定封面风格（优先级高于 version.json.coverStyle 和自动识别）
+node build-all.js --products all --cover-style 科技
 ```
 
 `build-all.js` 会自动检测 `fragments/*.md`，先调用 `convert-md.js` 转换为 HTML 片段，再执行后续构建。
@@ -423,7 +432,7 @@ node build-all.js --products all
 ## 产品门禁机制
 
 ```bash
-node build-all.js --products all        # 默认全部，构建后检查4种产物
+node build-all.js --products all        # 默认全部（5种产物），构建后检查产物
 node build-all.js --products html,pdf   # 只生成指定产物
 node build-all.js --products html --no-gate  # 跳过门禁
 ```
@@ -475,13 +484,42 @@ node build-all.js --products all
 | `build.js`           | 单文件HTML构建                                            |
 | `build-reader.js`    | 多文件阅读器构建                                             |
 | `build-pdf.js`       | PDF生成（两遍渲染精确书签）                                      |
-| `build-epub-pro.js`  | EPUB精排生成器（含代码高亮、图片打包）                                |
+| `build-epub-pro.js`  | EPUB精排生成器（零依赖打包、封面风格图文排版、代码高亮、图片打包）                 |
 | `build-md.js`        | Markdown导出（源头聚合，含围栏降级/SVG降级/产物自检）    |
 | `check-md.js`        | ★ MD片段门禁检查（标题层级、YAML、禁用HTML标签）                       |
 | `fix-md.js`          | ★ MD片段自动修复（标题层级规范化）                                  |
 | `convert-md.js`      | ★ MD→HTML片段（组件Markdown原生化渲染）                         |
 | `lib/fence-scan.js`  | ★ 共享围栏状态机（围栏判定的唯一实现）                                 |
+| `lib/cover-select.js` | ★ 封面/图标风格解析（EPUB封面与HTML图标共用的选择逻辑）                    |
 | `scripts/rebuild.js` | 产物重建（node scripts/rebuild.js \[products] \[--clean]） |
+
+## 封面与图标风格
+
+EPUB 封面、单文件 HTML 与 reader 的书架图标共用一套风格体系。素材库在 `icon/`（技能目录），`init-project.js` 会整库复制到项目 `cover-images/library/`。
+
+### 风格一览
+
+| 风格 | 竖版封面（EPUB 用） | 方形图标（HTML/reader 用） | 适用图书类型 |
+| ---- | -------------- | --------------------- | ---------- |
+| 科技 | 科技长方形.jpg | 科技正方形.jpg | 编程/技术/AI/数据 |
+| 素雅 | 素雅长方形.jpg | 素雅正方形.jpg | 学术/教材/工具书（**默认兜底**） |
+| 复古 | 复古长方形.jpg | 复古正方形.jpg | 历史/国学/经典文学 |
+| 书券 | 书券长方形.jpg | 书券正方形.jpg | 典藏/精装/文集/年报 |
+| 清新 | 清新长方形.jpg | 清新正方形.jpg | 科普/入门/教育成长 |
+| 日系 | 日系风格.jpg | 日系正方形.jpg | 小说/散文/生活治愈 |
+
+竖版约 1664×2496（≈2:3），渲染封面时叠加书名/副标题/作者排版并输出 1600×2400 PNG（需 Playwright；不可用时退化为原图封面）。方形 2048×2048。
+
+### 选择优先级（高 → 低）
+
+1. **显式文件**：`cover-images/cover.*`（自定义封面）、`cover-images/icon.*`（自定义图标）
+2. **显式指定**：CLI `--cover-style 科技` > `version.json` 的 `"coverStyle": "科技"`
+3. **自动识别**：按书名/副标题关键词匹配（科技 → 书券 → 复古 → 素雅 → 日系 → 清新）
+4. **兜底默认**：素雅
+
+### 老项目迁移
+
+`init-project.js` 之前创建的项目没有 `cover-images/library/` 与 `lib/cover-select.js`，手动复制技能目录的 `icon/*.jpg` → `cover-images/library/`、`templates/lib/cover-select.js` → `lib/` 即可；未复制时构建不报错，仅跳过封面/图标。
 
 ## 参考资料
 
