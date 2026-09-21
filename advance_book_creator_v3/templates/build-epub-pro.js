@@ -1196,7 +1196,10 @@ ${bodyContent}
   generateContainerXml();
 
   // 11. 打包 EPUB
-  const epubFileName = `${title}-v${version}.epub`;
+  // 输出文件名净化：书名含 / \ : * ? " < > | 时会被当成路径分隔符导致 ENOENT；
+  // 与 build.js / build-pdf.js / build-md.js 保持一致，优先取 version.json 的 fileTitle
+  const safeTitle = versionData.fileTitle || String(title).replace(/\s*[/\\:*?"<>|]\s*/g, '-');
+  const epubFileName = `${safeTitle}-v${version}.epub`;
   const epubOutputPath = path.join(OUTPUT_DIR, epubFileName);
 
   console.log('\n📦 正在打包 EPUB...');

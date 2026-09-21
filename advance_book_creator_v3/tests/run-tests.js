@@ -288,6 +288,16 @@ assert(epubSrc.includes('DK-KAITI') && epubSrc.includes('DK-HEITI'), 'EPUB DK �
 assert(epubJs.includes('DK-KAITI') && epubJs.includes('DK-HEITI'), 'fallback CSS 同步 DK 字体');
 assert(fs.readFileSync(path.join(TEMPLATES, 'check-md.js'), 'utf-8').includes('footnoteIntegrity'), 'check-md 含脚注完整性规则');
 
+// 7a-5. 输出文件名净化 + 封面模板围栏（WorkBuddy fix0921 回灌，防回退）
+for (const f of ['build.js', 'build-pdf.js', 'build-md.js', 'build-epub-pro.js', 'build-all.js']) {
+  const src = fs.readFileSync(path.join(TEMPLATES, f), 'utf-8');
+  assert(src.includes('fileTitle') && src.includes('[/\\\\:*?"<>|]'), `${f} 输出文件名净化（fileTitle 优先 + 非法字符替换）`);
+}
+const buildAllSrc = fs.readFileSync(path.join(TEMPLATES, 'build-all.js'), 'utf-8');
+assert(!buildAllSrc.includes('`${title}-v${version}'), 'build-all 门禁/摘要无裸 title 拼接残留');
+const coverTpl = fs.readFileSync(path.join(TEMPLATES, '..', 'references', 'md-templates', '00-cover.md'), 'utf-8');
+assert(coverTpl.startsWith('---\ntype: cover'), '00-cover.md 模板 frontmatter 围栏正确（---，非 ***）');
+
 // 7b. 风格注册表：6 风格齐全
 const styleNames = Object.keys(coverSelect.STYLES);
 assert(styleNames.length === 6, '封面风格 = 6', '实际: ' + styleNames.join('/'));

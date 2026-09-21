@@ -25,8 +25,12 @@ const path = require('path');
 const fs = require('fs');
 
 const versionData = JSON.parse(fs.readFileSync(path.join(__dirname, 'version.json'), 'utf-8'));
-const HTML_FILE = path.join(__dirname, 'output', `${versionData.title}-v${versionData.version}.html`);
-const PDF_FILE = path.join(__dirname, 'output', `${versionData.title}-v${versionData.version}.pdf`);
+// 文件名安全书名（书名可能含 / 等路径非法字符，直接拼路径会 ENOENT）；
+// HTML_FILE 是 PDF 构建读取单文件 HTML 的输入路径，必须与 build.js 写出的文件名一致
+const outTitle = versionData.fileTitle
+  || String(versionData.title).replace(/\s*[/\\:*?"<>|]\s*/g, '-');
+const HTML_FILE = path.join(__dirname, 'output', `${outTitle}-v${versionData.version}.html`);
+const PDF_FILE = path.join(__dirname, 'output', `${outTitle}-v${versionData.version}.pdf`);
 const BOOKMARKS_FILE = path.join(__dirname, 'output', 'bookmarks.json');
 
 const A4_WIDTH_PX = 794;

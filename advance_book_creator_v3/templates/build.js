@@ -395,7 +395,10 @@ ${interactionScript}
 
 // ===== 写入文件 =====
 if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-const outputPath = path.join(OUTPUT_DIR, `${title}-v${version}.html`);
+// 输出文件名净化：书名含 / \ : * ? " < > | 时会被当成路径分隔符导致 ENOENT；
+// 与 build-pdf.js / build-md.js / build-epub-pro.js 保持一致，优先取 version.json 的 fileTitle
+const safeTitle = versionData.fileTitle || String(title).replace(/\s*[/\\:*?"<>|]\s*/g, '-');
+const outputPath = path.join(OUTPUT_DIR, `${safeTitle}-v${version}.html`);
 fs.writeFileSync(outputPath, html, 'utf-8');
 
 // 生成书签数据文件（供PDF生成使用，避免从HTML提取时误匹配表格/代码块内容）

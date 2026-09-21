@@ -23,9 +23,12 @@ const path = require('path');
 const { scanFenceMask } = require(path.join(__dirname, 'lib', 'fence-scan.js'));
 
 const versionData = JSON.parse(fs.readFileSync(path.join(__dirname, 'version.json'), 'utf-8'));
+// 文件名安全书名（书名可能含 / 等路径非法字符，直接拼路径会 ENOENT）
+const outTitle = versionData.fileTitle
+  || String(versionData.title).replace(/\s*[/\\:*?"<>|]\s*/g, '-');
 const FRAGMENTS_DIR = path.join(__dirname, 'fragments');
 const MD_FILE = path.join(__dirname, 'output',
-  `${versionData.title}-v${versionData.version}.md`);
+  `${outTitle}-v${versionData.version}.md`);
 
 // ===== 解析 frontmatter（与 convert-md.js 同款规则：行首 --- 包裹） =====
 function parseFrontmatter(content) {

@@ -380,6 +380,9 @@ try {
   process.exit(1);
 }
 const { title, version } = versionData;
+// 输出文件名净化：书名含 / \ : * ? " < > | 时会被当成路径分隔符导致 ENOENT；
+// 与 build.js / build-pdf.js / build-md.js / build-epub-pro.js 保持一致，优先取 version.json 的 fileTitle
+const outTitle = versionData.fileTitle || String(title).replace(/\s*[/\\:*?"<>|]\s*/g, '-');
 
 // ===== 新增：fragments预处理 —— MD → HTML =====
 function preprocessFragments() {
@@ -567,11 +570,11 @@ if (!noGate) {
   console.log('\n🔒 门禁检查...');
 
   const productFiles = {
-    html: path.join(OUTPUT_DIR, `${title}-v${version}.html`),
+    html: path.join(OUTPUT_DIR, `${outTitle}-v${version}.html`),
     reader: path.join(OUTPUT_DIR, 'reader', 'index.html'),
-    pdf: path.join(OUTPUT_DIR, `${title}-v${version}.pdf`),
-    md: path.join(OUTPUT_DIR, `${title}-v${version}.md`),
-    epub: path.join(OUTPUT_DIR, `${title}-v${version}.epub`)
+    pdf: path.join(OUTPUT_DIR, `${outTitle}-v${version}.pdf`),
+    md: path.join(OUTPUT_DIR, `${outTitle}-v${version}.md`),
+    epub: path.join(OUTPUT_DIR, `${outTitle}-v${version}.epub`)
   };
 
   const missing = products.filter(p => {
@@ -605,11 +608,11 @@ const productLabels = {
 
 for (const product of products) {
   const filePath = {
-    html: path.join(OUTPUT_DIR, `${title}-v${version}.html`),
+    html: path.join(OUTPUT_DIR, `${outTitle}-v${version}.html`),
     reader: path.join(OUTPUT_DIR, 'reader', 'index.html'),
-    pdf: path.join(OUTPUT_DIR, `${title}-v${version}.pdf`),
-    md: path.join(OUTPUT_DIR, `${title}-v${version}.md`),
-    epub: path.join(OUTPUT_DIR, `${title}-v${version}.epub`)
+    pdf: path.join(OUTPUT_DIR, `${outTitle}-v${version}.pdf`),
+    md: path.join(OUTPUT_DIR, `${outTitle}-v${version}.md`),
+    epub: path.join(OUTPUT_DIR, `${outTitle}-v${version}.epub`)
   }[product];
 
   if (fs.existsSync(filePath)) {
