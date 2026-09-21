@@ -123,6 +123,31 @@ fs.rmSync(path.join(WORK, 'fragments', 'part02-figure.md'), { force: true });
 fs.rmSync(path.join(WORK, 'fragments', 'part02.html'), { force: true });
 spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
 
+// ===== 4b. 脚注渲染（多看弹窗规范三件套） =====
+console.log('🔍 [4b] 脚注渲染');
+fs.writeFileSync(path.join(WORK, 'fragments', 'part02-fn.md'),
+  '---\ntype: chapter\ntitle: 第二章 脚注\n---\n\n## 第二章 脚注\n\n向量化比循环快[^1]，底层是 C 实现[^c]。同源复用[^1]。\n\n[^1]: 来源：chapter-11-s01（官方文档）\n[^c]: 来源：chapter-13-s02\n', 'utf-8');
+spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
+const part02fn = fs.readFileSync(path.join(WORK, 'fragments', 'part02.html'), 'utf-8');
+assert(part02fn.includes('<a class="duokan-footnote" id="fnref-1" href="#fn-1"><sup>[1]</sup></a>'), '脚注文内引用（首引带锚点 id）');
+assert((part02fn.match(/class="duokan-footnote"/g) || []).length === 3, '脚注引用共 3 处（含同源复用）');
+assert(part02fn.includes('<ol class="duokan-footnote-content">'), '章末多看脚注列表（ol 三件套）');
+assert(part02fn.includes('<li class="duokan-footnote-item" id="fn-1">来源：chapter-11-s01'), '脚注定义渲染 + 编号重排');
+assert(part02fn.includes('id="fn-2"'), '第二脚注编号递增');
+// 未定义引用 → check-md 警告不阻断
+const badFnDir = path.join(WORK, 'bad-fn');
+fs.mkdirSync(badFnDir, { recursive: true });
+fs.writeFileSync(path.join(badFnDir, 'bad-fn.md'),
+  '---\ntype: chapter\ntitle: fn\n---\n\n## 第一章 fn\n\n引用[^9]未定义。\n', 'utf-8');
+const fnCheck = spawnSync(NODE_EXE, [path.join(WORK, 'check-md.js'), badFnDir, '--json'], { encoding: 'utf-8' });
+const fnJson = JSON.parse(fnCheck.stdout);
+assert(fnJson.errorCount === 0 && fnJson.warningCount >= 1, '脚注未定义引用 → 警告不阻断');
+fs.rmSync(badFnDir, { recursive: true, force: true });
+// 恢复现场
+fs.rmSync(path.join(WORK, 'fragments', 'part02-fn.md'), { force: true });
+fs.rmSync(path.join(WORK, 'fragments', 'part02.html'), { force: true });
+spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
+
 // ===== 5. build.js 单文件 + 书签指纹 =====
 console.log('🔍 [5] build.js 单文件构建');
 r = spawnSync(NODE_EXE, [path.join(WORK, 'build.js')], { cwd: WORK, encoding: 'utf-8' });
@@ -253,6 +278,15 @@ assert(fs.existsSync(path.join(TEMPLATES, 'lib', 'hljs-bundle.js')), 'hljs-bundl
 assert(fs.existsSync(path.join(TEMPLATES, 'lib', 'hljs', 'core.js')), 'hljs core.js 存在');
 assert(fs.existsSync(path.join(TEMPLATES, 'lib', 'hljs', 'languages', 'python.js')), 'hljs 语言包存在（python）');
 assert(epubJs.includes("path.join(__dirname, 'lib', 'hljs-bundle.js')"), 'build-epub-pro 优先加载内嵌 hljs');
+
+// 7a-4. 信源脚注 + DK 字体（多看精排对齐）
+const convertSrc = fs.readFileSync(path.join(TEMPLATES, 'convert-md.js'), 'utf-8');
+assert(convertSrc.includes('duokan-footnote-content') && convertSrc.includes('duokan-footnote-item'), 'convert-md 生成多看脚注三件套');
+assert(convertSrc.includes('footnoteOrder') && convertSrc.includes('isFenceSubCall'), '脚注编号重排 + 围栏子调用豁免');
+assert(epubSrc.includes('.duokan-footnote') && epubSrc.includes('.fn-back'), 'EPUB 脚注样式');
+assert(epubSrc.includes('DK-KAITI') && epubSrc.includes('DK-HEITI'), 'EPUB DK 字体对齐（楷体引文/黑体标题）');
+assert(epubJs.includes('DK-KAITI') && epubJs.includes('DK-HEITI'), 'fallback CSS 同步 DK 字体');
+assert(fs.readFileSync(path.join(TEMPLATES, 'check-md.js'), 'utf-8').includes('footnoteIntegrity'), 'check-md 含脚注完整性规则');
 
 // 7b. 风格注册表：6 风格齐全
 const styleNames = Object.keys(coverSelect.STYLES);

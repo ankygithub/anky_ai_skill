@@ -241,6 +241,47 @@ const RULES = {
 
       return errors;
     }
+  },
+
+  // 6. 脚注引用完整性（仅告警，不阻断构建）
+  // 引用未定义 / 定义未引用：convert-md 会把未定义引用原样保留、未引用定义不渲染，
+  // 两者的表现都是"脚注没生效"，提前在门禁阶段提示作者
+  footnoteIntegrity: {
+    id: 'FN001',
+    name: '脚注引用完整性',
+    severity: 'warning',
+    check(file, content, lines) {
+      const warnings = [];
+      const fenceMaskFn = scanFenceMask(lines);
+      const defined = new Map();    // id -> 首次定义行号
+      const referenced = new Map(); // id -> 首次引用行号
+      for (let i = 0; i < lines.length; i++) {
+        if (fenceMaskFn[i]) continue;
+        // 行内代码中的 [^1] 属字面量示例，不参与统计
+        const line = lines[i].replace(/`[^`\n]+`/g, '');
+        const defMatch = line.match(/^\[\^([^\]\s]+)\]:/);
+        if (defMatch) {
+          if (!defined.has(defMatch[1])) defined.set(defMatch[1], i + 1);
+          continue;
+        }
+        const refRe = /\[\^([^\]\s]+)\]/g;
+        let m;
+        while ((m = refRe.exec(line)) !== null) {
+          if (!referenced.has(m[1])) referenced.set(m[1], i + 1);
+        }
+      }
+      for (const [id, line] of referenced) {
+        if (!defined.has(id)) {
+          warnings.push({ line, message: `脚注 [^${id}] 被引用但未定义（在章末补充 [^${id}]: 脚注内容）` });
+        }
+      }
+      for (const [id, line] of defined) {
+        if (!referenced.has(id)) {
+          warnings.push({ line, message: `脚注 [^${id}] 已定义但未被引用（确认正文标记是否写成 [^${id}]，或删除多余定义）` });
+        }
+      }
+      return warnings;
+    }
   }
 };
 

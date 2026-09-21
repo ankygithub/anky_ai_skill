@@ -840,9 +840,9 @@ function copyCss() {
 function generateFallbackCss() {
   return `/* EPUB 基础样式（fallback） */
 body{font-family:"DK-SONGTI","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.8;color:#333;margin:0;padding:20px}
-h1{font-size:2em;font-weight:700;text-align:center!important}h2{font-size:1.6em;font-weight:700;color:#92400E;text-align:center!important}h3{font-size:1.3em;font-weight:600;text-align:left!important}h4,h5,h6{font-weight:600;text-align:left!important}
+h1{font-size:2em;font-weight:700;text-align:center!important}h2{font-size:1.6em;font-weight:700;color:#92400E;text-align:center!important}h3{font-size:1.3em;font-weight:600;text-align:left!important;font-family:"DK-HEITI","Microsoft YaHei",sans-serif}h4,h5,h6{font-weight:600;text-align:left!important;font-family:"DK-HEITI","Microsoft YaHei",sans-serif}
 p{margin-bottom:1em;text-align:justify}
-blockquote{margin:1.5em 0;padding:1em 1.5em;background:#f9f9f9;border-left:4px solid #92400E}
+blockquote{margin:1.5em 0;padding:1em 1.5em;background:#f9f9f9;border-left:4px solid #92400E;font-family:"DK-KAITI","Noto Serif SC","KaiTi",serif}
 table{width:100%;border-collapse:collapse;margin:1.5em 0;border:1px solid #ddd}th,td{padding:12px;border:1px solid #ddd;text-align:left;vertical-align:top}th{background:#1F2126;color:#fff;font-weight:600;letter-spacing:1px;border-bottom:2px solid #B42318;border-right:1px solid #3A3D45}tr:nth-child(even){background:#faf9f6}
 code{background:#f5f5f5;padding:2px 6px;border-radius:3px;font-family:"DK-CODE","JetBrains Mono","Consolas","Microsoft YaHei",monospace;font-size:0.9em}
 pre{background:#f8f8f8;padding:16px;border-radius:4px;margin:1.5em 0;white-space:pre-wrap!important;overflow-wrap:break-word}
@@ -850,6 +850,8 @@ pre code{background:none;padding:0;display:block;white-space:pre-wrap!important;
 ul,ol{margin:1em 0;padding-left:2em}li{margin-bottom:0.5em}
 img{max-width:100%;height:auto}
 .callout{margin:1.5em 0;padding:16px 20px;border-left:4px solid #92400E;background:#fdfcfa}
+.callout-title{font-family:"DK-HEITI","Microsoft YaHei",sans-serif;font-weight:700;margin-bottom:0.5em}
+.duokan-footnote{text-decoration:none;color:#92400E;font-size:0.75em}.footnotes{margin-top:2em;font-size:0.85em;color:#555}.footnotes li{text-indent:0}.fn-back{text-decoration:none;color:#92400E;margin-left:4px}
 .callout-tip{border-left-color:#10b981;background:#f0fdf4}.callout-warn{border-left-color:#f59e0b;background:#fffbeb}
 .callout-violet{border-left-color:#8b5cf6;background:#faf5ff}
 .compare-block[data-epub-layout="stack"]{display:block}.compare-block[data-epub-layout="stack"] .compare-item{margin-bottom:16px}

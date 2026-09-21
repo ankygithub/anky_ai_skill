@@ -302,6 +302,43 @@ function mdToHtml(md, h2Offset, h3Offset) {
     }
   }
 
+  // 0.5 脚注处理（信源标注 → 多看弹窗脚注规范；:::steps 等围栏子调用不处理，见 h2Offset>=900000 约定）
+  //     提取定义 [^id]: 内容 → 按本章首次引用顺序编号 → 行内阶段替换（占位符保护期内，不误伤行内代码字面量）
+  const isFenceSubCall = h2Offset >= 900000;
+  const footnoteDefs = new Map();
+  const footnoteOrder = [];
+  if (!isFenceSubCall) {
+    {
+      const fnLines = html.split('\n');
+      const fnMask = scanFenceMask(fnLines);
+      const kept = [];
+      for (let li = 0; li < fnLines.length; li++) {
+        const defMatch = !fnMask[li] && fnLines[li].match(/^\[\^([^\]\s]+)\]:\s?(.*)$/);
+        if (defMatch) {
+          footnoteDefs.set(defMatch[1], defMatch[2].trim());
+        } else {
+          kept.push(fnLines[li]);
+        }
+      }
+      html = kept.join('\n');
+    }
+    if (footnoteDefs.size > 0) {
+      const refLines = html.split('\n');
+      const refMask = scanFenceMask(refLines);
+      const seen = new Set();
+      for (let li = 0; li < refLines.length; li++) {
+        if (refMask[li]) continue;
+        // 行内代码中的 [^1] 属字面量示例，不参与编号
+        const line = refLines[li].replace(/`[^`\n]+`/g, '');
+        const refRe = /\[\^([^\]\s]+)\]/g;
+        let rm;
+        while ((rm = refRe.exec(line)) !== null) {
+          if (!seen.has(rm[1])) { seen.add(rm[1]); footnoteOrder.push(rm[1]); }
+        }
+      }
+    }
+  }
+
   // 1. 代码块（优先处理，加入language-xxx类名供highlight.js着色）
   //    开启/闭合侧均锚定行首（允许缩进），防止代码内容中的行内 ```（如
   //    removeprefix("```sql")）被误判为围栏闭合导致后续配对整体错位
@@ -517,6 +554,20 @@ function mdToHtml(md, h2Offset, h3Offset) {
   // 9. 行内语法转换（粗体、斜体、链接）
   html = inlineMd(html);
 
+  // 9.5 脚注引用替换（行内代码仍处于占位符保护期，字面量 [^1] 不受影响）
+  if (!isFenceSubCall && footnoteOrder.length > 0) {
+    const refUseCount = new Map();
+    html = html.replace(/\[\^([^\]\s]+)\]/g, (match, id) => {
+      const num = footnoteOrder.indexOf(id) + 1;
+      if (num === 0) return match; // 未定义引用：保持原样（check-md 已告警）
+      const used = refUseCount.get(num) || 0;
+      refUseCount.set(num, used + 1);
+      // 同一脚注多次引用时仅首次携带锚点 id（HTML id 不可重复）
+      const anchorId = used === 0 ? ` id="fnref-${num}"` : '';
+      return `<a class="duokan-footnote"${anchorId} href="#fn-${num}"><sup>[${num}]</sup></a>`;
+    });
+  }
+
   // 10. 恢复代码块
   codeBlocks.forEach((code, idx) => {
     html = html.replace(`__CODE_BLOCK_${idx}__`, code);
@@ -544,6 +595,18 @@ function mdToHtml(md, h2Offset, h3Offset) {
     html = html.replace(`__CALLOUT_${idx}__`,
       `<div class="callout callout-${c.cls}"><div class="callout-title">${c.title}</div>${paras}</div>`);
   });
+
+  // 13. 组装章末脚注区（多看弹窗脚注规范三件套；未引用的定义不渲染，check-md 已告警）
+  if (!isFenceSubCall && footnoteOrder.length > 0) {
+    const fnItems = footnoteOrder.map((id, i) => {
+      const num = i + 1;
+      const content = footnoteDefs.has(id)
+        ? renderItemInline(footnoteDefs.get(id))
+        : '<em>（脚注内容缺失，请补充 [^' + id + '] 的定义）</em>';
+      return `      <li class="duokan-footnote-item" id="fn-${num}">${content}<a class="fn-back" href="#fnref-${num}">↩</a></li>`;
+    }).join('\n');
+    html += `\n<div class="footnotes">\n<hr/>\n<ol class="duokan-footnote-content">\n${fnItems}\n</ol>\n</div>`;
+  }
 
   return { html, tocData };
 }

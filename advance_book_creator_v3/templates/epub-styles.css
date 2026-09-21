@@ -54,6 +54,7 @@ h3 {
   line-height: 1.3;
   color: #444;
   text-align: left !important;
+  font-family: "DK-HEITI", "Microsoft YaHei", "Noto Sans SC", sans-serif;
 }
 
 h4 {
@@ -62,6 +63,7 @@ h4 {
   margin: 1.2em 0 0.5em;
   color: #555;
   text-align: left !important;
+  font-family: "DK-HEITI", "Microsoft YaHei", "Noto Sans SC", sans-serif;
 }
 
 h5,
@@ -85,7 +87,8 @@ blockquote {
   padding: 1em 1.5em;
   background: #f9f9f9;
   border-left: 4px solid #92400E;
-  font-style: italic;
+  /* 引文用楷体区分正文（多看内置字体）；去掉斜体——宋/楷均无中文斜体字形，会回退衬线 */
+  font-family: "DK-KAITI", "Noto Serif SC", "Source Han Serif SC", "KaiTi", "SimSun", serif;
 }
 
 blockquote p {
@@ -244,6 +247,43 @@ pre code {
 .hljs-attr { color: #6f42c1; }
 .hljs-regexp { color: #032f62; }
 
+/* ===== 脚注（多看弹窗脚注规范三件套） ===== */
+.duokan-footnote {
+  text-decoration: none;
+  color: #92400E;
+  font-size: 0.75em;
+}
+
+.duokan-footnote sup {
+  line-height: 1;
+}
+
+.footnotes {
+  margin-top: 2em;
+  font-size: 0.85em;
+  color: #555;
+}
+
+.footnotes hr {
+  margin: 0 0 1em;
+}
+
+.footnotes ol {
+  padding-left: 1.5em;
+  margin: 0;
+}
+
+.footnotes li {
+  margin-bottom: 0.4em;
+  text-indent: 0;
+}
+
+.fn-back {
+  text-decoration: none;
+  color: #92400E;
+  margin-left: 4px;
+}
+
 /* ===== Callout 提示块 ===== */
 .callout {
   margin: 1.5em 0;
@@ -255,6 +295,12 @@ pre code {
 
 .callout p {
   text-indent: 0;
+  margin-bottom: 0.5em;
+}
+
+.callout-title {
+  font-family: "DK-HEITI", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  font-weight: 700;
   margin-bottom: 0.5em;
 }
 
@@ -441,6 +487,7 @@ pre code {
   font-weight: 600;
   color: #92400E;
   font-size: 0.9em;
+  font-family: "DK-HEITI", "Microsoft YaHei", "Noto Sans SC", sans-serif;
 }
 
 /* ===== 封面 ===== */
