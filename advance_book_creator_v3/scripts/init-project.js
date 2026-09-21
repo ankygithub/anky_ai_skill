@@ -106,11 +106,14 @@ if (fs.existsSync(path.join(SKILL_DIR, 'references', 'md-templates', '99-backpag
 
 // ===== version.json =====
 // coverStyle：显式指定封面风格（科技/书券/复古/素雅/日系/清新），留空则按书名关键词自动识别
+// fileTitle：产物文件名专用书名（文件名不允许 / \ : * ? " < > |）。留空则构建时自动净化 title；
+// 仅想自定义文件名时填写，封面与 EPUB 元数据仍使用 title
 fs.writeFileSync(path.join(PROJECT_DIR, 'version.json'), JSON.stringify({
   version: '1.0.0',
   build: 0,
   lastUpdate: TODAY,
   title: TITLE,
+  fileTitle: '',
   subtitle: '',
   author: '',
   coverStyle: ''
@@ -295,5 +298,7 @@ console.log(`
    封面风格（--cover-style 或 version.json.coverStyle，留空自动识别）:
    科技（编程技术） / 素雅（学术教材，默认） / 复古（历史国学）
    书券（典藏文集） / 清新（科普教育） / 日系（小说散文）
+
+   产物文件名: version.json.fileTitle 可自定义（留空则自动净化 title 中的非法字符）
 `);
 process.exit(depsOk ? 0 : 0);

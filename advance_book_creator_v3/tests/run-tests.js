@@ -319,6 +319,7 @@ for (const [name, cfg] of Object.entries(coverSelect.STYLES)) {
 const initSrc = fs.readFileSync(path.join(ROOT, 'scripts', 'init-project.js'), 'utf-8');
 assert(initSrc.includes("path.join(SKILL_DIR, 'icon')"), 'init 复制 icon 风格库');
 assert(initSrc.includes('cover-select.js'), 'init 复制 cover-select.js');
+assert(initSrc.includes("fileTitle: ''"), 'init 生成 version.json 含 fileTitle 字段（留空自动模式）');
 
 // ===== 清理 =====
 fs.rmSync(WORK, { recursive: true, force: true });

@@ -43,7 +43,7 @@ description: "Generate book-level PDF manuals from a topic. Invoke when user ask
 ├── fix-md.js               # ★ MD片段自动修复-标题层级（从templates/复制）
 ├── build-epub-pro.js       # EPUB精排生成器（从templates/复制）
 ├── epub-styles.css         # EPUB专用样式（从templates/复制）
-├── version.json            # {"title":"","subtitle":"","author":"","version":"1.0.0"}
+├── version.json            # {"title":"","fileTitle":"","subtitle":"","author":"","version":"1.0.0"}（fileTitle 仅产物文件名用，留空自动净化 title）
 ├── lib/
 │   ├── fence-scan.js       # ★ 共享围栏状态机（convert-md/check-md/build-all 公共依赖）
 │   └── cover-select.js     # ★ 封面/图标风格解析（build-epub-pro/build/build-reader 公共依赖）
