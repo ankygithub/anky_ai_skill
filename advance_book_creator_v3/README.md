@@ -72,7 +72,7 @@
 node tests/run-tests.js
 ```
 
-29 项断言，覆盖历次实际事故的回归：行内 \`\`\` 围栏配对、未闭合 figure 自愈、占位符零残留、步骤内表格/列表/代码块续行、门禁拦截。**不依赖 playwright**，约 10 秒跑完。
+130+ 项断言，覆盖历次实际事故的回归：行内 \`\`\` 围栏配对、未闭合 figure 自愈、占位符零残留、callout 内脚注渲染、步骤内表格/列表/代码块续行、check-md 门禁拦截、技能内文件名纯 ASCII、封面风格库缺失预检。**不依赖 playwright**。
 
 规则：改 `convert-md.js` / `check-md.js` / `build-all.js` / `lib/fence-scan.js` 任何一处后，必须跑一遍。
 

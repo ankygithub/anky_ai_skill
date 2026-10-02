@@ -2,8 +2,9 @@
  * 封面/图标风格解析（build-epub-pro / build / build-reader 共用）
  *
  * 素材库结构（由 init-project.js 从技能 icon/ 目录整库复制）：
- *   cover-images/library/科技长方形.jpg ...（竖版 ≈2:3，EPUB 封面用）
- *   cover-images/library/科技正方形.jpg ...（1:1，HTML/reader 图标用）
+ *   cover-images/library/<style>-portrait.jpg ...（竖版 ≈2:3，EPUB 封面用）
+ *   cover-images/library/<style>-square.jpg   ...（1:1，HTML/reader 图标用）
+ *   例：tech-portrait.jpg / tech-square.jpg；风格中文名→文件名映射见下方 STYLES
  *
  * 选择优先级：
  *   1. 显式文件覆盖：cover-images/cover.*（竖版封面）、cover-images/icon.*（方形图标）
@@ -16,10 +17,16 @@ const fs = require('fs');
 const path = require('path');
 
 // 风格注册表：keywords 用于书名自动识别，顺序即匹配优先级
+//
+// ⚠️ 磁盘文件名必须保持纯 ASCII，不要改回中文。
+//    原因：技能目录被 Trae / WorkBuddy 等 Agent 安装复制时，非 ASCII 文件名会因编码错乱
+//    而损坏（中文的 GBK 字节被按 CP437 解释成 "┐╞╝╝╒²╖╜╨╬.jpg" 这类乱码）。
+//    损坏后 readdirSync 仍拷得到文件，但这里按注册名找不到 → 封面/图标风格静默回退"素雅"。
+//    ASCII 文件名在任何代码页下字节不变，不会触发该故障。风格的中文 key 可保留（仅用于交互与关键词）。
 const STYLES = {
   科技: {
-    portrait: '科技长方形.jpg',
-    square: '科技正方形.jpg',
+    portrait: 'tech-portrait.jpg',
+    square: 'tech-square.jpg',
     keywords: [
       'python', 'java', 'javascript', 'typescript', 'golang', 'rust', 'c++', 'c#',
       '编程', '代码', '程序', '开发', '软件', '工程师', '算法', '数据结构',
@@ -28,28 +35,28 @@ const STYLES = {
     ],
   },
   书券: {
-    portrait: '书券长方形.jpg',
-    square: '书券正方形.jpg',
+    portrait: 'ticket-portrait.jpg',
+    square: 'ticket-square.jpg',
     keywords: ['典藏', '精装', '纪念', '文集', '全集', '年报', '年度报告', '礼品', '鉴赏', '珍藏'],
   },
   复古: {
-    portrait: '复古长方形.jpg',
-    square: '复古正方形.jpg',
+    portrait: 'retro-portrait.jpg',
+    square: 'retro-square.jpg',
     keywords: ['历史', '国学', '古典', '诗词', '论语', '诗经', '传统文化', '哲学', '名著', '经典', '文学'],
   },
   素雅: {
-    portrait: '素雅长方形.jpg',
-    square: '素雅正方形.jpg',
+    portrait: 'elegant-portrait.jpg',
+    square: 'elegant-square.jpg',
     keywords: ['学术', '研究', '论文', '教材', '原理', '方法论', '手册', '指南', '白皮书', '工具书', '思想'],
   },
   日系: {
-    portrait: '日系风格.jpg',
-    square: '日系正方形.jpg',
+    portrait: 'japanese-portrait.jpg',
+    square: 'japanese-square.jpg',
     keywords: ['小说', '散文', '随笔', '治愈', '日常', '旅行', '美食', '手帐', '青春', '生活'],
   },
   清新: {
-    portrait: '清新长方形.jpg',
-    square: '清新正方形.jpg',
+    portrait: 'fresh-portrait.jpg',
+    square: 'fresh-square.jpg',
     keywords: ['科普', '启蒙', '亲子', '少儿', '儿童', '成长', '学习', '思维', '教育', '入门', '自然'],
   },
 };

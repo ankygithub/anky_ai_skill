@@ -109,6 +109,17 @@ function inlineMd(text) {
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 }
 
+// 表格行切分：只剥离首尾边界竖线，保留行内空单元格。
+// ⚠️ 不可写成 split('|').filter(c => c.trim())——那会把「首列合并维度 + 续行留空」
+// 的表格（如评分卡 `| | 1-2 次 | -15 |`）的空首格一并删除，使该行 <td> 比表头少一格，
+// 浏览器按左对齐填充导致整行左移一格。空格子必须原样保留为 <td></td>。
+function splitTableRow(line) {
+  let s = line.trim();
+  if (s.startsWith('|')) s = s.slice(1);
+  if (s.endsWith('|')) s = s.slice(0, -1);
+  return s.split('|').map(c => c.trim());
+}
+
 // ==================== 预处理：围栏块与合法HTML ====================
 
 /**
@@ -382,22 +393,21 @@ function mdToHtml(md, h2Offset, h3Offset) {
           if (isSep) {
             let alignments = [];
             if (isSep) {
-              alignments = sepLine.split('|').filter(c => c.trim()).map(c => {
-                const trimmed = c.trim();
-                if (trimmed.startsWith(':') && trimmed.endsWith(':')) return 'center';
-                if (trimmed.endsWith(':')) return 'right';
+              alignments = splitTableRow(sepLine).map(c => {
+                if (c.startsWith(':') && c.endsWith(':')) return 'center';
+                if (c.endsWith(':')) return 'right';
                 return 'left';
               });
             }
             let tableHtml = '<table>\n<thead>\n<tr>';
-            const headers = tableLines[0].split('|').filter(c => c.trim());
+            const headers = splitTableRow(tableLines[0]);
             headers.forEach((h, hi) => {
               const align = alignments[hi] ? ` style="text-align:${alignments[hi]}"` : '';
               tableHtml += `<th${align}>${h.trim()}</th>`;
             });
             tableHtml += '</tr>\n</thead>\n<tbody>\n';
             for (let k = 2; k < tableLines.length; k++) {
-              const cells = tableLines[k].split('|').filter(c => c.trim());
+              const cells = splitTableRow(tableLines[k]);
               tableHtml += '<tr>';
               cells.forEach((c, ci) => {
                 const align = alignments[ci] ? ` style="text-align:${alignments[ci]}"` : '';
@@ -555,17 +565,22 @@ function mdToHtml(md, h2Offset, h3Offset) {
   html = inlineMd(html);
 
   // 9.5 脚注引用替换（行内代码仍处于占位符保护期，字面量 [^1] 不受影响）
-  if (!isFenceSubCall && footnoteOrder.length > 0) {
-    const refUseCount = new Map();
-    html = html.replace(/\[\^([^\]\s]+)\]/g, (match, id) => {
+  //     替换逻辑抽成函数：正文（本步）与 callout 正文（第 12 步）都必须调用。
+  //     原因：callout 在第 4 步就被整块抽成 __CALLOUT_n__ 占位符，其正文此时已不在 html 中，
+  //     本步替换不到；若不在第 12 步补做，callout 内的 [^n] 会以字面量漏到成品里，
+  //     且章末脚注项的 ↩ 回链指向不存在的 #fnref-N（悬空）。
+  //     注意：这里只产出引用链接、不发锚点 id——两步是分批替换的，批次顺序不等于文档顺序，
+  //     锚点统一留到第 12.5 步（拼装完成后）按文档顺序判定（见该步注释）
+  const replaceFootnoteRefs = (text) => {
+    if (footnoteOrder.length === 0) return text;
+    return text.replace(/\[\^([^\]\s]+)\]/g, (match, id) => {
       const num = footnoteOrder.indexOf(id) + 1;
       if (num === 0) return match; // 未定义引用：保持原样（check-md 已告警）
-      const used = refUseCount.get(num) || 0;
-      refUseCount.set(num, used + 1);
-      // 同一脚注多次引用时仅首次携带锚点 id（HTML id 不可重复）
-      const anchorId = used === 0 ? ` id="fnref-${num}"` : '';
-      return `<a class="duokan-footnote"${anchorId} href="#fn-${num}"><sup>[${num}]</sup></a>`;
+      return `<a class="duokan-footnote" href="#fn-${num}"><sup>[${num}]</sup></a>`;
     });
+  };
+  if (!isFenceSubCall) {
+    html = replaceFootnoteRefs(html);
   }
 
   // 10. 恢复代码块
@@ -578,13 +593,16 @@ function mdToHtml(md, h2Offset, h3Offset) {
     html = html.replace(`__INLINE_CODE_${idx}__`, code);
   });
 
-  // 12. 组装 callout（正文先做行内转换，支持 **粗体**、`代码`、[链接]()
+  // 12. 组装 callout（正文先做行内转换，支持 **粗体**、`代码`、[链接]()）
   callouts.forEach((c, idx) => {
     const paras = c.body.split(/\n\s*\n/)
       .map(seg => seg.trim())
       .filter(Boolean)
       .map(seg => {
         let bodyHtml = inlineMd(seg).replace(/\n/g, ' ');
+        // callout 正文/标题里的脚注引用必须在此补做替换（第 9.5 步看不到 callout 内部）；
+        // 仍须排在行内代码占位符恢复之前，避免误伤代码中的字面量 [^1]
+        bodyHtml = replaceFootnoteRefs(bodyHtml);
         // 行内代码在 callout 提取前已被占位，需在正文内恢复
         inlineCodes.forEach((code, ci) => {
           bodyHtml = bodyHtml.replace(`__INLINE_CODE_${ci}__`, code);
@@ -593,8 +611,21 @@ function mdToHtml(md, h2Offset, h3Offset) {
       })
       .join('');
     html = html.replace(`__CALLOUT_${idx}__`,
-      `<div class="callout callout-${c.cls}"><div class="callout-title">${c.title}</div>${paras}</div>`);
+      `<div class="callout callout-${c.cls}"><div class="callout-title">${replaceFootnoteRefs(c.title)}</div>${paras}</div>`);
   });
+
+  // 12.5 锚点补齐：按文档顺序给每个脚注的「首次引用」补 id="fnref-N"
+  //      第 9.5 步（正文）与第 12 步（callout）是分批替换的，批次内先跑的未必在文档中更靠前
+  //      （如 callout 在正文段落之前）。这里在拼装完成后统一扫一遍，保证 ↩ 回链
+  //      跳回的是文档中真正最先出现的那处引用
+  if (!isFenceSubCall && footnoteOrder.length > 0) {
+    const anchored = new Set();
+    html = html.replace(/<a class="duokan-footnote" href="#fn-(\d+)">/g, (match, num) => {
+      if (anchored.has(num)) return match;
+      anchored.add(num);
+      return `<a class="duokan-footnote" id="fnref-${num}" href="#fn-${num}">`;
+    });
+  }
 
   // 13. 组装章末脚注区（多看弹窗脚注规范三件套；未引用的定义不渲染，check-md 已告警）
   if (!isFenceSubCall && footnoteOrder.length > 0) {

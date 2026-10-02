@@ -83,6 +83,25 @@ if (fs.existsSync(ICON_SOURCE)) {
   console.log(`🖼️  封面风格库: 已复制 ${iconCount} 张到 cover-images/library/`);
 }
 
+// ===== 封面风格库完整性预检 =====
+// 背景：技能被 Trae / WorkBuddy 等 Agent 安装复制时，非 ASCII 文件名会因编码错乱而损坏
+//       （中文的 GBK 字节被按 CP437 解释成 "┐╞╝╝╒²╖╜╨╬.jpg" 这类乱码）。icon/ 下的风格图
+//       若被复制成乱码名，构建时 cover-select.js 按注册名找不到 → 封面/图标静默回退"素雅"。
+//       这里做一次显式校验：缺任何一张就大声告警（不静默），并给出可执行的修复指引。
+const { STYLES } = require(path.join(TEMPLATES_DIR, 'lib', 'cover-select.js'));
+const missingCovers = [];
+for (const [style, cfg] of Object.entries(STYLES)) {
+  for (const f of [cfg.portrait, cfg.square]) {
+    if (!fs.existsSync(path.join(ICON_SOURCE, f))) missingCovers.push(`${style} → ${f}`);
+  }
+}
+if (missingCovers.length > 0) {
+  console.warn(`⚠️  封面风格库不完整：icon/ 下缺失 ${missingCovers.length} 个文件`);
+  missingCovers.forEach(m => console.warn(`     - ${m}`));
+  console.warn('    若磁盘上以乱码名存在（中文名被安装过程编码破坏），请用技能源码目录重装/重同步本技能。');
+  console.warn('    缺失不影响构建成功，但对应风格的封面/图标会静默回退"素雅"。');
+}
+
 // ===== 复制参考资料到 research/（不参与构建，供写作时阅读） =====
 const refs = [
   ['references/components-quickref.md', 'components-quickref.md'],
@@ -93,7 +112,7 @@ const refs = [
   ['references/source-grade-simple.md', 'source-grade-simple.md'],
   ['references/md-templates/00-cover.md', 'md-template-00-cover.md'],
   ['references/md-templates/99-backpage.md', 'md-template-99-backpage.md'],
-  ['references/md-templates/part01-章节示例.md', 'md-template-part01-章节示例.md'],
+  ['references/md-templates/part01-chapter-example.md', 'md-template-part01-chapter-example.md'],
   ['DESIGN.md', 'DESIGN.md']
 ];
 for (const [src, dst] of refs) {

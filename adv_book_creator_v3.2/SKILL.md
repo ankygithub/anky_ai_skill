@@ -29,7 +29,7 @@ description: "深度调研一个主题，生成一本书"
 ├── build-pdf.js            # PDF渲染+精确书签（从templates/复制）
 ├── build-md.js             # Markdown导出（源头聚合式，从templates/复制）
 ├── build-reader.js         # 多文件阅读器（从templates/复制）
-├── build-all.js            # 统一构建入口 + 产物门禁（从templates/复制）
+├── build-all.js            # 统一构建入口 + 门禁[0a]MD/[0b]组件/[0c]编辑审查 + 产物门禁（从templates/复制）
 ├── convert-md.js           # Markdown → HTML片段（★组件原生化渲染，从templates/复制）
 ├── check-md.js             # ★ MD片段门禁检查（从templates/复制）
 ├── fix-md.js               # ★ MD片段自动修复-标题层级（从templates/复制）
@@ -388,7 +388,8 @@ type: backpage
 - **必须给证据**：每条问题引原句（≤30 字）+ 问题类型 + 改写建议；**禁止为凑数编问题**，无问题就写"无问题 + 依据"
 - **产出**：`materials/review/chapter-{NN}-review.md`（问题清单，按高/中/低分级）
 - **返修与复审**：写作 Agent 修高/中级问题（不认同须写明理由）；返修后**同一编辑 Agent 复审**，高/中级清零才算通过，写回 `PROJECT.md` 进度追踪
-- **与门禁分工**：编辑审语义（术语/文风），`check-md.js` 管语法（YAML/标题/HTML），两道都要过
+- **构建门禁（真强制）**：`build-all.js` 的 `[0c] 编辑审查门禁` 会校验每个正文章节片段（`fragments/part{NN}-*.md`，封面/尾页豁免）是否存在对应报告，**缺任一报告即拒绝构建**；仅预览/中途构建可加 `--no-gate` 临时跳过
+- **与门禁分工**：编辑审语义（术语/文风），`check-md.js` 管语法（YAML/标题/HTML），`build-all.js [0c]` 管审查留痕，三道都要过
 
 **6. 构建**
 
@@ -524,14 +525,16 @@ EPUB 封面、单文件 HTML 与 reader 的书架图标共用一套风格体系�
 
 | 风格 | 竖版封面（EPUB 用） | 方形图标（HTML/reader 用） | 适用图书类型 |
 | ---- | -------------- | --------------------- | ---------- |
-| 科技 | 科技长方形.jpg | 科技正方形.jpg | 编程/技术/AI/数据 |
-| 素雅 | 素雅长方形.jpg | 素雅正方形.jpg | 学术/教材/工具书（**默认兜底**） |
-| 复古 | 复古长方形.jpg | 复古正方形.jpg | 历史/国学/经典文学 |
-| 书券 | 书券长方形.jpg | 书券正方形.jpg | 典藏/精装/文集/年报 |
-| 清新 | 清新长方形.jpg | 清新正方形.jpg | 科普/入门/教育成长 |
-| 日系 | 日系风格.jpg | 日系正方形.jpg | 小说/散文/生活治愈 |
+| 科技 | tech-portrait.jpg | tech-square.jpg | 编程/技术/AI/数据 |
+| 素雅 | elegant-portrait.jpg | elegant-square.jpg | 学术/教材/工具书（**默认兜底**） |
+| 复古 | retro-portrait.jpg | retro-square.jpg | 历史/国学/经典文学 |
+| 书券 | ticket-portrait.jpg | ticket-square.jpg | 典藏/精装/文集/年报 |
+| 清新 | fresh-portrait.jpg | fresh-square.jpg | 科普/入门/教育成长 |
+| 日系 | japanese-portrait.jpg | japanese-square.jpg | 小说/散文/生活治愈 |
 
 竖版约 1664×2496（≈2:3），渲染封面时叠加书名/副标题/作者排版并输出 1600×2400 PNG（需 Playwright；不可用时退化为原图封面）。方形 2048×2048。
+
+> ⚠️ `icon/` 下的文件名必须保持纯 ASCII（如上表），**不要改回中文名**。技能被 Trae / WorkBuddy 等 Agent 安装复制时，非 ASCII 文件名会因编码错乱而损坏（中文的 GBK 字节被按 CP437 解释成 `┐╞╝╝╒²╖╜╨╬.jpg` 这类乱码）；损坏后 `readdirSync` 仍拷得到文件，但 [cover-select.js](lib/cover-select.js) 按注册名找不到 → 封面/图标静默回退「素雅」。ASCII 名在任何代码页下字节不变，不会触发该故障。
 
 ### 选择优先级（高 → 低）
 
@@ -555,5 +558,6 @@ EPUB 封面、单文件 HTML 与 reader 的书架图标共用一套风格体系�
 | 采集素材时  | `references/source-grade-simple.md` | 信源分级规范（A/B/C/D，素材头部必填）                    |
 | 审查/返修时 | `references/editor-review.md`       | ★ 资深编辑对抗审查规范（角色 + 两段式清单 + 体裁加查 + 输出格式）      |
 | 定制样式时  | `references/design-system.md`       | CSS变量、主题、MD片段规范                         |
+| 写MD片段时  | `references/md-templates/` 目录       | 3 个格式模板：`references/md-templates/00-cover.md`（封面）/ `references/md-templates/99-backpage.md`（尾页）/ `references/md-templates/part01-chapter-example.md`（章节示例）；init 复制为 `research/md-template-*.md` |
 | 新建项目时  | `templates/` 目录                     | 可直接复制的骨架文件                              |
 

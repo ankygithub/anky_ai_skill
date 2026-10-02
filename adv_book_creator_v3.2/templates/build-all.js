@@ -311,6 +311,39 @@ function writeErrorLog(errors, fixable) {
   return logPath;
 }
 
+// ===== 编辑审查门禁：章节片段必须有对应审查报告 =====
+// v3.2 的强制环节（见 SKILL.md「5. 编辑审查」）：写作完稿后必须派独立编辑子 Agent 审查，
+// 报告落盘到 materials/review/chapter-{NN}-review.md。此前该强制只是纸面要求（构建不校验），
+// 这里补成真门禁——缺报告即拒绝构建，杜绝"跳过审查直接出书"。
+// 注意：门禁只校验"报告是否存在"，不判断报告内容质量（语义问题不进门禁，与 check-md 分工一致）。
+function validateEditorReview() {
+  if (!fs.existsSync(FRAGMENTS_DIR)) return { valid: true, missing: [], exempt: [] };
+
+  const mdFiles = fs.readdirSync(FRAGMENTS_DIR).filter(f => f.endsWith('.md')).sort();
+  const missing = [];
+  const exempt = [];
+
+  for (const f of mdFiles) {
+    // 章号取自文件名 part{NN}-xxx.md；不匹配的文件（含封面 00-cover、尾页 99-backpage）不要求审查
+    const numMatch = f.match(/^part(\d+)/i);
+    if (!numMatch) { exempt.push(f); continue; }
+
+    // 封面/尾页片段声明了 type，不是正文章节，豁免
+    const head = fs.readFileSync(path.join(FRAGMENTS_DIR, f), 'utf-8').slice(0, 400);
+    const typeMatch = head.match(/^---\s*\n[\s\S]*?\btype:\s*(\S+)/);
+    if (typeMatch && (typeMatch[1] === 'cover' || typeMatch[1] === 'backpage')) {
+      exempt.push(f);
+      continue;
+    }
+
+    const nn = numMatch[1].padStart(2, '0');
+    const rel = `materials/review/chapter-${nn}-review.md`;
+    if (!fs.existsSync(path.join(TEMPLATES_DIR, rel))) missing.push({ fragment: f, review: rel });
+  }
+
+  return { valid: missing.length === 0, missing, exempt };
+}
+
 // ===== CLI参数解析 =====
 const args = process.argv.slice(2);
 let sourcePath = null;
@@ -539,6 +572,26 @@ if (!sourcePath) {
     console.log('✅ 组件语法检查通过');
   } else {
     console.log('⏭️  未找到 check-md.js，跳过组件门禁');
+  }
+
+  // [0c] 编辑审查门禁：每个正文章节片段必须有对应审查报告
+  console.log('\n🔍 [0c] 编辑审查门禁...');
+  if (noGate) {
+    console.log('⏭️  --no-gate 已指定，跳过编辑审查门禁');
+  } else {
+    const reviewCheck = validateEditorReview();
+    if (!reviewCheck.valid) {
+      console.error(`\n❌ 编辑审查门禁失败：${reviewCheck.missing.length} 个章节缺少审查报告`);
+      for (const m of reviewCheck.missing) {
+        console.error(`   ❌ ${m.fragment} → 缺少 ${m.review}`);
+      }
+      console.error('');
+      console.error('   编辑审查是 v3.2 的强制环节（见 SKILL.md「5. 编辑审查」与 research/editor-review.md）。');
+      console.error('   请派独立编辑子 Agent 审查后落盘报告，再重新构建。');
+      console.error('   仅预览/中途构建可加 --no-gate 临时跳过。');
+      process.exit(1);
+    }
+    console.log(`✅ 编辑审查报告齐全（豁免 ${reviewCheck.exempt.length} 个封面/尾页/非章节片段）`);
   }
 
   // 再执行 fragments 预处理

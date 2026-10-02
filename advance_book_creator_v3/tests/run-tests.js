@@ -11,6 +11,7 @@
  *  6. v3 设计系统：7套主题/默认print-proof/表头token/无网络字体/
  *     reader 锚点提取四段齐全（改 styles.css 注释弄断提取的事故回归）
  *  7. EPUB：零依赖打包（archiver 移除）/封面风格注册表与关键词识别/icon 库文件齐备
+ *  8. callout 内脚注渲染、文件名纯 ASCII、封面库缺失预检、编辑审查门禁（v3.2 有则断言）
  *
  * 用法：node tests/run-tests.js
  * （不依赖 playwright，PDF/阅读器不在本测试范围）
@@ -109,6 +110,34 @@ assert(tocCount === 6, 'TOC 条目数 = 6（1章 + 5节，代码块内注释不�
 assert((part01.match(/<figure\b/g) || []).length === (part01.match(/<\/figure>/g) || []).length, 'figure 开闭配对');
 assert(part01.includes('<svg'), '内嵌 SVG 保留');
 
+// ===== 3g. 表格空单元格保留（回归：split('|').filter(c=>c.trim()) 吞掉空格子，
+//          使「首列合并维度 + 续行留空」的表格整行左移一格） =====
+console.log('🔍 [3g] 表格空单元格保留');
+const cellMd = path.join(WORK, 'fragments', 'part02-emptycell.md');
+fs.writeFileSync(cellMd,
+  '---\ntype: chapter\ntitle: 第二章 空单元格\n---\n\n## 第二章 空单元格\n\n' +
+  '| 维度 | 档位 | 加分/扣分 |\n|------|------|----------|\n' +
+  '| 征信逾期次数 | 0 次 | 0 |\n| | 1-2 次 | -15 |\n| | 3 次及以上 | -40 |\n', 'utf-8');
+spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
+// 产物按章节序号命名（part01/part02…，非源文件名），用唯一标记定位含该表的 html，避免耦合序号
+const cellHtmlPath = fs.readdirSync(path.join(WORK, 'fragments'))
+  .filter(f => f.endsWith('.html'))
+  .map(f => path.join(WORK, 'fragments', f))
+  .find(p => fs.readFileSync(p, 'utf-8').includes('征信逾期次数'));
+const cellHtml = cellHtmlPath ? fs.readFileSync(cellHtmlPath, 'utf-8') : '';
+{
+  const bodyRows = (cellHtml.match(/<tr>[\s\S]*?<\/tr>/g) || []).filter(x => x.includes('<td'));
+  const contRow = bodyRows.find(x => x.includes('1-2 次')) || '';
+  assert(bodyRows.length === 3, '数据行 = 3 行', '实际: ' + bodyRows.length);
+  assert((contRow.match(/<td/g) || []).length === 3, '续行保留 3 个 <td>（不再左移一格）',
+    '实际: ' + (contRow.match(/<td/g) || []).length);
+  assert(/<td[^>]*><\/td>\s*<td[^>]*>1-2 次<\/td>/.test(contRow), '首格渲染为空 <td>，档位/分值各归其位');
+  assert(bodyRows.every(x => (x.match(/<td/g) || []).length === 3), '全表每行均 3 格');
+}
+// 恢复现场：删除该用例片段并重新转换（convert-md 每次会清空旧 html，序号随之复位）
+fs.rmSync(cellMd, { force: true });
+spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
+
 // ===== 4. 未闭合 figure 自愈 =====
 console.log('🔍 [4] figure 未闭合自愈');
 fs.writeFileSync(path.join(WORK, 'fragments', 'part02-figure.md'),
@@ -145,6 +174,37 @@ assert(fnJson.errorCount === 0 && fnJson.warningCount >= 1, '脚注未定义引�
 fs.rmSync(badFnDir, { recursive: true, force: true });
 // 恢复现场
 fs.rmSync(path.join(WORK, 'fragments', 'part02-fn.md'), { force: true });
+fs.rmSync(path.join(WORK, 'fragments', 'part02.html'), { force: true });
+spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
+
+// ===== 4c. callout 内脚注渲染（回归：callout 先被抽成占位符，第 9.5 步替换不到 → [^n] 漏为字面量） =====
+console.log('🔍 [4c] callout 内脚注渲染');
+fs.writeFileSync(path.join(WORK, 'fragments', 'part02-callout-fn.md'),
+  '---\ntype: chapter\ntitle: 第二章 提示块脚注\n---\n\n## 第二章 提示块脚注\n\n' +
+  '> [!TIP] 标题带脚注[^t]\n' +
+  '> 正文带脚注[^a]，再复用[^t]。\n' +
+  '> 行内代码 `[^x]` 应保持字面量。\n\n' +
+  '正文引用[^a]。\n\n' +
+  '[^t]: 标题脚注定义\n[^a]: 正文脚注定义\n', 'utf-8');
+spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
+const part02cf = fs.readFileSync(path.join(WORK, 'fragments', 'part02.html'), 'utf-8');
+const cfNoCode = part02cf.replace(/<code>[\s\S]*?<\/code>/g, '<code>…</code>');
+assert(part02cf.includes('<div class="callout callout-tip">'), 'callout 渲染为 div.callout');
+assert(!/\[\^[A-Za-z0-9]\]/.test(cfNoCode), 'callout 内 [^n] 无字面量残留（行内代码除外）');
+assert(part02cf.includes('<code>[^x]</code>'), 'callout 内行内代码字面量 [^x] 未被误伤');
+assert((part02cf.match(/class="duokan-footnote"/g) || []).length === 4, 'callout + 正文脚注引用共 4 处',
+  '实际: ' + (part02cf.match(/class="duokan-footnote"/g) || []).length);
+assert(part02cf.includes('<li class="duokan-footnote-item" id="fn-1">标题脚注定义'), '章末脚注列表含 callout 引用的定义');
+assert(part02cf.includes('class="fn-back" href="#fnref-1"'), '章末脚注 ↩ 回链指向 fnref-1');
+{
+  // 锚点必须落在文档中最先出现的引用处（callout 标题），而非"分批处理顺序最先"的正文
+  const calloutStart = part02cf.indexOf('<div class="callout callout-tip">');
+  const calloutEnd = part02cf.indexOf('</div>', calloutStart);
+  const anchorIdx = part02cf.indexOf('id="fnref-1"');
+  assert(anchorIdx > calloutStart && anchorIdx < calloutEnd, 'fnref-1 锚点位于文档首个引用处（callout 标题内）');
+}
+// 恢复现场
+fs.rmSync(path.join(WORK, 'fragments', 'part02-callout-fn.md'), { force: true });
 fs.rmSync(path.join(WORK, 'fragments', 'part02.html'), { force: true });
 spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
 
@@ -320,6 +380,36 @@ const initSrc = fs.readFileSync(path.join(ROOT, 'scripts', 'init-project.js'), '
 assert(initSrc.includes("path.join(SKILL_DIR, 'icon')"), 'init 复制 icon 风格库');
 assert(initSrc.includes('cover-select.js'), 'init 复制 cover-select.js');
 assert(initSrc.includes("fileTitle: ''"), 'init 生成 version.json 含 fileTitle 字段（留空自动模式）');
+
+// 7f. 文件名纯 ASCII 回归（Trae/WorkBuddy 安装时非 ASCII 文件名会被编码破坏 → icon 库失效/模板漏拷）
+{
+  const bad = [];
+  const walk = (dir) => {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (e.name === '.work') continue;
+      const p = path.join(dir, e.name);
+      if (/[^\x00-\x7F]/.test(e.name)) bad.push(path.relative(ROOT, p));
+      if (e.isDirectory()) walk(p);
+    }
+  };
+  walk(ROOT);
+  assert(bad.length === 0, '技能内文件名全为 ASCII（防安装期编码破坏）', '非法: ' + bad.join(', '));
+}
+
+// 7g. 封面风格库完整性预检（init-project.js 显式校验 icon/ 是否齐备，不静默漏拷）
+assert(initSrc.includes('封面风格库完整性预检') && initSrc.includes('missingCovers'), 'init 含封面风格库缺失预检告警');
+
+// 7h. 编辑审查门禁（仅 v3.2 有；v3.1 与本文件共用一套测试，故做条件断言）
+{
+  if (buildAllSrc.includes('validateEditorReview')) {
+    assert(buildAllSrc.includes('[0c] 编辑审查门禁'), 'build-all 含 [0c] 编辑审查门禁调用');
+    assert(/materials\/review\/chapter-\$\{nn\}-review\.md/.test(buildAllSrc), '门禁校验 materials/review/chapter-NN-review.md 是否存在');
+    assert(buildAllSrc.includes("typeMatch[1] === 'cover'"), '门禁豁免封面/尾页片段');
+    assert(buildAllSrc.includes('--no-gate 临时跳过'), '门禁提示 --no-gate 逃生阀');
+  } else {
+    console.log('   ⏭️  该技能无编辑审查门禁（v3.1），跳过 [0c] 断言');
+  }
+}
 
 // ===== 清理 =====
 fs.rmSync(WORK, { recursive: true, force: true });

@@ -512,14 +512,16 @@ EPUB 封面、单文件 HTML 与 reader 的书架图标共用一套风格体系�
 
 | 风格 | 竖版封面（EPUB 用） | 方形图标（HTML/reader 用） | 适用图书类型 |
 | ---- | -------------- | --------------------- | ---------- |
-| 科技 | 科技长方形.jpg | 科技正方形.jpg | 编程/技术/AI/数据 |
-| 素雅 | 素雅长方形.jpg | 素雅正方形.jpg | 学术/教材/工具书（**默认兜底**） |
-| 复古 | 复古长方形.jpg | 复古正方形.jpg | 历史/国学/经典文学 |
-| 书券 | 书券长方形.jpg | 书券正方形.jpg | 典藏/精装/文集/年报 |
-| 清新 | 清新长方形.jpg | 清新正方形.jpg | 科普/入门/教育成长 |
-| 日系 | 日系风格.jpg | 日系正方形.jpg | 小说/散文/生活治愈 |
+| 科技 | tech-portrait.jpg | tech-square.jpg | 编程/技术/AI/数据 |
+| 素雅 | elegant-portrait.jpg | elegant-square.jpg | 学术/教材/工具书（**默认兜底**） |
+| 复古 | retro-portrait.jpg | retro-square.jpg | 历史/国学/经典文学 |
+| 书券 | ticket-portrait.jpg | ticket-square.jpg | 典藏/精装/文集/年报 |
+| 清新 | fresh-portrait.jpg | fresh-square.jpg | 科普/入门/教育成长 |
+| 日系 | japanese-portrait.jpg | japanese-square.jpg | 小说/散文/生活治愈 |
 
 竖版约 1664×2496（≈2:3），渲染封面时叠加书名/副标题/作者排版并输出 1600×2400 PNG（需 Playwright；不可用时退化为原图封面）。方形 2048×2048。
+
+> ⚠️ `icon/` 下的文件名必须保持纯 ASCII（如上表），**不要改回中文名**。技能被 Trae / WorkBuddy 等 Agent 安装复制时，非 ASCII 文件名会因编码错乱而损坏（中文的 GBK 字节被按 CP437 解释成 `┐╞╝╝╒²╖╜╨╬.jpg` 这类乱码）；损坏后 `readdirSync` 仍拷得到文件，但 [cover-select.js](lib/cover-select.js) 按注册名找不到 → 封面/图标静默回退「素雅」。ASCII 名在任何代码页下字节不变，不会触发该故障。
 
 ### 选择优先级（高 → 低）
 
@@ -538,5 +540,6 @@ EPUB 封面、单文件 HTML 与 reader 的书架图标共用一套风格体系�
 | ------ | ----------------------------------- | --------------------------------------- |
 | 写MD片段时 | `references/components-quickref.md` | ★ 组件语法唯一规范（\[!TIP]/:::steps/:::compare） |
 | 定制样式时  | `references/design-system.md`       | CSS变量、主题、MD片段规范                         |
+| 写MD片段时  | `references/md-templates/` 目录       | 3 个格式模板：`references/md-templates/00-cover.md`（封面）/ `references/md-templates/99-backpage.md`（尾页）/ `references/md-templates/part01-chapter-example.md`（章节示例）；init 复制为 `research/md-template-*.md` |
 | 新建项目时  | `templates/` 目录                     | 可直接复制的骨架文件                              |
 
