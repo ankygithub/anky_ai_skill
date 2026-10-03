@@ -40,17 +40,20 @@ description: "深度调研一个主题，生成一本书"
 │   ├── fence-scan.js       # ★ 共享围栏状态机（convert-md/check-md/build-all 公共依赖）
 │   ├── cover-select.js     # ★ 封面/图标风格解析（build-epub-pro/build/build-reader 公共依赖）
 │   ├── footnote-pop.js     # ★ 脚注点击弹层（build/build-reader 内联的单一来源）
+│   ├── flow-gate.js        # ★ 流程门禁共享逻辑（build-all [0c] 与 stage.js 共用；指纹唯一来源）
 │   ├── hljs-bundle.js      # 内置 highlight.js 精简版（EPUB 代码高亮零安装）
 │   └── hljs/               # hljs-bundle 的语言文件
 ├── scripts/
-│   └── rebuild.js          # 产物重建脚本（node scripts/rebuild.js [products] [--clean]）
+│   ├── rebuild.js          # 产物重建脚本（node scripts/rebuild.js [products] [--clean]）
+│   └── stage.js            # ★ 流程门禁信号（node scripts/stage.js writing|review|revision --done）
 ├── fragments/              # ★ Markdown片段（纯.md）
 │   ├── 00-cover.md         # 封面（YAML frontmatter + Markdown）
 │   ├── part01-xxx.md       # 正文Part
 │   ├── part02-xxx.md       # ...
 │   └── 99-backpage.md      # 尾页
 ├── assets/                 # 图片资源
-├── materials/              # 素材库（仅存有长期参考价值的原始件，默认空）
+├── materials/              # 素材库 + 流程留痕
+│   ├── workflow.json       # ★ 流程门禁信号（由 scripts/stage.js 写入）
 │   └── review/             # 编辑审查留痕（issues.md 意见清单 / resolved.md 核销）
 ├── research/               # 写作参考资料（组件速查/写作编排/术语纪律/编辑审查/MD模板，由 init 复制）
 ├── cover-images/           # 封面资源（library/ 风格库由 init 自动复制；cover.* 自定义封面；icon.* 自定义图标）
@@ -353,6 +356,8 @@ type: backpage
 
 - 如果确实需要展示 SVG 代码（如教程），确保内容不是完整的 `<svg>...</svg>` 结构
 
+**写作完成信号**：全书片段写完后运行 `node scripts/stage.js writing --done`（构建门禁 [0c] 依据）。
+
 **5. 编辑审查（全书写完统一执行一次；资深编辑对抗审查）**
 
 > **【强制环节】** 全书片段写完、封笔后，**必须**派**独立的审查 Agent**（新起 Agent，不继承写作上下文）统一审一次——这是治术语生造、语言生硬、空话夸大、案例编造、**稻草人假设**的主手段。规范见 `research/editor-review.md`。
@@ -364,10 +369,11 @@ type: backpage
 - **提示词装配（干净上下文）**：审查 Agent 是**新会话、必须自带上下文**——取 `research/editor-review.md`「审查 Agent 提示词模板」，把 `PROJECT.md`「九、对抗性审查设计」的**主审身份 / 粒度**填入 → 粘给它；**只给它规格文件与产物，不要粘写作过程或作者自评**（否则锚定审查者）
 - **只落盘不改稿**：审查**只产出**一份全书意见清单 `materials/review/issues.md`（按 part 分节；列：章节 | 级别 | 类型 | 原句 | 建议）——**审查阶段不改稿**
 - **统一修改 + 逐条核销**：审查完成后**统一执行一次修改**，再逐条核销写入 `materials/review/resolved.md`（`#N 已改` / `驳回：理由`）；**核销是极轻的收尾校验**，只读被改的句子，不重扫全文
+- **阶段信号（构建门禁依据）**：审查落盘后 `node scripts/stage.js review --done`；统一修改 + 核销后 `node scripts/stage.js revision --done`。重复标记某阶段会作废其后信号（重写→须重审，重审→须重核销）
 - **必须给证据**：每条问题引原句（≤30 字）+ 类型 + 改写建议；**禁止为凑数编问题**
 - **不误伤体裁**：文学里正当的修辞/节奏不可当 AI 腔误杀（`editor-review.md` §五 已内联适用边界）
-- **构建门禁（真强制）**：`build-all.js` 的 `[0c] 编辑审查门禁` 校验 `materials/review/issues.md` 与 `materials/review/resolved.md` 是否存在，**缺任一份即拒绝构建**；仅预览/中途构建可加 `--no-gate` 临时跳过
-- **与门禁分工**：编辑审语义（术语/文风/稻草人），`check-md.js` 管语法（YAML/标题/HTML + 术语禁用词扫描），`build-all.js [0c]` 管审查留痕，三道都要过
+- **构建门禁（真强制，纯机械）**：`build-all.js` 的 `[0c] 流程门禁` 校验——三段信号（writing/review/revision）+ 审查留痕 + 大纲 vs 片段（防漏写）+ 核销覆盖（防漏核销）+ 片段指纹（防改后未被重审），**任一不过即拒绝构建**；仅预览/中途构建可加 `--no-gate` 临时跳过
+- **与门禁分工**：编辑审语义（术语/文风/稻草人），`check-md.js` 管语法（YAML/标题/HTML + 术语禁用词扫描），`build-all.js [0c]` 管流程信号与留痕，三道都要过
 
 **6. 构建**
 
@@ -382,7 +388,7 @@ node build-all.js --products html,pdf
 node build-all.js --products all --cover-style 科技
 ```
 
-`build-all.js` 会自动检测 `fragments/*.md`，先调用 `convert-md.js` 转换为 HTML 片段，再执行后续构建。
+`build-all.js` 会自动检测 `fragments/*.md`，先跑三道门禁（`[0a]` MD 源 / `[0b]` 组件语法 / `[0c]` 流程信号），再调用 `convert-md.js` 转换为 HTML 片段并构建。流程门禁不过时，依次补跑 `stage.js` 三段信号。
 
 **7. 版本更新**
 
@@ -495,6 +501,8 @@ EPUB 是可重排介质，与网页能力差异大。写作层必须遵守以下
 | `lib/cover-select.js` | ★ 封面/图标风格解析（EPUB封面与HTML图标共用的选择逻辑）                    |
 | `lib/footnote-pop.js` | ★ 脚注点击弹层（build/build-reader 构建期内联的单一来源）                  |
 | `scripts/rebuild.js` | 产物重建（node scripts/rebuild.js \[products] \[--clean]） |
+| `scripts/stage.js`   | ★ 流程门禁信号（node scripts/stage.js writing\|review\|revision --done） |
+| `lib/flow-gate.js`   | ★ 流程门禁共享逻辑（build-all \[0c] 与 stage.js 共用；指纹唯一来源） |
 
 ## 封面与图标风格
 

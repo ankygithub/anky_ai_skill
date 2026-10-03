@@ -56,6 +56,8 @@ fs.copyFileSync(path.join(TEMPLATES_DIR, 'lib', 'fence-scan.js'), path.join(PROJ
 fs.copyFileSync(path.join(TEMPLATES_DIR, 'lib', 'cover-select.js'), path.join(PROJECT_DIR, 'lib', 'cover-select.js'));
 // 脚注点击弹层（build/build-reader 的公共依赖，单一来源）
 fs.copyFileSync(path.join(TEMPLATES_DIR, 'lib', 'footnote-pop.js'), path.join(PROJECT_DIR, 'lib', 'footnote-pop.js'));
+// 流程门禁共享逻辑（build-all [0c] 与 scripts/stage.js 共用，保证指纹算法单一来源）
+fs.copyFileSync(path.join(TEMPLATES_DIR, 'lib', 'flow-gate.js'), path.join(PROJECT_DIR, 'lib', 'flow-gate.js'));
 // highlight.js 内嵌精简版（EPUB 代码高亮零安装）
 const hljsLibSrc = path.join(TEMPLATES_DIR, 'lib', 'hljs');
 const hljsLibDst = path.join(PROJECT_DIR, 'lib', 'hljs');
@@ -67,6 +69,8 @@ for (const f of fs.readdirSync(path.join(hljsLibSrc, 'languages'))) {
 }
 // 辅助脚本
 fs.copyFileSync(path.join(__dirname, 'rebuild.js'), path.join(PROJECT_DIR, 'scripts', 'rebuild.js'));
+// 流程门禁信号（写作/审查/修改三段信号写入 materials/workflow.json）
+fs.copyFileSync(path.join(__dirname, 'stage.js'), path.join(PROJECT_DIR, 'scripts', 'stage.js'));
 
 // ===== 封面/图标风格库（EPUB 封面与 HTML/reader 图标共用，构建时按风格选取） =====
 const ICON_SOURCE = path.join(SKILL_DIR, 'icon');
@@ -168,6 +172,11 @@ console.log(`
    3. 在 fragments/ 下写 Markdown 片段（组件语法见 research/components-quickref.md）
    4. 全书写完后统一编辑审查：派独立子 Agent 按 research/editor-review.md 审一次 → issues.md；统一修改后逐条核销 resolved.md
    5. 构建: node build-all.js --products all（含 EPUB；PDF/EPUB 封面排版需 Playwright）
+
+   流程信号（构建门禁 [0c] 依据，缺任一段拒绝构建）:
+   node scripts/stage.js writing  --done   # 写作完成
+   node scripts/stage.js review   --done   # 对抗审查完成
+   node scripts/stage.js revision --done   # 统一修改+核销完成
 
    快捷命令:
    node scripts/rebuild.js              # MD 就绪后重建全部产物

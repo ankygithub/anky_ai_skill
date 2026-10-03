@@ -157,10 +157,12 @@
 | 规划 | ⏳ | |
 | 术语表锁定 | ⬜ | |
 | 数据速查 | ⬜ | 全书共享硬事实是否登记齐 |
-| 写作 | ⬜ | 需要时现场搜、直接写正文+脚注 |
-| 统一对抗审查 | ⬜ | 全书写完派独立 Agent 审一次 → materials/review/issues.md |
-| 清单核销 | ⬜ | 统一修改后逐条核销 → materials/review/resolved.md |
-| 构建 | ⬜ | 门禁校验 issues.md + resolved.md 存在 |
+| 写作 | ⬜ | 需要时现场搜、直接写正文+脚注；完成后 `stage.js writing --done` |
+| 统一对抗审查 | ⬜ | 全书写完派独立 Agent 审一次 → materials/review/issues.md；完成后 `stage.js review --done` |
+| 清单核销 | ⬜ | 统一修改后逐条核销 → materials/review/resolved.md；完成后 `stage.js revision --done` |
+| 构建 | ⬜ | [0c] 流程门禁校验三段信号 + 大纲对齐 + 核销覆盖 + 指纹 |
+
+> 说明：上表供人查看；机器门禁以 `materials/workflow.json`（由 `node scripts/stage.js {writing|review|revision} --done` 写入）为准。
 
 ---
 

@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const { scanFenceMask } = require(path.join(__dirname, 'lib', 'fence-scan.js'));
+const { validateFlowGate } = require(path.join(__dirname, 'lib', 'flow-gate.js'));
 
 // Windows 沙箱环境 PATH 可能不包含 node，使用完整路径
 const NODE_EXE = process.execPath;
@@ -311,20 +312,10 @@ function writeErrorLog(errors, fixable) {
   return logPath;
 }
 
-// ===== 编辑审查门禁：统一审查留痕（issues.md + resolved.md）必须存在 =====
-// 新审查模型（见 SKILL.md「5. 编辑审查」与 research/editor-review.md）：
-// 全书写完后**统一审一次**——审查 Agent 只产出一份全书意见清单 materials/review/issues.md，
-// 统一修改后逐条核销写入 materials/review/resolved.md。
-// （旧模型"逐章 chapter-{NN}-review.md"已废弃，本门禁不再逐章校验。）
-// 注意：门禁只校验这两份文件是否存在，不判断内容质量（语义问题不进门禁，与 check-md 分工一致）。
-function validateEditorReview() {
-  const required = [
-    path.join('materials', 'review', 'issues.md'),
-    path.join('materials', 'review', 'resolved.md')
-  ];
-  const missing = required.filter(rel => !fs.existsSync(path.join(TEMPLATES_DIR, rel)));
-  return { valid: missing.length === 0, missing };
-}
+// ===== 流程门禁（[0c]）=====
+// 校验逻辑已抽到共享库 lib/flow-gate.js（与 scripts/stage.js 写信号共用指纹算法与规则）：
+//   阶段信号 writing/review/revision + 审查留痕 + 大纲 vs 片段 + 核销覆盖 + 片段指纹
+// 纯机械判断，不做 AI 语义分析（语义问题交审查 Agent，与 check-md 分工一致）。
 
 // ===== CLI参数解析 =====
 const args = process.argv.slice(2);
@@ -556,25 +547,23 @@ if (!sourcePath) {
     console.log('⏭️  未找到 check-md.js，跳过组件门禁');
   }
 
-  // [0c] 编辑审查门禁：统一审查留痕（issues.md + resolved.md）必须存在
-  console.log('\n🔍 [0c] 编辑审查门禁...');
+  // [0c] 流程门禁：阶段信号 + 大纲对齐 + 核销覆盖 + 指纹（机械判断，无 AI 语义分析）
+  console.log('\n🔍 [0c] 流程门禁（阶段信号 / 大纲对齐 / 核销覆盖 / 指纹）...');
   if (noGate) {
-    console.log('⏭️  --no-gate 已指定，跳过编辑审查门禁');
+    console.log('⏭️  --no-gate 已指定，跳过流程门禁');
   } else {
-    const reviewCheck = validateEditorReview();
-    if (!reviewCheck.valid) {
-      console.error(`\n❌ 编辑审查门禁失败：缺少 ${reviewCheck.missing.length} 份审查留痕`);
-      for (const m of reviewCheck.missing) {
-        console.error(`   ❌ 缺少 ${m}`);
-      }
+    const flow = validateFlowGate(TEMPLATES_DIR);
+    for (const w of flow.warnings) console.log(`   ⚠️  ${w}`);
+    if (!flow.valid) {
+      console.error(`\n❌ 流程门禁失败（${flow.errors.length} 项）：`);
+      for (const e of flow.errors) console.error(`   ❌ ${e}`);
       console.error('');
-      console.error('   编辑审查是强制环节（见 SKILL.md「5. 编辑审查」与 research/editor-review.md）。');
-      console.error('   全书写完后派独立审查 Agent 统一审一次 → 落盘 materials/review/issues.md；');
-      console.error('   统一修改后逐条核销 → 落盘 materials/review/resolved.md，两份齐备才可构建。');
+      console.error('   流程：写作 → stage writing → 对抗审查 → stage review → 统一修改+核销 → stage revision → 构建。');
+      console.error('   规范见 SKILL.md「5. 编辑审查」与 research/editor-review.md。');
       console.error('   仅预览/中途构建可加 --no-gate 临时跳过。');
       process.exit(1);
     }
-    console.log('✅ 编辑审查留痕齐全（issues.md + resolved.md）');
+    console.log('✅ 流程门禁通过（writing/review/revision 信号齐 + 大纲对齐 + 核销覆盖 + 指纹一致）');
   }
 
   // 再执行 fragments 预处理

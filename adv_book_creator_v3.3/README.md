@@ -40,6 +40,7 @@
 | `build-epub-pro.js` | EPUB 精排生成器（依赖可选的 highlight.js / archiver）                                                               |
 | `lib/fence-scan.js` | **共享围栏状态机**：代码围栏（\`\`\` / \~\~\~）判定的唯一实现。convert-md、check-md、build-all 三方共用，防止各写一套判定逻辑漂移（曾导致配对错位吞掉半章正文） |
 | `lib/footnote-pop.js` | **脚注点击弹层**：点击正文脚注标记在标记旁浮出内容（替代跳转章末）。build.js 与 build-reader.js 构建期内联的**单一来源**；样式在 styles.css「脚注」段。EPUB 不用它（多看自有弹窗） |
+| `lib/flow-gate.js` | **流程门禁共享逻辑**：阶段信号 + 大纲 vs 片段 + 核销覆盖 + 片段指纹。build-all `[0c]` 与 `scripts/stage.js` 共用（指纹算法唯一来源） |
 | `project_template.md` | **项目中枢模板**：init 读取 → 把 `{{书名}}` 替换为书名 → 生成项目根 `PROJECT.md`（带 `_template` 后缀，防覆盖项目文件） |
 | `version_template.json` | **版本信息模板**：init 读取 → 注入 title/lastUpdate → 生成项目根 `version.json`（带 `_template` 后缀，防覆盖项目文件） |
 
@@ -49,6 +50,7 @@
 | -------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------- |
 | `init-project.js`    | **新建书项目**：创建目录骨架 + 复制模板 + 由 `templates/*_template.*` 生成 `version.json`/`PROJECT.md`（注入书名）+ CHANGELOG.md | 技能目录下运行 |
 | `rebuild.js`         | **重建产物**：`node scripts/rebuild.js [html,pdf,reader,md] [--clean]`。`--clean` 清空旧产物后重建（自动跳过产物门禁） | 书项目下运行（init 时复制到书项目 scripts/） |
+| `stage.js`           | **流程门禁信号**：`node scripts/stage.js writing\|review\|revision --done`（写 `materials/workflow.json`）/ `status`（查看）。重复标记某阶段会作废其后信号 | 书项目下运行（init 时复制到书项目 scripts/） |
 | `migrate-to-lite.js` | **旧书迁移**：把 v2/v4 时代写的书（HTML 组件语法）转成 lite 的 Markdown 组件语法。详见下方"旧书迁移"                            | 任意位置，参数指定目标 fragments 目录      |
 
 ## 四、references/ — 写作参考资料
@@ -106,8 +108,8 @@
 - **统一修改 + 逐条核销**：审查完成后统一改一次，再逐条核销写 `materials/review/resolved.md`（`#N 已改` / `驳回：理由`）；核销是极轻收尾校验，只读被改的句子，不重扫全文
 - **必须给证据**：每条问题引原句（≤30 字）+ 类型 + 改写建议；**禁止为凑数编问题**
 - **不误伤体裁**：文学里正当的修辞/节奏不可当 AI 腔误杀
-- **构建期真门禁**：`build-all.js` 的 `[0c]` 校验 `materials/review/issues.md` 与 `resolved.md` 是否存在，**缺任一份直接拒绝构建**（仅校验留痕存在，不判断内容质量；预览可用 `--no-gate` 跳过）
-- **与门禁分工**：编辑审**语义**（术语/文风/稻草人），check-md 管**语法**（YAML/标题/HTML + 术语禁用词扫描），`build-all [0c]` 管**留痕**，三道都要过、互不替代
+- **流程信号 + 真门禁**：写作/审查/修改三步各写一次信号（`node scripts/stage.js writing|review|revision --done` → `materials/workflow.json`）；`build-all.js` 的 `[0c]` 校验三段信号 + `issues.md`/`resolved.md` + 大纲 vs 片段（防漏写）+ 核销覆盖（防漏核销）+ 片段指纹（防改后未被重审），**任一不过直接拒绝构建**（纯机械判断，不做 AI 语义分析；预览可用 `--no-gate` 跳过）
+- **与门禁分工**：编辑审**语义**（术语/文风/稻草人），check-md 管**语法**（YAML/标题/HTML + 术语禁用词扫描），`build-all [0c]` 管**流程信号与留痕**，三道都要过、互不替代
 
 > **双视角清单**：专家视角=生造名词/术语准确性 · 专业结论正确性 · 时效 · 逻辑自洽 · 案例真实性；读者视角=语句生硬/AI腔 · 空话 · 稻草人（作者捏造读者误解来纠正）· 读不懂/缺前置 · 啰嗦。**不再有独立的"去 AI 味"流程**，统一并入本审查。
 

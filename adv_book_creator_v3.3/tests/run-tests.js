@@ -53,6 +53,7 @@ for (const f of ['convert-md.js', 'check-md.js', 'fix-md.js', 'build-all.js', 'b
 }
 fs.mkdirSync(path.join(WORK, 'lib'), { recursive: true });
 fs.copyFileSync(path.join(TEMPLATES, 'lib', 'fence-scan.js'), path.join(WORK, 'lib', 'fence-scan.js'));
+fs.copyFileSync(path.join(TEMPLATES, 'lib', 'flow-gate.js'), path.join(WORK, 'lib', 'flow-gate.js'));
 // 模板化：技能侧只放 *_template 模板（防覆盖项目文件），WORK 的 version.json 按需现写
 fs.writeFileSync(path.join(WORK, 'version.json'), JSON.stringify({
   version: '1.0.0', title: '回归测试手册', subtitle: '', author: '测试'
@@ -423,15 +424,19 @@ assert(initSrc.includes('project_template.md'), 'init 从 project_template.md �
 // 7g. 封面风格库完整性预检（init-project.js 显式校验 icon/ 是否齐备，不静默漏拷）
 assert(initSrc.includes('封面风格库完整性预检') && initSrc.includes('missingCovers'), 'init 含封面风格库缺失预检告警');
 
-// 7h. 编辑审查门禁（仅 v3.2+ 有；v3.1 与本文件共用一套测试，故做条件断言）
+// 7h. 构建门禁探针（v3.3+ 为 [0c] 流程门禁；v3.2 为编辑审查留痕门禁；v3.1 无）
 {
-  if (buildAllSrc.includes('validateEditorReview')) {
+  if (buildAllSrc.includes('validateFlowGate')) {
+    assert(buildAllSrc.includes('[0c] 流程门禁'), 'build-all 含 [0c] 流程门禁调用');
+    assert(buildAllSrc.includes("require(path.join(__dirname, 'lib', 'flow-gate.js'))"), 'build-all 引用共享库 lib/flow-gate.js');
+    assert(buildAllSrc.includes('--no-gate 临时跳过'), '门禁提示 --no-gate 逃生阀');
+  } else if (buildAllSrc.includes('validateEditorReview')) {
     assert(buildAllSrc.includes('[0c] 编辑审查门禁'), 'build-all 含 [0c] 编辑审查门禁调用');
     assert(/materials['"],\s*['"]review['"],\s*['"]issues\.md/.test(buildAllSrc), '门禁校验 materials/review/issues.md 是否存在');
     assert(/materials['"],\s*['"]review['"],\s*['"]resolved\.md/.test(buildAllSrc), '门禁校验 materials/review/resolved.md 是否存在');
     assert(buildAllSrc.includes('--no-gate 临时跳过'), '门禁提示 --no-gate 逃生阀');
   } else {
-    console.log('   ⏭️  该技能无编辑审查门禁（v3.1），跳过 [0c] 断言');
+    console.log('   ⏭️  该技能无流程/编辑审查门禁（v3.1），跳过 [0c] 断言');
   }
 }
 
@@ -461,6 +466,93 @@ console.log('🔍 [7i] init 模板化（PROJECT.md / version.json）');
   assert(typeof vj.lastUpdate === 'string' && vj.lastUpdate.length === 10, 'version.json lastUpdate 已注入日期', String(vj.lastUpdate));
   assert(!fs.existsSync(path.join(initOut, 'project_template.md')) && !fs.existsSync(path.join(initOut, 'version_template.json')), '模板文件不落进项目根');
   fs.rmSync(initOut, { recursive: true, force: true });
+}
+
+// 7j. 流程门禁（阶段信号 / 大纲对齐 / 核销覆盖 / 指纹）——纯机械，无 AI
+console.log('🔍 [7j] 流程门禁（阶段信号 / 大纲对齐 / 核销覆盖 / 指纹）');
+{
+  const gatePath = path.join(TEMPLATES, 'lib', 'flow-gate.js');
+  assert(fs.existsSync(gatePath), 'templates/lib/flow-gate.js 存在');
+  const gate = require(gatePath);
+
+  const proj = path.join(WORK, 'flowproj');
+  const mk = (rel, txt) => {
+    const p = path.join(proj, rel);
+    fs.mkdirSync(path.dirname(p), { recursive: true });
+    fs.writeFileSync(p, txt, 'utf-8');
+  };
+  const outline = (rows) =>
+    '## 五、章节大纲\n\n| Part | 文件 | 标题 |\n|---|---|---|\n' + rows + '\n\n## 六、x\n';
+
+  mk('fragments/part01-a.md', '# a\n');
+  mk('fragments/part02-b.md', '# b\n');
+  mk('PROJECT.md', outline('| 1 | part01-a.md | 一 |\n| 2 | part02-b.md | 二 |'));
+
+  // stage.js 就位（复制真实脚本 + 共享库）
+  const stageJs = path.join(proj, 'scripts', 'stage.js');
+  fs.mkdirSync(path.dirname(stageJs), { recursive: true });
+  fs.copyFileSync(path.join(ROOT, 'scripts', 'stage.js'), stageJs);
+  fs.mkdirSync(path.join(proj, 'lib'), { recursive: true });
+  fs.copyFileSync(gatePath, path.join(proj, 'lib', 'flow-gate.js'));
+  const runStage = (...a) => spawnSync(NODE_EXE, [stageJs, ...a], { encoding: 'utf-8' });
+
+  // 初始：无信号、无留痕 → 门禁失败
+  let g = gate.validateFlowGate(proj);
+  assert(!g.valid, '初始（无信号无留痕）→ 门禁失败');
+  assert(g.errors.some(e => e.includes('workflow.json')), '缺 workflow.json 被判缺', JSON.stringify(g.errors));
+  assert(g.errors.some(e => e.includes('issues.md')) && g.errors.some(e => e.includes('resolved.md')), '缺审查留痕被判缺');
+
+  // 写作信号
+  let sr = runStage('writing', '--done');
+  assert(sr.status === 0 && fs.existsSync(path.join(proj, 'materials', 'workflow.json')), 'stage writing --done 写信号', sr.stdout + sr.stderr);
+
+  // review：缺 issues.md 被拒
+  sr = runStage('review', '--done');
+  assert(sr.status !== 0, '缺 issues.md 时 review --done 被拒', sr.stdout);
+  mk('materials/review/issues.md',
+    '# 编辑审查意见清单\n\n## part01\n\n| # | 章节 | 级别 | 类型 | 原句 | 建议 |\n|---|---|---|---|---|---|\n' +
+    '| 1 | 第一章 | 高 | 用词 | "x" | 改 |\n| 2 | 第二章 | 低 | 润色 | "y" | 改 |\n');
+  sr = runStage('review', '--done');
+  assert(sr.status === 0, 'issues.md 就绪后 review --done 通过', sr.stdout + sr.stderr);
+
+  // revision：缺 resolved.md 被拒
+  sr = runStage('revision', '--done');
+  assert(sr.status !== 0, '缺 resolved.md 时 revision --done 被拒', sr.stdout);
+  mk('materials/review/resolved.md', '# 审查意见核销\n\n| # | 处理 | 说明 |\n|---|---|---|\n| 2 | 已改 | y |\n');
+  sr = runStage('revision', '--done');
+  assert(sr.status === 0, 'resolved.md 就绪后 revision --done 通过', sr.stdout + sr.stderr);
+
+  // 核销覆盖：高/中级 #1 未核销 → 失败
+  g = gate.validateFlowGate(proj);
+  assert(!g.valid && g.errors.some(e => e.includes('#1')), '高/中级未核销（#1）→ 门禁失败', JSON.stringify(g.errors));
+
+  // 补齐核销 → 通过
+  mk('materials/review/resolved.md', '# 审查意见核销\n\n| # | 处理 | 说明 |\n|---|---|---|\n| 1 | 已改 | x |\n| 2 | 已改 | y |\n');
+  runStage('revision', '--done');
+  g = gate.validateFlowGate(proj);
+  assert(g.valid, '信号齐 + 核销覆盖 → 门禁通过', JSON.stringify(g.errors));
+
+  // 指纹：修改完成后再动稿 → 失败
+  mk('fragments/part01-a.md', '# a changed\n');
+  g = gate.validateFlowGate(proj);
+  assert(!g.valid && g.errors.some(e => e.includes('指纹')), '修改完成后又动稿 → 指纹不一致 → 门禁失败', JSON.stringify(g.errors));
+
+  // 大纲 vs 片段：缺 part03 → 失败
+  fs.rmSync(path.join(proj, 'materials', 'workflow.json'), { force: true });
+  mk('PROJECT.md', outline('| 1 | part01-a.md | 一 |\n| 2 | part02-b.md | 二 |\n| 3 | part03-c.md | 三 |'));
+  g = gate.validateFlowGate(proj);
+  assert(g.errors.some(e => e.includes('part03')), '大纲列出但片段缺失（part03）→ 被判漏写', JSON.stringify(g.errors));
+
+  // 重标 writing 作废其后信号（强制重审）
+  runStage('writing', '--done');
+  runStage('review', '--done');
+  runStage('revision', '--done');
+  const wfAll = JSON.parse(fs.readFileSync(path.join(proj, 'materials', 'workflow.json'), 'utf-8'));
+  runStage('writing', '--done');
+  const wfReset = JSON.parse(fs.readFileSync(path.join(proj, 'materials', 'workflow.json'), 'utf-8'));
+  assert(wfAll.review && wfAll.revision && !wfReset.review && !wfReset.revision, '重标 writing 作废其后信号（强制重审）', JSON.stringify(wfReset));
+
+  fs.rmSync(proj, { recursive: true, force: true });
 }
 
 // ===== 清理 =====
