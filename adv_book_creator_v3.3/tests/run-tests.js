@@ -53,8 +53,7 @@ for (const f of ['convert-md.js', 'check-md.js', 'fix-md.js', 'build-all.js', 'b
 }
 fs.mkdirSync(path.join(WORK, 'lib'), { recursive: true });
 fs.copyFileSync(path.join(TEMPLATES, 'lib', 'fence-scan.js'), path.join(WORK, 'lib', 'fence-scan.js'));
-fs.copyFileSync(path.join(TEMPLATES, 'version.json'), path.join(WORK, 'version.json'));
-// templates/version.json 仅含版本号，测试需要完整字段
+// 模板化：技能侧只放 *_template 模板（防覆盖项目文件），WORK 的 version.json 按需现写
 fs.writeFileSync(path.join(WORK, 'version.json'), JSON.stringify({
   version: '1.0.0', title: '回归测试手册', subtitle: '', author: '测试'
 }), 'utf-8');
@@ -403,7 +402,8 @@ for (const [name, cfg] of Object.entries(coverSelect.STYLES)) {
 const initSrc = fs.readFileSync(path.join(ROOT, 'scripts', 'init-project.js'), 'utf-8');
 assert(initSrc.includes("path.join(SKILL_DIR, 'icon')"), 'init 复制 icon 风格库');
 assert(initSrc.includes('cover-select.js'), 'init 复制 cover-select.js');
-assert(initSrc.includes("fileTitle: ''"), 'init 生成 version.json 含 fileTitle 字段（留空自动模式）');
+assert(initSrc.includes('version_template.json'), 'init 从 version_template.json 读版本模板');
+assert(initSrc.includes('project_template.md'), 'init 从 project_template.md 读项目计划模板');
 
 // 7f. 文件名纯 ASCII 回归（Trae/WorkBuddy 安装时非 ASCII 文件名会被编码破坏 → icon 库失效/模板漏拷）
 {
@@ -433,6 +433,34 @@ assert(initSrc.includes('封面风格库完整性预检') && initSrc.includes('m
   } else {
     console.log('   ⏭️  该技能无编辑审查门禁（v3.1），跳过 [0c] 断言');
   }
+}
+
+// 7i. init 模板化：PROJECT.md / version.json 由 *_template 生成，模板不落进项目（防覆盖回归）
+console.log('🔍 [7i] init 模板化（PROJECT.md / version.json）');
+{
+  const projTplPath = path.join(TEMPLATES, 'project_template.md');
+  assert(fs.existsSync(projTplPath), 'templates 含 project_template.md');
+  assert(!fs.existsSync(path.join(TEMPLATES, 'PROJECT.md')), 'templates 不含 PROJECT.md（防覆盖项目文件）');
+  assert(fs.existsSync(path.join(TEMPLATES, 'version_template.json')), 'templates 含 version_template.json');
+  assert(!fs.existsSync(path.join(TEMPLATES, 'version.json')), 'templates 不含 version.json（防覆盖项目文件）');
+
+  const projTplSrc = fs.readFileSync(projTplPath, 'utf-8');
+  assert(projTplSrc.includes('{{书名}}'), 'project_template.md 含 {{书名}} 占位符');
+  assert(projTplSrc.includes('## 九、对抗性审查设计'), 'project_template.md 含对抗性审查设计节');
+
+  const initOut = path.join(WORK, 'init-smoke');
+  const run = spawnSync(NODE_EXE, [path.join(ROOT, 'scripts', 'init-project.js'), initOut, '模板化冒烟'], { encoding: 'utf-8' });
+  assert(run.status === 0, 'init 实际运行成功', (run.stdout || '') + (run.stderr || ''));
+  const projMd = fs.existsSync(path.join(initOut, 'PROJECT.md'))
+    ? fs.readFileSync(path.join(initOut, 'PROJECT.md'), 'utf-8') : '';
+  assert(projMd.startsWith('# 模板化冒烟 — 项目计划'), 'PROJECT.md 书名由模板占位符替换', projMd.slice(0, 60));
+  assert(projMd !== '' && !projMd.includes('{{书名}}'), 'PROJECT.md 无残留占位符');
+  const vjPath = path.join(initOut, 'version.json');
+  const vj = fs.existsSync(vjPath) ? JSON.parse(fs.readFileSync(vjPath, 'utf-8')) : {};
+  assert(vj.title === '模板化冒烟' && vj.fileTitle === '' && vj.coverStyle === '', 'version.json 由模板生成且字段完整', JSON.stringify(vj));
+  assert(typeof vj.lastUpdate === 'string' && vj.lastUpdate.length === 10, 'version.json lastUpdate 已注入日期', String(vj.lastUpdate));
+  assert(!fs.existsSync(path.join(initOut, 'project_template.md')) && !fs.existsSync(path.join(initOut, 'version_template.json')), '模板文件不落进项目根');
+  fs.rmSync(initOut, { recursive: true, force: true });
 }
 
 // ===== 清理 =====

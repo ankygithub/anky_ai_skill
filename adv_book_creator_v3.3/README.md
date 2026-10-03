@@ -23,6 +23,8 @@
 
 初始化书项目时由此复制到书项目根。**改这里的文件只影响之后新建的项目**，已存在的书项目用的是各自的副本。
 
+> **防覆盖命名约定**：凡进项目后**不该被覆盖**的项目级数据文件，技能侧一律带 `_template` 后缀——`project_template.md` → 项目 `PROJECT.md`、`version_template.json` → 项目 `version.json`。这样"把新版本技能脚本覆盖进已有项目"时，模板只会落成 `*_template.*`，**不会盖掉项目自己的 `PROJECT.md` / `version.json`**。
+
 | 文件                  | 用途                                                                                                      |
 | ------------------- | ------------------------------------------------------------------------------------------------------- |
 | `convert-md.js`     | **核心转换器**：Markdown 片段 → HTML 片段。组件语法（\[!TIP] / :::steps / :::compare）在这里解析渲染，占位符零残留断言在这里                |
@@ -38,12 +40,14 @@
 | `build-epub-pro.js` | EPUB 精排生成器（依赖可选的 highlight.js / archiver）                                                               |
 | `lib/fence-scan.js` | **共享围栏状态机**：代码围栏（\`\`\` / \~\~\~）判定的唯一实现。convert-md、check-md、build-all 三方共用，防止各写一套判定逻辑漂移（曾导致配对错位吞掉半章正文） |
 | `lib/footnote-pop.js` | **脚注点击弹层**：点击正文脚注标记在标记旁浮出内容（替代跳转章末）。build.js 与 build-reader.js 构建期内联的**单一来源**；样式在 styles.css「脚注」段。EPUB 不用它（多看自有弹窗） |
+| `project_template.md` | **项目中枢模板**：init 读取 → 把 `{{书名}}` 替换为书名 → 生成项目根 `PROJECT.md`（带 `_template` 后缀，防覆盖项目文件） |
+| `version_template.json` | **版本信息模板**：init 读取 → 注入 title/lastUpdate → 生成项目根 `version.json`（带 `_template` 后缀，防覆盖项目文件） |
 
 ## 三、scripts/ — 技能级工具
 
 | 脚本                   | 用途                                                                                             | 运行位置                          |
 | -------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------- |
-| `init-project.js`    | **新建书项目**：创建目录骨架 + 复制模板 + 生成 version.json/PROJECT.md/CHANGELOG.md                              | 技能目录下运行                       |
+| `init-project.js`    | **新建书项目**：创建目录骨架 + 复制模板 + 由 `templates/*_template.*` 生成 `version.json`/`PROJECT.md`（注入书名）+ CHANGELOG.md | 技能目录下运行 |
 | `rebuild.js`         | **重建产物**：`node scripts/rebuild.js [html,pdf,reader,md] [--clean]`。`--clean` 清空旧产物后重建（自动跳过产物门禁） | 书项目下运行（init 时复制到书项目 scripts/） |
 | `migrate-to-lite.js` | **旧书迁移**：把 v2/v4 时代写的书（HTML 组件语法）转成 lite 的 Markdown 组件语法。详见下方"旧书迁移"                            | 任意位置，参数指定目标 fragments 目录      |
 
@@ -96,6 +100,7 @@
 
 - **只审一次、全书写完再审**：写作中途不审；全文封笔后派一个审查 Agent 统一审一遍——审查 → 落盘清单 → 统一修改 → 核销，结束，**不反复对抗**
 - **一个 Agent 融合双视角**：领域主审（身份由 PROJECT.md「对抗性审查设计」定：技术编辑/业务专家/科普编辑/学术编辑/文学编辑…）+ 普通读者；**两视角各独立走一遍清单**（防止读者视角被专家视角淹没）
+- **提示词装配（干净上下文）**：审查 Agent 是新会话、必须自带上下文——取 `references/editor-review.md`「审查 Agent 提示词模板」，填入 PROJECT.md「九、对抗性审查设计」的主审身份/粒度 → 粘给它；**只给规格文件与产物，不粘写作过程/作者自评**（否则锚定审查者）。模板只此一份，不在 PROJECT.md 再抄
 - **粒度 = part**：计划里合成 part 的按 part 审，否则逐章；**不做跨 part 交叉分析**（连贯性交给规划阶段的 PROJECT.md/Mini-Plan）。批次：1 个 Agent 处理 1-3 个 part，**禁止每 part 派一个 Agent**
 - **只落盘不改稿**：审查只产出全书意见清单 `materials/review/issues.md`（按 part 分节；章节 | 级别 | 类型 | 原句 | 建议）——审查阶段不动稿
 - **统一修改 + 逐条核销**：审查完成后统一改一次，再逐条核销写 `materials/review/resolved.md`（`#N 已改` / `驳回：理由`）；核销是极轻收尾校验，只读被改的句子，不重扫全文
