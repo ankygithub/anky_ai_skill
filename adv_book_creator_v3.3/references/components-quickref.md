@@ -101,7 +101,7 @@
 </svg>
 ```
 
-**外部图片**（封面装饰、数据图表，放 `assets/`）：
+**外部图片**（仅用户自备的照片/截图等，放 `assets/`；数据图表与插图一律内嵌 SVG）：
 
 ```html
 <figure class="content-figure">

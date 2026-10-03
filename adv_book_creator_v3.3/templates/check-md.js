@@ -160,8 +160,8 @@ const RULES = {
         // 跳过 frontmatter 中的 ---
         if (line.trim() === '---') continue;
 
-        // 检查章标题：第X章 必须是 h2
-        if (/^第\d+章/.test(title)) {
+        // 检查章标题：第X章 必须是 h2（汉字与阿拉伯数字章号都要认：规范要求"第一章"）
+        if (/^第[0-9一二三四五六七八九十百零]+章/.test(title)) {
           if (level !== 2) {
             errors.push({
               line: i + 1,
@@ -251,18 +251,21 @@ const RULES = {
     severity: 'error',
     check(file, content, lines) {
       const errors = [];
-      const chapterNum = parseInt(file.match(/chapter-(\d+)/)?.[1] || '0', 10);
-      if (chapterNum === 0) return errors; // 非 chapter 文件跳过
+      // 正文片段命名为 partNN-xxx.md；cover/backpage 及非正文文件不参与本规则
+      if (!/^part\d+/.test(file)) return errors;
 
-      const hasChapterHeading = lines.some(line => {
+      // 汉字与阿拉伯数字章号都要认（规范要求汉字"第一章"；兼容"第1章"）
+      const fenceMaskCh = scanFenceMask(lines);
+      const hasChapterHeading = lines.some((line, i) => {
+        if (fenceMaskCh[i]) return false; // 围栏内是代码/字面量，不算章标题
         const match = line.match(/^#{1,6}\s+(.+)$/);
-        return match && /^第\d+章/.test(match[1].trim());
+        return match && /^第[0-9一二三四五六七八九十百零]+章/.test(match[1].trim());
       });
 
       if (!hasChapterHeading) {
         errors.push({
           line: 1,
-          message: `缺少章标题（应包含 "第${chapterNum}章 ..."）`
+          message: '缺少章标题（正文片段应至少包含一个 "## 第X章 标题"）'
         });
       }
 

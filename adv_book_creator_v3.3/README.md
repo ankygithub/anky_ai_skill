@@ -28,7 +28,7 @@
 | `convert-md.js`     | **核心转换器**：Markdown 片段 → HTML 片段。组件语法（\[!TIP] / :::steps / :::compare）在这里解析渲染，占位符零残留断言在这里                |
 | `check-md.js`       | **MD 片段门禁**：YAML 完整性、标题层级、禁用 HTML 标签拦截（error 阻断构建）；术语禁用词扫描（TERM001，warning 级不阻断）                                                      |
 | `fix-md.js`         | 门禁失败后的自动修复：仅处理标题层级（第X章→h2 等），不碰组件                                                                       |
-| `build.js`          | 合并 HTML 片段 → 单文件 HTML（6 套主题 + 导航 + 目录面板），生成 bookmarks.json（含内容指纹）                                       |
+| `build.js`          | 合并 HTML 片段 → 单文件 HTML（7 套主题 + 导航 + 目录面板），生成 bookmarks.json（含内容指纹）                                       |
 | `build-pdf.js`      | PDF 生成：Playwright 测量 + 模拟分页 + pdf-lib 书签。**优先读取 bookmarks.json 缓存，指纹不一致自动重算**                           |
 | `build-reader.js`   | 多文件阅读器。**组件样式从 styles.css 按锚点提取**（见维护须知 #2）                                                             |
 | `build-md.js`       | Markdown 导出（源头聚合：组件保真/围栏降级/SVG转文字说明+源码框）                     |
@@ -59,7 +59,7 @@
 
 - `editor-review.md` — **对抗性编辑审查规范（v3.2 新增，v3.3 改为"全书写完统一审一次"）**：触发时机与独立性、主审身份表、part 粒度与批次、**双视角清单（专家视角 + 普通读者）**、反 AI 腔速查、对抗性原则、`issues.md` 落盘与 `resolved.md` 核销、机械扫描边界
 
-- `design-system.md` — CSS 变量、6 套主题、转换器生成的 HTML 结构说明
+- `design-system.md` — CSS 变量、7 套主题、转换器生成的 HTML 结构说明
 
 - `md-templates/` — 封面/尾页/章节片段的格式模板
 
