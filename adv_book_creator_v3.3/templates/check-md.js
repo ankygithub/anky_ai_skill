@@ -75,6 +75,8 @@ function loadBannedTerms() {
       for (const raw of bannedCell.split(/[、，,;；\/]/)) {
         const t = raw.trim();
         if (!t || t === '-' || t === '—' || t === '无') continue;
+        // 单字符禁词（如 "A/B 测试" 按斜杠拆出的 A、B）只会制造全库误报，跳过
+        if (t.length < 2) continue;
         terms.add(t);
       }
     }
@@ -252,7 +254,11 @@ const RULES = {
     check(file, content, lines) {
       const errors = [];
       // 正文片段命名为 partNN-xxx.md；cover/backpage 及非正文文件不参与本规则
-      if (!/^part\d+/.test(file)) return errors;
+      const partMatch = file.match(/^part(\d+)/);
+      if (!partMatch) return errors;
+      // part00（卷首/导读）与附录（文件名含 fulu/appendix）不是"章"，不要求章标题
+      if (parseInt(partMatch[1], 10) === 0) return errors;
+      if (/fulu|appendix/i.test(file)) return errors;
 
       // 汉字与阿拉伯数字章号都要认（规范要求汉字"第一章"；兼容"第1章"）
       const fenceMaskCh = scanFenceMask(lines);

@@ -610,7 +610,7 @@ npx playwright install chromium
 
 | 版本 | 日期 | 主要改进 |
 |------|------|---------|
-| v3.3 | 2026-10 | 取消独立素材采集阶段（写作时现场搜、直接写正文+脚注）；对抗性审查改为"全书写完统一审一次"（一个 Agent 双视角、part 粒度、1-3 part/批，只落盘 issues.md → 统一修改 → 逐条核销 resolved.md，不反复对抗）；术语一致性机械扫描并入 check-md.js（TERM001，警告级）；删除 anti-ai-cliche.md / source-grade-simple.md；`[0c]` 门禁改校验 issues.md + resolved.md |
+| v3.3 | 2026-10 | 取消独立素材采集阶段（写作时现场搜、直接写正文+脚注）；对抗性审查改为"全书写完统一审一次"（一个 Agent 双视角、part 粒度、有界分段串行——每段全新上下文审 3–5 个单位并追加写同一份 issues.md，只落盘 issues.md → 统一修改（外科手术式）→ 逐条核销 resolved.md，不反复对抗）；术语一致性机械扫描并入 check-md.js（TERM001，警告级）；删除 anti-ai-cliche.md / source-grade-simple.md；`[0c]` 门禁改为流程门禁（三段信号 + 审查留痕 + 大纲对齐 + 核销覆盖 + 指纹） |
 | v3.2 | 2026-09 | 素材采集默认不采（不可编造事实判据 + 2轮 + 配额 + 用量回执）；术语纪律（体裁映射 + 术语表锁定）；资深编辑对抗审查（独立子 Agent + 两段式清单 + 体裁加查）；反 AI 腔 12 类清单 |
 | lite | 2026-09 | 组件 Markdown 原生化（[!TIP]/:::steps/:::compare）、删除HTML保护修复链、门禁改禁用清单策略、组件规范单一来源化 |
 | v4 | 2025-05 | MD-first架构、HTML标签自动检查修复、降级处理机制 |

@@ -96,6 +96,45 @@ const termText = spawnSync(NODE_EXE, [path.join(WORK, 'check-md.js'), path.join(
 assert(termText.stdout.includes('警告明细') && termText.stdout.includes('抓变化'), '成功分支打印术语警告明细');
 fs.rmSync(termRoot, { recursive: true, force: true });
 
+// ===== 2c. check-md：特殊文件豁免 + 单字符禁词（回归） =====
+console.log('🔍 [2c] check-md 特殊文件豁免与单字符禁词');
+{
+  const root = path.join(WORK, 'special-case');
+  fs.mkdirSync(path.join(root, 'fragments'), { recursive: true });
+  const w = (rel, txt) => fs.writeFileSync(path.join(root, rel), txt, 'utf-8');
+  const fm = (title) => `---\ntype: chapter\ntitle: ${title}\n---\n\n`;
+
+  // HDG003：part00（卷首）与附录（fulu）无章标题不应报错；普通 part 无章标题应报错
+  w('fragments/part00-daodu.md', fm('卷首') + '导言，无章标题。\n');
+  w('fragments/part05-fulu-terms.md', fm('附录') + '### 附录A 术语表\n\n内容。\n');
+  w('fragments/part01-normal.md', fm('缺章标题') + '### 1.1 小节\n\n正文。\n');
+  let rx = spawnSync(NODE_EXE, [path.join(WORK, 'check-md.js'), path.join(root, 'fragments'), '--json'], { encoding: 'utf-8' });
+  let jx = JSON.parse(rx.stdout);
+  const hdg = jx.errors.filter(e => e.ruleId === 'HDG003');
+  assert(hdg.length === 1 && hdg[0].file === 'part01-normal.md',
+    'HDG003 只对普通 part 报缺章标题（part00/附录豁免）', JSON.stringify(hdg));
+  fs.rmSync(root, { recursive: true, force: true });
+
+  // TERM001：单字符禁词（"A/B 测试"拆出的 A）不再全库误报；2 字禁词仍命中
+  const troot = path.join(WORK, 'single-char');
+  fs.mkdirSync(path.join(troot, 'fragments'), { recursive: true });
+  fs.writeFileSync(path.join(troot, 'PROJECT.md'),
+    '# T\n\n## 三、术语表（写作前锁定用词）\n\n' +
+    '| 中文标准名 | 英文 | 全称/说明 | 首次出现章 | 禁用同义词 |\n' +
+    '|-----------|------|----------|-----------|-----------|\n' +
+    '| 变更数据捕获 | CDC | Change Data Capture | 第 5 章 | 抓变化、A/B 测试（仅可作括注） |\n\n', 'utf-8');
+  fs.writeFileSync(path.join(troot, 'fragments', 'part01-term.md'),
+    '---\ntype: chapter\ntitle: 术语\n---\n\n## 第一章 术语\n\n' +
+    '标准词 变更数据捕获。误用 抓变化。\n\n' +
+    '颜色 #E8F1FB 与 A/B 测试 属于字面量，不应命中单字符禁词。\n', 'utf-8');
+  rx = spawnSync(NODE_EXE, [path.join(WORK, 'check-md.js'), path.join(troot, 'fragments'), '--json'], { encoding: 'utf-8' });
+  jx = JSON.parse(rx.stdout);
+  const termWarns = jx.errors.filter(e => e.ruleId === 'TERM001');
+  assert(termWarns.length === 1 && /抓变化/.test(termWarns[0].message),
+    'TERM001 单字符禁词跳过（A/B 不再全库误报），2 字禁词仍命中', JSON.stringify(termWarns));
+  fs.rmSync(troot, { recursive: true, force: true });
+}
+
 // ===== 3. convert-md 转换正确性 =====
 console.log('🔍 [3] convert-md 转换');
 r = spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
