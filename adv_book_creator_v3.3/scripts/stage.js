@@ -3,7 +3,7 @@
  * lite - 流程门禁信号（轻量硬信号，无 AI 语义判断）
  *
  * 用法（在书项目下运行）：
- *   node scripts/stage.js writing  --done   # 写作完成（要求 fragments/ 有 part*.md）
+ *   node scripts/stage.js writing  --done   # 写作完成（要求 fragments/ 有 ch*.md 章节）
  *   node scripts/stage.js review   --done   # 对抗性审查完成（要求 materials/review/issues.md）
  *   node scripts/stage.js revision --done   # 统一修改 + 核销完成（要求 materials/review/resolved.md）
  *   node scripts/stage.js status            # 查看当前信号
@@ -42,10 +42,11 @@ function nowISO() {
     `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}${s}` +
     `${p(Math.floor(Math.abs(off) / 60))}:${p(Math.abs(off) % 60)}`;
 }
-function partIds() {
+// 章节片段：chNN-xxx.md（一章一文件）
+function chapterIds() {
   if (!fs.existsSync(FRAGMENTS_DIR)) return [];
   return fs.readdirSync(FRAGMENTS_DIR)
-    .map(f => (f.match(/^(part\d+)/) || [])[1]).filter(Boolean).sort();
+    .map(f => (f.match(/^(ch\d+)/i) || [])[1]).filter(Boolean).sort();
 }
 function countIssueRows(md) {
   let n = 0;
@@ -78,8 +79,8 @@ if (!flags.includes('--done')) {
 }
 
 // 依赖留痕校验：信号不能凭空写，必须对应产物已落盘
-if (stage === 'writing' && partIds().length === 0) {
-  console.error('❌ fragments/ 下没有 part*.md 正文，不能标记写作完成');
+if (stage === 'writing' && chapterIds().length === 0) {
+  console.error('❌ fragments/ 下没有 ch*.md 章节，不能标记写作完成');
   process.exit(1);
 }
 if (stage === 'review' && !fs.existsSync(path.join(REVIEW_DIR, 'issues.md'))) {
@@ -94,7 +95,7 @@ if (stage === 'revision' && !fs.existsSync(path.join(REVIEW_DIR, 'resolved.md'))
 const wf = readWf();
 const fp = fingerprint(FRAGMENTS_DIR);
 const entry = { done: true, at: nowISO(), fp };
-if (stage === 'writing') entry.parts = partIds();
+if (stage === 'writing') entry.chapters = chapterIds();
 if (stage === 'review') {
   try {
     entry.issues = countIssueRows(fs.readFileSync(path.join(REVIEW_DIR, 'issues.md'), 'utf-8'));
@@ -107,5 +108,5 @@ writeWf(wf);
 console.log(`✅ 已记录阶段信号：${stage}`);
 console.log(`   时间: ${entry.at}`);
 console.log(`   指纹: ${fp}`);
-if (stage === 'writing') console.log(`   Part: ${entry.parts.join(', ')}`);
+if (stage === 'writing') console.log(`   章节: ${entry.chapters.join(', ')}`);
 process.exit(0);

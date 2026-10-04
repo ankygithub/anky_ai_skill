@@ -253,11 +253,11 @@ const RULES = {
     severity: 'error',
     check(file, content, lines) {
       const errors = [];
-      // 正文片段命名为 partNN-xxx.md；cover/backpage 及非正文文件不参与本规则
-      const partMatch = file.match(/^part(\d+)/);
-      if (!partMatch) return errors;
-      // part00（卷首/导读）与附录（文件名含 fulu/appendix）不是"章"，不要求章标题
-      if (parseInt(partMatch[1], 10) === 0) return errors;
+      // 正文章节片段命名为 chNN-xxx.md；cover/backpage 及非章节文件不参与本规则
+      const chMatch = file.match(/^ch(\d+)/);
+      if (!chMatch) return errors;
+      // ch00（卷首/导读）与附录（文件名含 fulu/appendix）不是"章"，不要求章标题
+      if (parseInt(chMatch[1], 10) === 0) return errors;
       if (/fulu|appendix/i.test(file)) return errors;
 
       // 汉字与阿拉伯数字章号都要认（规范要求汉字"第一章"；兼容"第1章"）

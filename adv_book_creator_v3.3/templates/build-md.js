@@ -135,8 +135,8 @@ function extractToc(body) {
 
 // ===== 片段排序（与 build.js 同构：cover→正文→backpage，part 自然排序） =====
 function naturalPartSort(a, b) {
-  const numA = parseInt(a.match(/^part(\d+)/)?.[1] || '0', 10);
-  const numB = parseInt(b.match(/^part(\d+)/)?.[1] || '0', 10);
+  const numA = parseInt(a.match(/^ch(\d+)/)?.[1] || '0', 10);
+  const numB = parseInt(b.match(/^ch(\d+)/)?.[1] || '0', 10);
   if (numA !== numB) return numA - numB;
   return a.localeCompare(b);
 }

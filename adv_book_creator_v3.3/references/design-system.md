@@ -116,7 +116,7 @@
 | type | 文件命名 | 说明 |
 |------|---------|------|
 | `cover` | `00-cover.md` | 封面（详见下方封面字段表） |
-| `chapter` | `part01-xxx.md` ~ `part99-xxx.md` | 正文章节，`##`作为顶级标题 |
+| `chapter` | `ch01-xxx.md` ~ `ch99-xxx.md` | 正文章节（一章一文件），`##`作为顶级标题 |
 | `backpage` | `99-backpage.md` | 尾页（详见下方封底字段表） |
 
 > **模板参考位置**：`references/md-templates/` 目录下有 3 个示例文件供 AI 写作时参考格式

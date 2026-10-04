@@ -83,7 +83,7 @@ fs.writeFileSync(path.join(termRoot, 'PROJECT.md'),
   '|-----------|------|----------|-----------|-----------|\n' +
   '| 变更数据捕获 | CDC | Change Data Capture | 第 5 章 | 抓变化、抽取变更 |\n\n',
   'utf-8');
-fs.writeFileSync(path.join(termRoot, 'fragments', 'part01-term.md'),
+fs.writeFileSync(path.join(termRoot, 'fragments', 'ch01-term.md'),
   '---\ntype: chapter\ntitle: 术语\n---\n\n## 第一章 术语\n\n正文用标准词 变更数据捕获。\n\n' +
   '这里误用了抓变化这个说法。\n\n```text\n代码里的 抓变化 属字面量，不扫\n```\n\n行内示例 `抓变化` 也不扫。\n', 'utf-8');
 r = spawnSync(NODE_EXE, [path.join(WORK, 'check-md.js'), path.join(termRoot, 'fragments'), '--json'], { encoding: 'utf-8' });
@@ -104,15 +104,15 @@ console.log('🔍 [2c] check-md 特殊文件豁免与单字符禁词');
   const w = (rel, txt) => fs.writeFileSync(path.join(root, rel), txt, 'utf-8');
   const fm = (title) => `---\ntype: chapter\ntitle: ${title}\n---\n\n`;
 
-  // HDG003：part00（卷首）与附录（fulu）无章标题不应报错；普通 part 无章标题应报错
-  w('fragments/part00-daodu.md', fm('卷首') + '导言，无章标题。\n');
-  w('fragments/part05-fulu-terms.md', fm('附录') + '### 附录A 术语表\n\n内容。\n');
-  w('fragments/part01-normal.md', fm('缺章标题') + '### 1.1 小节\n\n正文。\n');
+  // HDG003：ch00（卷首）与附录（fulu）无章标题不应报错；普通章节无章标题应报错
+  w('fragments/ch00-daodu.md', fm('卷首') + '导言，无章标题。\n');
+  w('fragments/ch05-fulu-terms.md', fm('附录') + '### 附录A 术语表\n\n内容。\n');
+  w('fragments/ch01-normal.md', fm('缺章标题') + '### 1.1 小节\n\n正文。\n');
   let rx = spawnSync(NODE_EXE, [path.join(WORK, 'check-md.js'), path.join(root, 'fragments'), '--json'], { encoding: 'utf-8' });
   let jx = JSON.parse(rx.stdout);
   const hdg = jx.errors.filter(e => e.ruleId === 'HDG003');
-  assert(hdg.length === 1 && hdg[0].file === 'part01-normal.md',
-    'HDG003 只对普通 part 报缺章标题（part00/附录豁免）', JSON.stringify(hdg));
+  assert(hdg.length === 1 && hdg[0].file === 'ch01-normal.md',
+    'HDG003 只对普通章节报缺章标题（ch00/附录豁免）', JSON.stringify(hdg));
   fs.rmSync(root, { recursive: true, force: true });
 
   // TERM001：单字符禁词（"A/B 测试"拆出的 A）不再全库误报；2 字禁词仍命中
@@ -123,7 +123,7 @@ console.log('🔍 [2c] check-md 特殊文件豁免与单字符禁词');
     '| 中文标准名 | 英文 | 全称/说明 | 首次出现章 | 禁用同义词 |\n' +
     '|-----------|------|----------|-----------|-----------|\n' +
     '| 变更数据捕获 | CDC | Change Data Capture | 第 5 章 | 抓变化、A/B 测试（仅可作括注） |\n\n', 'utf-8');
-  fs.writeFileSync(path.join(troot, 'fragments', 'part01-term.md'),
+  fs.writeFileSync(path.join(troot, 'fragments', 'ch01-term.md'),
     '---\ntype: chapter\ntitle: 术语\n---\n\n## 第一章 术语\n\n' +
     '标准词 变更数据捕获。误用 抓变化。\n\n' +
     '颜色 #E8F1FB 与 A/B 测试 属于字面量，不应命中单字符禁词。\n', 'utf-8');
@@ -175,7 +175,7 @@ assert(part01.includes('<svg'), '内嵌 SVG 保留');
 // ===== 3g. 表格空单元格保留（回归：split('|').filter(c=>c.trim()) 吞掉空格子，
 //          使「首列合并维度 + 续行留空」的表格整行左移一格） =====
 console.log('🔍 [3g] 表格空单元格保留');
-const cellMd = path.join(WORK, 'fragments', 'part02-emptycell.md');
+const cellMd = path.join(WORK, 'fragments', 'ch02-emptycell.md');
 fs.writeFileSync(cellMd,
   '---\ntype: chapter\ntitle: 第二章 空单元格\n---\n\n## 第二章 空单元格\n\n' +
   '| 维度 | 档位 | 加分/扣分 |\n|------|------|----------|\n' +
@@ -202,7 +202,7 @@ spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragment
 
 // ===== 4. 未闭合 figure 自愈 =====
 console.log('🔍 [4] figure 未闭合自愈');
-fs.writeFileSync(path.join(WORK, 'fragments', 'part02-figure.md'),
+fs.writeFileSync(path.join(WORK, 'fragments', 'ch02-figure.md'),
   '---\ntype: chapter\ntitle: 第二章 自愈\n---\n\n## 第二章 自愈\n\n<figure class="content-figure">\n<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><rect width="10" height="10"/></svg>\n<figcaption>图</figcaption>\n\nfigure 之后的正文。\n', 'utf-8');
 r = spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
 const part02 = fs.readFileSync(path.join(WORK, 'fragments', 'part02.html'), 'utf-8');
@@ -210,13 +210,13 @@ assert(r.stdout.includes('unclosed-figure'), '未闭合 figure 触发自愈警�
 assert((part02.match(/<figure\b/g) || []).length === (part02.match(/<\/figure>/g) || []).length, '自愈后 figure 配对');
 assert(part02.includes('<p>figure 之后的正文。</p>'), 'figure 后正文不被吞（未被包进 figure）');
 // 恢复现场：删除自愈用例的源文件与产物，重新转换，避免污染后续构建测试
-fs.rmSync(path.join(WORK, 'fragments', 'part02-figure.md'), { force: true });
+fs.rmSync(path.join(WORK, 'fragments', 'ch02-figure.md'), { force: true });
 fs.rmSync(path.join(WORK, 'fragments', 'part02.html'), { force: true });
 spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
 
 // ===== 4b. 脚注渲染（多看弹窗规范三件套） =====
 console.log('🔍 [4b] 脚注渲染');
-fs.writeFileSync(path.join(WORK, 'fragments', 'part02-fn.md'),
+fs.writeFileSync(path.join(WORK, 'fragments', 'ch02-fn.md'),
   '---\ntype: chapter\ntitle: 第二章 脚注\n---\n\n## 第二章 脚注\n\n向量化比循环快[^1]，底层是 C 实现[^c]。同源复用[^1]。\n\n[^1]: 来源：chapter-11-s01（官方文档）\n[^c]: 来源：chapter-13-s02\n', 'utf-8');
 spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
 const part02fn = fs.readFileSync(path.join(WORK, 'fragments', 'part02.html'), 'utf-8');
@@ -235,13 +235,13 @@ const fnJson = JSON.parse(fnCheck.stdout);
 assert(fnJson.errorCount === 0 && fnJson.warningCount >= 1, '脚注未定义引用 → 警告不阻断');
 fs.rmSync(badFnDir, { recursive: true, force: true });
 // 恢复现场
-fs.rmSync(path.join(WORK, 'fragments', 'part02-fn.md'), { force: true });
+fs.rmSync(path.join(WORK, 'fragments', 'ch02-fn.md'), { force: true });
 fs.rmSync(path.join(WORK, 'fragments', 'part02.html'), { force: true });
 spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
 
 // ===== 4c. callout 内脚注渲染（回归：callout 先被抽成占位符，第 9.5 步替换不到 → [^n] 漏为字面量） =====
 console.log('🔍 [4c] callout 内脚注渲染');
-fs.writeFileSync(path.join(WORK, 'fragments', 'part02-callout-fn.md'),
+fs.writeFileSync(path.join(WORK, 'fragments', 'ch02-callout-fn.md'),
   '---\ntype: chapter\ntitle: 第二章 提示块脚注\n---\n\n## 第二章 提示块脚注\n\n' +
   '> [!TIP] 标题带脚注[^t]\n' +
   '> 正文带脚注[^a]，再复用[^t]。\n' +
@@ -266,7 +266,7 @@ assert(part02cf.includes('class="fn-back" href="#fnref-1"'), '章末脚注 ↩ �
   assert(anchorIdx > calloutStart && anchorIdx < calloutEnd, 'fnref-1 锚点位于文档首个引用处（callout 标题内）');
 }
 // 恢复现场
-fs.rmSync(path.join(WORK, 'fragments', 'part02-callout-fn.md'), { force: true });
+fs.rmSync(path.join(WORK, 'fragments', 'ch02-callout-fn.md'), { force: true });
 fs.rmSync(path.join(WORK, 'fragments', 'part02.html'), { force: true });
 spawnSync(NODE_EXE, [path.join(WORK, 'convert-md.js'), path.join(WORK, 'fragments')], { encoding: 'utf-8' });
 
@@ -523,9 +523,9 @@ console.log('🔍 [7j] 流程门禁（阶段信号 / 大纲对齐 / 核销覆盖
   const outline = (rows) =>
     '## 五、章节大纲\n\n| Part | 文件 | 标题 |\n|---|---|---|\n' + rows + '\n\n## 六、x\n';
 
-  mk('fragments/part01-a.md', '# a\n');
-  mk('fragments/part02-b.md', '# b\n');
-  mk('PROJECT.md', outline('| 1 | part01-a.md | 一 |\n| 2 | part02-b.md | 二 |'));
+  mk('fragments/ch01-a.md', '# a\n');
+  mk('fragments/ch02-b.md', '# b\n');
+  mk('PROJECT.md', outline('| 1 | ch01-a.md | 一 |\n| 2 | ch02-b.md | 二 |'));
 
   // stage.js 就位（复制真实脚本 + 共享库）
   const stageJs = path.join(proj, 'scripts', 'stage.js');
@@ -549,7 +549,7 @@ console.log('🔍 [7j] 流程门禁（阶段信号 / 大纲对齐 / 核销覆盖
   sr = runStage('review', '--done');
   assert(sr.status !== 0, '缺 issues.md 时 review --done 被拒', sr.stdout);
   mk('materials/review/issues.md',
-    '# 编辑审查意见清单\n\n## part01\n\n| # | 章节 | 级别 | 类型 | 原句 | 建议 |\n|---|---|---|---|---|---|\n' +
+    '# 编辑审查意见清单\n\n## Part 1\n\n| # | 章节 | 级别 | 类型 | 原句 | 建议 |\n|---|---|---|---|---|---|\n' +
     '| 1 | 第一章 | 高 | 用词 | "x" | 改 |\n| 2 | 第二章 | 低 | 润色 | "y" | 改 |\n');
   sr = runStage('review', '--done');
   assert(sr.status === 0, 'issues.md 就绪后 review --done 通过', sr.stdout + sr.stderr);
@@ -572,15 +572,15 @@ console.log('🔍 [7j] 流程门禁（阶段信号 / 大纲对齐 / 核销覆盖
   assert(g.valid, '信号齐 + 核销覆盖 → 门禁通过', JSON.stringify(g.errors));
 
   // 指纹：修改完成后再动稿 → 失败
-  mk('fragments/part01-a.md', '# a changed\n');
+  mk('fragments/ch01-a.md', '# a changed\n');
   g = gate.validateFlowGate(proj);
   assert(!g.valid && g.errors.some(e => e.includes('指纹')), '修改完成后又动稿 → 指纹不一致 → 门禁失败', JSON.stringify(g.errors));
 
-  // 大纲 vs 片段：缺 part03 → 失败
+  // 大纲 vs 片段：缺 ch03 → 失败
   fs.rmSync(path.join(proj, 'materials', 'workflow.json'), { force: true });
-  mk('PROJECT.md', outline('| 1 | part01-a.md | 一 |\n| 2 | part02-b.md | 二 |\n| 3 | part03-c.md | 三 |'));
+  mk('PROJECT.md', outline('| 1 | ch01-a.md | 一 |\n| 2 | ch02-b.md | 二 |\n| 3 | ch03-c.md | 三 |'));
   g = gate.validateFlowGate(proj);
-  assert(g.errors.some(e => e.includes('part03')), '大纲列出但片段缺失（part03）→ 被判漏写', JSON.stringify(g.errors));
+  assert(g.errors.some(e => e.includes('ch03')), '大纲列出但片段缺失（ch03）→ 被判漏写', JSON.stringify(g.errors));
 
   // 重标 writing 作废其后信号（强制重审）
   runStage('writing', '--done');
@@ -590,6 +590,47 @@ console.log('🔍 [7j] 流程门禁（阶段信号 / 大纲对齐 / 核销覆盖
   runStage('writing', '--done');
   const wfReset = JSON.parse(fs.readFileSync(path.join(proj, 'materials', 'workflow.json'), 'utf-8'));
   assert(wfAll.review && wfAll.revision && !wfReset.review && !wfReset.revision, '重标 writing 作废其后信号（强制重审）', JSON.stringify(wfReset));
+
+  fs.rmSync(proj, { recursive: true, force: true });
+}
+
+// 7k. Part 分组映射：解析 + 覆盖性校验（不重不漏）
+console.log('🔍 [7k] Part 分组映射覆盖校验');
+{
+  const gate = require(path.join(TEMPLATES, 'lib', 'flow-gate.js'));
+  const parts = gate.parsePartMapping(
+    '### 5.2 写作与审阅分组（Part 映射）\n\n| Part | 包含章节 | 分组理由 |\n|---|---|---|\n| 1 | ch01, ch02 | 强相关 |\n| 2 | ch03–ch05 | 独立 |\n');
+  assert(parts && parts.length === 2 && parts[1].chapters.join(',') === 'ch03,ch04,ch05',
+    'Part 映射解析（逗号 + 范围展开）', JSON.stringify(parts));
+
+  const proj = path.join(WORK, 'mapping-case');
+  const mk = (rel, txt) => {
+    const p = path.join(proj, rel);
+    fs.mkdirSync(path.dirname(p), { recursive: true });
+    fs.writeFileSync(p, txt, 'utf-8');
+  };
+  const projMd = (mapRows) =>
+    '## 五、章节大纲\n\n### 5.1 章清单\n\n| 章 | 文件 | 标题 |\n|---|---|---|\n' +
+    '| 1 | ch01-a.md | 一 |\n| 2 | ch02-b.md | 二 |\n| 3 | ch03-c.md | 三 |\n\n' +
+    '### 5.2 写作与审阅分组（Part 映射）\n\n| Part | 包含章节 | 分组理由 |\n|---|---|---|\n' + mapRows + '\n';
+  mk('fragments/ch01-a.md', '# a\n');
+  mk('fragments/ch02-b.md', '# b\n');
+  mk('fragments/ch03-c.md', '# c\n');
+
+  // 遗漏 ch03 → 报“未归入任何 Part”
+  mk('PROJECT.md', projMd('| 1 | ch01, ch02 | x |\n'));
+  let g = gate.validateFlowGate(proj);
+  assert(g.errors.some(e => e.includes('未归入任何 Part')), 'Part 映射遗漏章节 → 报错', JSON.stringify(g.errors));
+
+  // 补齐 → 不再报遗漏
+  mk('PROJECT.md', projMd('| 1 | ch01, ch02, ch03 | x |\n'));
+  g = gate.validateFlowGate(proj);
+  assert(!g.errors.some(e => e.includes('未归入任何 Part')), 'Part 映射补齐 → 不报遗漏', JSON.stringify(g.errors));
+
+  // 重复归组 ch02 → 报“分组重复”
+  mk('PROJECT.md', projMd('| 1 | ch01, ch02 | x |\n| 2 | ch02, ch03 | y |\n'));
+  g = gate.validateFlowGate(proj);
+  assert(g.errors.some(e => e.includes('分组重复')), 'Part 映射重复归组 → 报错', JSON.stringify(g.errors));
 
   fs.rmSync(proj, { recursive: true, force: true });
 }

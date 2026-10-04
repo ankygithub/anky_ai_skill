@@ -114,7 +114,7 @@ const refs = [
   ['references/editor-review.md', 'editor-review.md'],
   ['references/md-templates/00-cover.md', 'md-template-00-cover.md'],
   ['references/md-templates/99-backpage.md', 'md-template-99-backpage.md'],
-  ['references/md-templates/part01-chapter-example.md', 'md-template-part01-chapter-example.md'],
+  ['references/md-templates/ch01-chapter-example.md', 'md-template-ch01-chapter-example.md'],
   ['DESIGN.md', 'DESIGN.md']
 ];
 for (const [src, dst] of refs) {

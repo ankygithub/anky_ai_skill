@@ -29,7 +29,7 @@ description: "深度调研一个主题，生成一本书"
 ├── build-pdf.js            # PDF渲染+精确书签（从templates/复制）
 ├── build-md.js             # Markdown导出（源头聚合式，从templates/复制）
 ├── build-reader.js         # 多文件阅读器（从templates/复制）
-├── build-all.js            # 统一构建入口 + 门禁[0a]MD/[0b]组件/[0c]编辑审查 + 产物门禁（从templates/复制）
+├── build-all.js            # 统一构建入口 + 门禁[0a]MD/[0b]组件/[0c]流程 + 产物门禁（从templates/复制）
 ├── convert-md.js           # Markdown → HTML片段（★组件原生化渲染，从templates/复制）
 ├── check-md.js             # ★ MD片段门禁检查（从templates/复制）
 ├── fix-md.js               # ★ MD片段自动修复-标题层级（从templates/复制）
@@ -48,8 +48,8 @@ description: "深度调研一个主题，生成一本书"
 │   └── stage.js            # ★ 流程门禁信号（node scripts/stage.js writing|review|revision --done）
 ├── fragments/              # ★ Markdown片段（纯.md）
 │   ├── 00-cover.md         # 封面（YAML frontmatter + Markdown）
-│   ├── part01-xxx.md       # 正文Part
-│   ├── part02-xxx.md       # ...
+│   ├── ch01-xxx.md         # 正文章节（一章一文件）
+│   ├── ch02-xxx.md         # ...
 │   └── 99-backpage.md      # 尾页
 ├── assets/                 # 图片资源
 ├── materials/              # 素材库 + 流程留痕
@@ -97,7 +97,7 @@ description: "深度调研一个主题，生成一本书"
   | 二、读者画像（8 维）                                       | 写作 Agent 校准语气     |
   | 三、术语表（标准名/英文/全称/首次出现章/禁用同义词）                      | 锁定用词，防生造名词（门禁会机械扫禁用词） |
   | 四、数据速查（全书共享硬事实：统一版本号 / 核心数字）                        | 各章共用，避免每章重复搜       |
-  | 五、章节大纲（核心内容3-5句/读者收益/类型标签/前置依赖/信息来源）             | 每章价值 + 依赖         |
+  | 五、章节大纲（5.1 章清单 `chNN` / 5.2 Part 分组映射）                    | 每章价值 + 分组派发        |
   | 六、单章 Mini-Plan（核心论点/读完能做什么/必须包含/禁止重复/衔接/风险点/本章术语） | 每章给写作 Agent 的直接指令 |
   | 七、知识递进路线                                          | 结构防漏              |
   | 八、图表与组件规划                                         | 视觉元素制度化           |
@@ -145,7 +145,7 @@ description: "深度调研一个主题，生成一本书"
 
 **4. 写作**
 
-**派发方式（控 token 关键）**：由主 Agent 派发写作子 Agent，每个 Agent 写 **3–5 章**（**不要每章派一个 Agent**——每个 Agent 都要重新装载固定载荷，Agent 越多越贵）。大书分多段推进；不同 `partNN-*.md` 文件互不冲突，可并行写。
+**派发方式（控 token 关键）**：由主 Agent **按 PROJECT.md §5.2 的 Part 分组**派发写作子 Agent——**一个 Agent 写一个 Part 的若干章**（内容强相关，语气/术语更一致）；**不要每章派一个 Agent**（每个 Agent 都要重新装载固定载荷，Agent 越多越贵）。各 Part 可并行写（每章一个文件 `chNN-*.md`，互不冲突）。
 
 > **【写作前必做】** 每个写作 Agent 在开始写作前，**必须先拿到以下三样**：
 >
@@ -231,12 +231,12 @@ title: 第一章 章节标题
 
 #### 7.1 组件使用配额（写作 Agent 自查，构建门禁不强制拦截）
 
-每个 `partNN-xxx.md` 文件：
+每个章节文件 `chNN-*.md`：
 
-- ✅ 提示块 **每 Part 最多 2-3 个**，只放真正的关键转折或高危警告处；**禁止每个小节都用要点块收尾**（强调块通胀会让"关键"失效）
+- ✅ 提示块 **每章最多 2-3 个**，只放真正的关键转折或高危警告处；**禁止每个小节都用要点块收尾**（强调块通胀会让"关键"失效）
 - ✅ 含操作步骤 → **必须**用 `:::steps`；含对比内容 → **必须**用 `:::compare`
 - ✅ 编排模式遵循 `research/writing-style.md`：相邻小节不重复同一模式，收尾方式轮换
-- ❌ 避免整个 Part 零组件（纯文本输出，缺乏视觉层次）
+- ❌ 避免整个章节零组件（纯文本输出，缺乏视觉层次）
 
 #### 7.2 HTML 使用边界
 
@@ -322,10 +322,10 @@ type: backpage
 
 - **时机与次数**：**全书写完后再审，只审一次**；写作中途不审。审查 → 落盘清单 → 统一修改 → 核销，结束，**不反复对抗**
 - **双视角一个 Agent**：审查 Agent 兼具**领域主审**（身份由 `PROJECT.md`「对抗性审查设计」定：技术编辑 / 业务专家 / 科普编辑 / 学术编辑 / 文学编辑…）+ **普通读者**；**两视角各独立走一遍清单**（专家查术语/结论/时效/逻辑/案例真实；读者查生硬 AI 腔 / 空话 / 稻草人 / 读不懂 / 啰嗦）
-- **粒度 = part 优先**：计划里合成 part 的按 part 审（该 part 的多章统一审一次），否则逐章审；**不做跨 part 交叉分析**（连贯性交给 PROJECT.md / Mini-Plan 规划阶段）
-- **串行分段，不并行**：用**全新上下文**的审查 Agent **依次**审——每段只审 **3–5 个单位**（或临近 3–5 万 token 即切段），审完**追加写同一份 issues.md**，再起下一段。**不派并行 Agent、不合并多份意见**（并行重复装载依据、合并易漏行重号；单会话跑完全书则上下文被压缩、后半本审瞎）
+- **粒度 = Part**：按 `PROJECT.md` §5.2 的 Part 分组审——**一个 Part（含其若干章）统一审一次**；**不做跨 Part 交叉分析**（连贯性交给规划阶段）
+- **串行分段，不并行**：用**全新上下文**的审查 Agent **依次**审——每段审 **1–2 个 Part**（或临近 3–5 万 token 即切段），审完**追加写同一份 issues.md**，再起下一段。**不派并行 Agent、不合并多份意见**（并行重复装载依据、合并易漏行重号；单会话跑完全书则上下文被压缩、后半本审瞎）
 - **提示词装配（干净上下文）**：审查 Agent 是**新会话、必须自带上下文**——取 `research/editor-review.md`「审查 Agent 提示词模板」，把 `PROJECT.md`「九、对抗性审查设计」的**主审身份 / 粒度**与**本次审查范围**填入 → 粘给它；**只给它规格文件与产物，不要粘写作过程或作者自评**（否则锚定审查者）
-- **只落盘不改稿**：审查**只产出**一份全书意见清单 `materials/review/issues.md`（按 part 分节；列：章节 | 级别 | 类型 | 原句 | **替换句/建议**）——**审查阶段不改稿**；"替换句"要写成可机械替换的整句
+- **只落盘不改稿**：审查**只产出**一份全书意见清单 `materials/review/issues.md`（按 Part 分节；列：章节 | 级别 | 类型 | 原句 | **替换句/建议**）——**审查阶段不改稿**；"替换句"要写成可机械替换的整句
 - **统一修改（外科手术式）+ 逐条核销**：审查完成后由**一个 Agent 串行**统一修改，**只就地替换被标记的句子**（**禁止重读整本 / 整段重写**——这是省 token 的关键）；再逐条核销写入 `materials/review/resolved.md`（`#N 已改` / `驳回：理由`）；**核销是极轻的收尾校验**，只读被改的句子
 - **阶段信号（构建门禁依据）**：审查落盘后 `node scripts/stage.js review --done`；统一修改 + 核销后 `node scripts/stage.js revision --done`。重复标记某阶段会作废其后信号（重写→须重审，重审→须重核销）
 - **必须给证据**：每条问题引原句（≤30 字）+ 类型 + 改写建议；**禁止为凑数编问题**
@@ -499,8 +499,8 @@ EPUB 封面、单文件 HTML 与 reader 的书架图标共用一套风格体系�
 | 写MD片段时 | `references/components-quickref.md` | ★ 组件语法唯一规范（\[!TIP]/:::steps/:::compare） |
 | 写作前    | `references/writing-style.md`       | ★ 写作编排规范（5种模式轮换 + 收尾轮换 + 提示块配额）          |
 | 写作前    | `references/terminology-discipline.md` | ★ 术语纪律（体裁映射 / 领域通用词 / 中英对照 / 禁用同义词；机械扫描并入 check-md.js，语义判定交审查 Agent）        |
-| 全书写完后审查时 | `references/editor-review.md`       | ★ 对抗性编辑审查规范（全书写完统一审一次 / 一个 Agent 双视角 / part 粒度 / issues.md 落盘 + resolved.md 核销 / 反AI腔速查 / 术语扫描边界）      |
+| 全书写完后审查时 | `references/editor-review.md`       | ★ 对抗性编辑审查规范（全书写完统一审一次 / 一个 Agent 双视角 / Part 粒度 / issues.md 落盘 + resolved.md 核销 / 反AI腔速查 / 术语扫描边界）      |
 | 定制样式时  | `references/design-system.md`       | CSS变量、主题、MD片段规范                         |
-| 写MD片段时  | `references/md-templates/` 目录       | 3 个格式模板：`references/md-templates/00-cover.md`（封面）/ `references/md-templates/99-backpage.md`（尾页）/ `references/md-templates/part01-chapter-example.md`（章节示例）；init 复制为 `research/md-template-*.md` |
+| 写MD片段时  | `references/md-templates/` 目录       | 3 个格式模板：`references/md-templates/00-cover.md`（封面）/ `references/md-templates/99-backpage.md`（尾页）/ `references/md-templates/ch01-chapter-example.md`（章节示例）；init 复制为 `research/md-template-*.md` |
 | 新建项目时  | `templates/` 目录                     | 可直接复制的骨架文件                              |
 
