@@ -1,6 +1,6 @@
 # 模板：轮次自测计划（产出 `docs/changes/round-NN/test-plan.md`）
 
-> 使用说明：本轮追加需求的**自测计划**。**测试由 AI 自己跑，不许留给人工**。用例从 `to-list.md` 每条任务的完成标准（DoD）派生；跑完逐条回填结果，全绿才通知用户。叙述遵守 `_writing-guide.md`（`templates/_writing-guide.md`）。
+> 使用说明：本轮追加需求的**自测计划**。**测试由 AI 自己跑，不许留给人工**。用例从 `todolist.md` 每条任务的完成标准（DoD）派生；跑完逐条回填结果，全绿才通知用户。叙述遵守 `_writing-guide.md`（`templates/_writing-guide.md`）。
 
 ---
 
