@@ -1,5 +1,5 @@
 ---
-name: "spec-forge-fullstack"
+name: "spec-forge-fullstack1.1"
 description: "需求分析和设计文档一站式生成：写代码之前，先把需求锻造成两套文档。本技能先辅助需求调研，产出供你审核、查阅的需求分析、概要设计、详细设计；再据此派生专供 AI 执行的规格、计划、验收、自测四份文档。人读文档管方向、决策与追溯，AI 执行文档管任务、边界与校验；两类文档分开，避免 AI 直接照需求文档编码产生偏差。适用于：新项目/新功能只有初步想法、已有 PRD 或需求文档待拆解、文档组交付后需求变更、或直接点名要写需求分析/概要设计/详细设计/执行计划/验收标准/自测计划这类文档时。不适用于直接编码任务。"
 ---
 
@@ -131,7 +131,7 @@ ai-docs/spec.md  （需求全集 ← 需求分析；契约 ← 详设。契约�
 
 ### 3.3 给人看的文档怎么写
 
-逐条执行 `templates/_写作规范.md`。一句话概括：**像人话，不像机器人**——说事实、给理由、每段有干货；每张图后面必须有一段"这张图怎么读"；拿不准的话标 `[假设]` 并记入 TBD。
+逐条执行 `templates/_writing-guide.md`。一句话概括：**像人话，不像机器人**——说事实、给理由、每段有干货；每张图后面必须有一段"这张图怎么读"；拿不准的话标 `[假设]` 并记入 TBD。
 
 ### 3.4 给 AI 看的文档怎么写
 
@@ -259,17 +259,19 @@ ai-docs/spec.md  （需求全集 ← 需求分析；契约 ← 详设。契约�
 
 ## 11. 模板清单
 
-| 文档 | 模板 |
+| 产出文档（写入项目时的名字） | 模板文件（技能源码，纯 ASCII） |
 |---|---|
-| README | `templates/README-项目说明.md` |
-| 1-需求分析 | `templates/1-需求分析.md` |
-| 2-概要设计 | `templates/2-概要设计.md` |
-| 3-详细设计 | `templates/3-详细设计.md` |
-| 4-变更记录 | `templates/4-变更记录.md` |
-| 5-验收报告 | `templates/5-验收报告.md` |
-| 文档清单与导航（可选） | `templates/文档清单与导航.md` |
-| 写作规范 | `templates/_写作规范.md` |
+| README.md | `templates/README-template.md` |
+| 1-需求分析.md | `templates/1-requirements.md` |
+| 2-概要设计.md | `templates/2-overview-design.md` |
+| 3-详细设计.md | `templates/3-detailed-design.md` |
+| 4-变更记录.md | `templates/4-changelog.md` |
+| 5-验收报告.md | `templates/5-acceptance-report.md` |
+| 文档清单与导航.md（可选） | `templates/doc-nav.md` |
+| 写作规范（无产出，纯执行规范） | `templates/_writing-guide.md` |
 | ai-docs 四件套 | `templates/ai-docs/` 下同名 |
 | 自查清单 | `checklists.md` |
 
 > 模板路径相对于本 SKILL.md 所在目录。**templates/ 目录就是 docs/ 的镜像**——docs 里每个文件对应 templates 里哪个模板，一一对应，无嵌套。
+>
+> **命名约束（硬性）**：技能源码内的模板文件名**必须纯 ASCII**（安装时中文文件名会被宿主编码链路破坏成乱码，导致按 SKILL.md 找模板时 Read 失败）；但**产出文档写入项目 `docs/` 时必须按左列中文名命名**（1-需求分析.md 等），给人看的中文命名惯例只约束产出物，不约束技能源码。读模板、写产出是两步，别把模板的 ASCII 名带进 docs/。
